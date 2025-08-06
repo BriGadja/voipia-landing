@@ -9,6 +9,17 @@ This file provides guidance to Claude Code (claude.ai/code) when working with co
 - `npm run start` - Start production server  
 - `npm run lint` - Run ESLint for code quality
 
+## UI Verification Workflow
+
+**IMPORTANT**: After making any UI modifications, you MUST:
+1. Use the MCP Playwright server to navigate to the site (locally on `http://localhost:3000` or production URL)
+2. Take a browser snapshot to verify the visual changes
+3. Check that the updates correspond to the expected behavior
+4. Test responsive design by resizing the browser window
+5. Verify animations and interactions are working correctly
+
+This visual verification ensures that all changes are properly rendered and functioning as intended before committing.
+
 ## Project Architecture
 
 This is a Voipia landing page built with Next.js 15 App Router, showcasing three AI voice agents (Louis, Arthur, Alexandra). The application uses a component-based architecture with clear separation of concerns.

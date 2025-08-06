@@ -26,42 +26,81 @@ const scenarios = [
   }
 ]
 
-const conversationSteps = [
-  { speaker: 'agent', text: 'Bonjour, je suis Louis de Voipia. J\'aimerais vous parler de votre demande d\'information.' },
-  { speaker: 'prospect', text: 'Ah oui, bonjour. J\'avais effectivement fait une demande.' },
-  { speaker: 'agent', text: 'Parfait ! Pouvez-vous me dire quel est votre principal défi actuellement ?' },
-  { speaker: 'prospect', text: 'Nous avons du mal à suivre tous nos prospects qui nous contactent.' },
-  { speaker: 'agent', text: 'Je comprends parfaitement. Combien de leads recevez-vous par mois environ ?' }
-]
+const conversations: Record<string, Record<string, Array<{ speaker: string; text: string }>>> = {
+  louis: {
+    'lead-callback': [
+      { speaker: 'agent', text: 'Bonjour, je suis Louis de Voipia. J\'aimerais vous parler de votre demande d\'information sur nos solutions.' },
+      { speaker: 'prospect', text: 'Ah oui, bonjour. J\'avais effectivement fait une demande hier.' },
+      { speaker: 'agent', text: 'Parfait ! Pouvez-vous me dire quel est votre principal défi commercial actuellement ?' },
+      { speaker: 'prospect', text: 'Nous avons du mal à suivre tous nos prospects qui nous contactent.' },
+      { speaker: 'agent', text: 'Je comprends. Combien de leads recevez-vous par mois environ ?' },
+      { speaker: 'prospect', text: 'Entre 200 et 300, mais nous n\'arrivons à en traiter que la moitié.' },
+      { speaker: 'agent', text: 'C\'est exactement le type de problème que nous résolvons. Puis-je vous proposer une démo personnalisée ?' }
+    ],
+    'appointment-booking': [
+      { speaker: 'agent', text: 'Bonjour, Louis de Voipia à l\'appareil. Vous avez demandé à être rappelé pour planifier une démo.' },
+      { speaker: 'prospect', text: 'Oui, j\'aimerais voir comment vos agents IA fonctionnent.' },
+      { speaker: 'agent', text: 'Avec plaisir ! Êtes-vous disponible cette semaine pour une session de 30 minutes ?' },
+      { speaker: 'prospect', text: 'Jeudi après-midi serait parfait pour moi.' },
+      { speaker: 'agent', text: 'Excellent ! Je vous propose jeudi à 14h30. Je vous envoie l\'invitation.' }
+    ]
+  },
+  arthur: {
+    'dormant-reactivation': [
+      { speaker: 'agent', text: 'Bonjour, je suis Arthur de Voipia. Cela fait 6 mois que nous n\'avons pas échangé.' },
+      { speaker: 'client', text: 'Ah bonjour Arthur, effectivement ça fait un moment.' },
+      { speaker: 'agent', text: 'J\'espère que tout va bien ! Comment évoluent vos projets de développement commercial ?' },
+      { speaker: 'client', text: 'On a pas mal de nouveaux défis, notamment sur la prospection.' },
+      { speaker: 'agent', text: 'Justement, nous avons développé de nouvelles fonctionnalités qui pourraient vous intéresser.' },
+      { speaker: 'client', text: 'Ah oui ? Dites-moi en plus.' },
+      { speaker: 'agent', text: 'Nos agents IA peuvent maintenant qualifier automatiquement vos prospects 24/7. Voulez-vous qu\'on en discute ?' }
+    ]
+  },
+  alexandra: {
+    'lead-callback': [
+      { speaker: 'agent', text: 'Bonjour, Voipia, Alexandra à votre écoute. Comment puis-je vous aider ?' },
+      { speaker: 'appelant', text: 'Bonjour, j\'aimerais parler à quelqu\'un au sujet de vos solutions IA.' },
+      { speaker: 'agent', text: 'Bien sûr ! Pour mieux vous orienter, s\'agit-il d\'une demande commerciale ou technique ?' },
+      { speaker: 'appelant', text: 'Plutôt commercial, j\'aimerais comprendre vos offres.' },
+      { speaker: 'agent', text: 'Parfait ! Je vais vous mettre en relation avec Louis, notre expert commercial. Un instant s\'il vous plaît.' }
+    ]
+  }
+}
 
 export default function DemoSection() {
   const [selectedAgent, setSelectedAgent] = useState(agents[0])
   const [selectedScenario, setSelectedScenario] = useState(scenarios[0])
   const [isPlaying, setIsPlaying] = useState(false)
-  const [conversationStep, setConversationStep] = useState(0)
+  const [conversationStep, setConversationStep] = useState(-1)
 
   const handlePlayDemo = () => {
     if (isPlaying) {
       setIsPlaying(false)
-      setConversationStep(0)
+      setConversationStep(-1)
     } else {
       setIsPlaying(true)
-      playConversation()
+      setConversationStep(-1)
+      setTimeout(() => playConversation(), 500)
     }
   }
 
   const playConversation = () => {
+    const steps = conversations[selectedAgent.id]?.[selectedScenario.id] || []
     let step = 0
-    const interval = setInterval(() => {
-      if (step < conversationSteps.length) {
+    
+    const playNextStep = () => {
+      if (step < steps.length) {
         setConversationStep(step)
         step++
+        setTimeout(playNextStep, 2500)
       } else {
-        clearInterval(interval)
-        setIsPlaying(false)
-        setConversationStep(0)
+        setTimeout(() => {
+          setIsPlaying(false)
+        }, 2000)
       }
-    }, 2500)
+    }
+    
+    playNextStep()
   }
 
   return (
@@ -92,7 +131,11 @@ export default function DemoSection() {
                   {agents.map((agent) => (
                     <motion.button
                       key={agent.id}
-                      onClick={() => setSelectedAgent(agent)}
+                      onClick={() => {
+                        setSelectedAgent(agent)
+                        setConversationStep(-1)
+                        setIsPlaying(false)
+                      }}
                       className={`p-4 rounded-xl border transition-all duration-300 ${
                         selectedAgent.id === agent.id
                           ? 'border-purple-500 bg-purple-500/10'
@@ -121,7 +164,11 @@ export default function DemoSection() {
                   {scenarios.map((scenario) => (
                     <motion.button
                       key={scenario.id}
-                      onClick={() => setSelectedScenario(scenario)}
+                      onClick={() => {
+                        setSelectedScenario(scenario)
+                        setConversationStep(-1)
+                        setIsPlaying(false)
+                      }}
                       className={`w-full p-4 rounded-xl border text-left transition-all duration-300 ${
                         selectedScenario.id === scenario.id
                           ? 'border-blue-500 bg-blue-500/10'
@@ -223,7 +270,10 @@ export default function DemoSection() {
 
               <div className="h-96 overflow-y-auto space-y-4">
                 <AnimatePresence>
-                  {conversationSteps.slice(0, isPlaying ? conversationStep + 1 : 1).map((step, index) => (
+                  {(() => {
+                    const steps = conversations[selectedAgent.id]?.[selectedScenario.id] || []
+                    const visibleSteps = conversationStep >= 0 ? steps.slice(0, conversationStep + 1) : []
+                    return visibleSteps.map((step, index) => (
                     <motion.div
                       key={index}
                       initial={{ opacity: 0, y: 20 }}
@@ -243,20 +293,21 @@ export default function DemoSection() {
                           )}
                           <div>
                             <div className="text-xs opacity-70 mb-1">
-                              {step.speaker === 'agent' ? selectedAgent.name : 'Prospect'}
+                              {step.speaker === 'agent' ? selectedAgent.name : step.speaker === 'prospect' ? 'Prospect' : step.speaker === 'client' ? 'Client' : 'Appelant'}
                             </div>
                             <p className="text-sm leading-relaxed">{step.text}</p>
                           </div>
-                          {step.speaker === 'prospect' && (
+                          {step.speaker !== 'agent' && (
                             <MessageCircle className="w-4 h-4 opacity-60 flex-shrink-0 mt-0.5" />
                           )}
                         </div>
                       </div>
                     </motion.div>
-                  ))}
+                  ))
+                  })()}
                 </AnimatePresence>
 
-                {!isPlaying && (
+                {!isPlaying && conversationStep < 0 && (
                   <div className="text-center py-12">
                     <Volume2 className="w-12 h-12 text-gray-400 mx-auto mb-4" />
                     <p className="text-gray-400">

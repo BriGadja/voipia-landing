@@ -1,34 +1,23 @@
 'use client'
 
-import { useState, useEffect, useRef } from 'react'
+import { useRef } from 'react'
 import { motion, useInView } from 'framer-motion'
 import FadeIn from '@/components/animations/FadeIn'
 import GlassCard from '@/components/ui/GlassCard'
 import { metrics } from '@/lib/constants'
 import { TrendingUp, Clock, Zap, CheckCircle } from 'lucide-react'
+import { useCountAnimation } from '@/lib/useCountAnimation'
 
 const icons = [TrendingUp, Clock, Zap, CheckCircle]
 
+function AnimatedMetric({ value, isInView, delay }: { value: string; isInView: boolean; delay: number }) {
+  const displayValue = useCountAnimation(value, isInView, delay)
+  return <>{displayValue}</>
+}
+
 export default function Metrics() {
   const ref = useRef(null)
-  const isInView = useInView(ref, { once: true })
-  const [animatedValues, setAnimatedValues] = useState<string[]>(['0', '0', '0', '0'])
-
-  useEffect(() => {
-    if (isInView) {
-      const timers = metrics.map((metric, index) => {
-        return setTimeout(() => {
-          setAnimatedValues(prev => {
-            const newValues = [...prev]
-            newValues[index] = metric.value
-            return newValues
-          })
-        }, index * 200)
-      })
-
-      return () => timers.forEach(timer => clearTimeout(timer))
-    }
-  }, [isInView])
+  const isInView = useInView(ref, { once: true, amount: 0.3 })
 
   return (
     <section id="metrics" className="py-20 lg:py-32 relative overflow-hidden">
@@ -70,7 +59,7 @@ export default function Metrics() {
                     animate={isInView ? { scale: 1, opacity: 1 } : {}}
                     transition={{ delay: index * 0.2, duration: 0.6 }}
                   >
-                    {animatedValues[index] || metric.value}
+                    <AnimatedMetric value={metric.value} isInView={isInView} delay={index * 200} />
                   </motion.div>
 
                   <h3 className="text-lg font-semibold text-white mb-2">

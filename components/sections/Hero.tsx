@@ -1,11 +1,14 @@
 'use client'
 
+import { useState } from 'react'
 import Button from '@/components/ui/Button'
+import ContactModal from '@/components/ui/ContactModal'
 import FadeIn from '@/components/animations/FadeIn'
 import { motion } from 'framer-motion'
 import { Phone, Sparkles } from 'lucide-react'
 
 export default function Hero() {
+  const [isContactModalOpen, setIsContactModalOpen] = useState(false)
   return (
     <section className="relative min-h-screen flex items-center justify-center overflow-hidden">
       <div className="absolute inset-0 gradient-mesh opacity-30 dark:opacity-20" />
@@ -45,13 +48,21 @@ export default function Hero() {
 
           <FadeIn delay={0.4}>
             <div className="flex flex-col sm:flex-row gap-4 justify-center">
-              <Button size="lg" className="group">
+              <Button 
+                size="lg" 
+                className="group"
+                onClick={() => setIsContactModalOpen(true)}
+              >
                 <span className="flex items-center gap-2">
                   <Phone className="w-5 h-5 group-hover:animate-pulse" />
                   Je veux une démo
                 </span>
               </Button>
-              <Button variant="secondary" size="lg">
+              <Button 
+                variant="secondary" 
+                size="lg"
+                onClick={() => document.getElementById('agents')?.scrollIntoView({ behavior: 'smooth' })}
+              >
                 Découvrir nos agents
               </Button>
             </div>
@@ -85,6 +96,12 @@ export default function Hero() {
           <div className="w-1 h-3 bg-white/60 rounded-full mt-2 animate-bounce" />
         </div>
       </motion.div>
+
+      <ContactModal 
+        isOpen={isContactModalOpen}
+        onClose={() => setIsContactModalOpen(false)}
+        title="Demander une démo gratuite"
+      />
     </section>
   )
 }

@@ -1,7 +1,7 @@
 'use client'
 
 import { useState, useEffect } from 'react'
-import { motion } from 'framer-motion'
+import { motion, AnimatePresence } from 'framer-motion'
 import ThemeToggle from '@/components/ThemeToggle'
 import Button from '@/components/ui/Button'
 import { Menu, X } from 'lucide-react'
@@ -77,33 +77,39 @@ export default function Navigation() {
         </div>
       </div>
 
-      {isMobileMenuOpen && (
-        <motion.div
-          initial={{ opacity: 0, height: 0 }}
-          animate={{ opacity: 1, height: 'auto' }}
-          exit={{ opacity: 0, height: 0 }}
-          className="md:hidden bg-black/30 backdrop-blur-xl border-t border-white/10"
-        >
-          <div className="container mx-auto px-4 py-4">
-            {navItems.map((item) => (
-              <a
-                key={item.label}
-                href={item.href}
-                className="block py-3 text-white/80 hover:text-white transition-colors"
-                onClick={() => setIsMobileMenuOpen(false)}
-              >
-                {item.label}
-              </a>
-            ))}
-            <div className="flex items-center gap-4 pt-4 border-t border-white/10 mt-4">
-              <ThemeToggle />
-              <Button size="sm" className="flex-1">
-                Essayer gratuitement
-              </Button>
+      <AnimatePresence>
+        {isMobileMenuOpen && (
+          <motion.div
+            initial={{ opacity: 0, height: 0 }}
+            animate={{ opacity: 1, height: 'auto' }}
+            exit={{ opacity: 0, height: 0 }}
+            transition={{ duration: 0.3 }}
+            className="md:hidden bg-black/95 backdrop-blur-xl border-t border-white/10"
+          >
+            <div className="container mx-auto px-4 py-4">
+              {navItems.map((item, index) => (
+                <motion.a
+                  key={item.label}
+                  href={item.href}
+                  className="block py-3 text-white/80 hover:text-white transition-colors"
+                  onClick={() => setIsMobileMenuOpen(false)}
+                  initial={{ opacity: 0, x: -20 }}
+                  animate={{ opacity: 1, x: 0 }}
+                  transition={{ delay: index * 0.05 }}
+                >
+                  {item.label}
+                </motion.a>
+              ))}
+              <div className="flex items-center gap-4 pt-4 border-t border-white/10 mt-4">
+                <ThemeToggle />
+                <Button size="sm" className="flex-1">
+                  Essayer gratuitement
+                </Button>
+              </div>
             </div>
-          </div>
-        </motion.div>
-      )}
+          </motion.div>
+        )}
+      </AnimatePresence>
     </motion.nav>
   )
 }

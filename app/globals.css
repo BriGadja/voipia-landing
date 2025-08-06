@@ -1,0 +1,66 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+@layer base {
+  :root {
+    --background: 0 0% 100%;
+    --foreground: 222.2 84% 4.9%;
+  }
+
+  .dark {
+    --background: 222.2 84% 4.9%;
+    --foreground: 210 40% 98%;
+  }
+
+  * {
+    @apply border-gray-200;
+  }
+
+  body {
+    @apply bg-black text-white;
+  }
+
+  html {
+    scroll-behavior: smooth;
+  }
+}
+
+@layer utilities {
+  .glass {
+    @apply bg-white/10 backdrop-blur-md border border-white/20;
+  }
+
+  .glass-dark {
+    @apply bg-black/10 backdrop-blur-md border border-white/10;
+  }
+
+  .gradient-primary {
+    @apply bg-gradient-to-r from-primary to-secondary;
+  }
+
+  .gradient-mesh {
+    background-image: 
+      radial-gradient(at 40% 20%, hsla(270, 50%, 60%, 0.3) 0px, transparent 50%),
+      radial-gradient(at 80% 0%, hsla(220, 70%, 50%, 0.3) 0px, transparent 50%),
+      radial-gradient(at 0% 50%, hsla(270, 50%, 60%, 0.3) 0px, transparent 50%),
+      radial-gradient(at 80% 50%, hsla(220, 70%, 50%, 0.3) 0px, transparent 50%),
+      radial-gradient(at 0% 100%, hsla(270, 50%, 60%, 0.3) 0px, transparent 50%);
+  }
+
+  .text-gradient {
+    @apply bg-clip-text text-transparent gradient-primary;
+  }
+
+  .animation-delay-200 {
+    animation-delay: 200ms;
+  }
+
+  .animation-delay-400 {
+    animation-delay: 400ms;
+  }
+
+  .animation-delay-600 {
+    animation-delay: 600ms;
+  }
+}

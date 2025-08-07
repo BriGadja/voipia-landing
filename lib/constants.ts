@@ -20,7 +20,7 @@ export const agents = [
     name: 'Arthur',
     title: 'Expert prospection',
     color: 'arthur',
-    gradient: 'from-orange-500 to-orange-600',
+    gradient: 'from-arthur to-orange-600',
     description: 'Réveillez votre base dormante et générez de nouvelles opportunités',
     capabilities: [
       'Réactivation de votre base clients dormante',
@@ -36,7 +36,7 @@ export const agents = [
     name: 'Alexandra',
     title: 'Standardiste IA',
     color: 'alexandra',
-    gradient: 'from-green-500 to-green-600',
+    gradient: 'from-alexandra to-green-600',
     description: 'Votre réceptionniste virtuelle disponible 24/7',
     capabilities: [
       'Accueil professionnel de tous vos appels',
@@ -94,5 +94,11 @@ export const howItWorksSteps = [
     title: 'Lancement automatique',
     description: 'Vos agents commencent à travailler immédiatement',
     icon: 'Rocket'
+  },
+  {
+    number: '04',
+    title: 'Reporting avancé',
+    description: 'Suivez les performances de chaque agent avec des rapports détaillés en temps réel',
+    icon: 'BarChart'
   }
 ]

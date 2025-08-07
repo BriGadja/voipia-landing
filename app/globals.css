@@ -18,11 +18,12 @@
   }
 
   body {
-    @apply bg-black text-white;
+    @apply bg-black text-white overflow-x-hidden;
   }
 
   html {
     scroll-behavior: smooth;
+    overflow-x: hidden;
   }
 }
 

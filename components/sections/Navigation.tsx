@@ -2,7 +2,6 @@
 
 import { useState, useEffect } from 'react'
 import { motion, AnimatePresence } from 'framer-motion'
-import ThemeToggle from '@/components/ThemeToggle'
 import Button from '@/components/ui/Button'
 import { Menu, X } from 'lucide-react'
 
@@ -62,7 +61,6 @@ export default function Navigation() {
           </div>
 
           <div className="hidden md:flex items-center gap-4">
-            <ThemeToggle />
             <Button size="sm">
               Essayer gratuitement
             </Button>
@@ -101,8 +99,7 @@ export default function Navigation() {
                 </motion.a>
               ))}
               <div className="flex items-center gap-4 pt-4 border-t border-white/10 mt-4">
-                <ThemeToggle />
-                <Button size="sm" className="flex-1">
+                <Button size="sm" className="w-full">
                   Essayer gratuitement
                 </Button>
               </div>

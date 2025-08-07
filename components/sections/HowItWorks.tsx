@@ -3,12 +3,13 @@
 import { motion } from 'framer-motion'
 import FadeIn from '@/components/animations/FadeIn'
 import { howItWorksSteps } from '@/lib/constants'
-import { Plug, Settings, Rocket, ArrowDown } from 'lucide-react'
+import { Plug, Settings, Rocket, BarChart, ArrowDown } from 'lucide-react'
 
 const icons = {
   Plug,
   Settings,
-  Rocket
+  Rocket,
+  BarChart
 }
 
 export default function HowItWorks() {
@@ -59,16 +60,16 @@ export default function HowItWorks() {
                       )}
                     </div>
 
-                    <div className="flex-1 pt-4">
-                      <div className="flex items-center gap-4 mb-4">
-                        <span className="text-6xl font-bold text-white/10">
+                    <div className="flex-1 pt-4 overflow-hidden">
+                      <div className="flex items-start sm:items-center gap-2 sm:gap-4 mb-4">
+                        <span className="text-4xl sm:text-6xl font-bold text-white/10 shrink-0">
                           {step.number}
                         </span>
-                        <h3 className="text-2xl font-bold text-white">
+                        <h3 className="text-xl sm:text-2xl font-bold text-white">
                           {step.title}
                         </h3>
                       </div>
-                      <p className="text-lg text-gray-300 dark:text-gray-400 max-w-2xl">
+                      <p className="text-base sm:text-lg text-gray-300 dark:text-gray-400">
                         {step.description}
                       </p>
 
@@ -120,6 +121,28 @@ export default function HowItWorks() {
                             <div className="w-2 h-2 bg-green-400 rounded-full animate-pulse" />
                             Vos agents sont maintenant actifs !
                           </div>
+                        </motion.div>
+                      )}
+
+                      {index === 3 && (
+                        <motion.div 
+                          className="mt-6 flex flex-wrap gap-3"
+                          initial={{ opacity: 0, y: 20 }}
+                          whileInView={{ opacity: 1, y: 0 }}
+                          transition={{ delay: 0.5 }}
+                        >
+                          {['Analytics en temps réel', 'Tableaux de bord KPI', 'Rapports exportables'].map((feature, i) => (
+                            <motion.div 
+                              key={feature}
+                              className="px-3 py-1 rounded-full bg-blue-500/20 border border-blue-500/30 text-sm text-blue-300"
+                              whileHover={{ scale: 1.05 }}
+                              initial={{ opacity: 0, x: -20 }}
+                              whileInView={{ opacity: 1, x: 0 }}
+                              transition={{ delay: 0.7 + i * 0.1 }}
+                            >
+                              {feature}
+                            </motion.div>
+                          ))}
                         </motion.div>
                       )}
                     </div>

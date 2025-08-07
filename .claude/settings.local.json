@@ -17,7 +17,18 @@
       "mcp__playwright__browser_take_screenshot",
       "mcp__playwright__browser_resize",
       "mcp__playwright__browser_click",
-      "mcp__filesystem__create_directory"
+      "mcp__filesystem__create_directory",
+      "Bash(npm run dev:*)",
+      "Bash(npm run build:*)",
+      "Bash(curl:*)",
+      "Bash(npm run lint)",
+      "Bash(npx next:*)",
+      "mcp__playwright__browser_close",
+      "Bash(powershell:*)",
+      "mcp__playwright__browser_snapshot",
+      "mcp__playwright__browser_evaluate",
+      "mcp__playwright__browser_wait_for",
+      "Bash(npx tsc:*)"
     ],
     "deny": []
   }

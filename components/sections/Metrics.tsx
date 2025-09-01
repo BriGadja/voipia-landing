@@ -111,7 +111,7 @@ export default function Metrics() {
                     }}
                     transition={{ duration: 3, repeat: Infinity, delay: 0.5 }}
                   >
-                    2.1s
+                    0.5s
                   </motion.div>
                   <p className="text-sm text-gray-400">Latence moyenne</p>
                 </div>

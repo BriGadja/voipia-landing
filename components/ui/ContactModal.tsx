@@ -2,7 +2,7 @@
 
 import { useState } from 'react'
 import { motion, AnimatePresence } from 'framer-motion'
-import { X, Phone, Mail, Calendar, Send } from 'lucide-react'
+import { X, Phone, Mail, Calendar, Send, Loader2 } from 'lucide-react'
 import Button from './Button'
 
 interface ContactModalProps {
@@ -19,13 +19,34 @@ export default function ContactModal({ isOpen, onClose, title = "Demander une d√
     company: '',
     message: ''
   })
+  const [isSubmitting, setIsSubmitting] = useState(false)
 
-  const handleSubmit = (e: React.FormEvent) => {
+  const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault()
-    // Ici on pourrait envoyer les donn√©es √† un serveur
-    console.log('Form submitted:', formData)
-    alert('Merci pour votre demande ! Nous vous contacterons dans les 24h.')
-    onClose()
+    setIsSubmitting(true)
+    
+    try {
+      const response = await fetch('https://n8n.voipia.fr/webhook/formulaire_rdv', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify(formData)
+      })
+      
+      if (response.ok) {
+        alert('Merci pour votre demande ! Nous vous contacterons dans les 24h.')
+        setFormData({ name: '', email: '', phone: '', company: '', message: '' })
+        onClose()
+      } else {
+        throw new Error('Erreur lors de l\'envoi')
+      }
+    } catch (error) {
+      console.error('Erreur:', error)
+      alert('Une erreur est survenue. Veuillez r√©essayer ou nous contacter directement.')
+    } finally {
+      setIsSubmitting(false)
+    }
   }
 
   const handleChange = (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => {
@@ -50,9 +71,14 @@ export default function ContactModal({ isOpen, onClose, title = "Demander une d√
             initial={{ opacity: 0, scale: 0.9, y: 20 }}
             animate={{ opacity: 1, scale: 1, y: 0 }}
             exit={{ opacity: 0, scale: 0.9, y: 20 }}
-            className="fixed left-1/2 top-1/2 -translate-x-1/2 -translate-y-1/2 w-full max-w-md z-50 p-4"
+            className="fixed inset-0 z-50 overflow-y-auto"
+            onClick={onClose}
           >
-            <div className="bg-gray-900/95 backdrop-blur-xl rounded-2xl border border-white/10 p-6 shadow-2xl">
+            <div className="flex min-h-full items-center justify-center p-4" onClick={onClose}>
+              <div 
+                className="w-full max-w-md bg-gray-900/95 backdrop-blur-xl rounded-2xl border border-white/10 p-6 shadow-2xl my-8"
+                onClick={(e) => e.stopPropagation()}
+              >
               <div className="flex justify-between items-center mb-6">
                 <h2 className="text-2xl font-bold text-white">{title}</h2>
                 <button
@@ -148,9 +174,19 @@ export default function ContactModal({ isOpen, onClose, title = "Demander une d√
                   <Button
                     type="submit"
                     className="flex-1 flex items-center justify-center gap-2"
+                    disabled={isSubmitting}
                   >
-                    <Send className="w-4 h-4" />
-                    Envoyer
+                    {isSubmitting ? (
+                      <>
+                        <Loader2 className="w-4 h-4 animate-spin" />
+                        Envoi en cours...
+                      </>
+                    ) : (
+                      <>
+                        <Send className="w-4 h-4" />
+                        Envoyer
+                      </>
+                    )}
                   </Button>
                 </div>
               </form>
@@ -162,6 +198,7 @@ export default function ContactModal({ isOpen, onClose, title = "Demander une d√
                     01 23 45 67 89
                   </a>
                 </p>
+              </div>
               </div>
             </div>
           </motion.div>

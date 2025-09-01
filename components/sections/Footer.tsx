@@ -4,8 +4,12 @@ import { motion } from 'framer-motion'
 import FadeIn from '@/components/animations/FadeIn'
 import Button from '@/components/ui/Button'
 import { Mail, Phone, MapPin, Calendar, ArrowRight } from 'lucide-react'
+import { useState } from 'react'
+import ContactModal from '@/components/ui/ContactModal'
 
 export default function Footer() {
+  const [isContactModalOpen, setIsContactModalOpen] = useState(false)
+
   return (
     <>
       <section className="py-20 lg:py-32 relative overflow-hidden">
@@ -26,18 +30,16 @@ export default function Footer() {
           </FadeIn>
 
           <FadeIn delay={0.2}>
-            <div className="flex flex-col sm:flex-row gap-6 justify-center mb-16">
-              <Button size="lg" variant="secondary" className="group">
+            <div className="flex justify-center mb-16">
+              <Button 
+                size="lg" 
+                variant="secondary" 
+                className="group"
+                onClick={() => setIsContactModalOpen(true)}
+              >
                 <span className="flex items-center gap-2">
                   <Phone className="w-5 h-5 group-hover:animate-pulse" />
                   Être contacté sous 24h
-                  <ArrowRight className="w-4 h-4 group-hover:translate-x-1 transition-transform" />
-                </span>
-              </Button>
-              <Button size="lg" className="group bg-white text-purple-600 hover:bg-gray-100">
-                <span className="flex items-center gap-2">
-                  <Calendar className="w-5 h-5 group-hover:animate-bounce" />
-                  Planifier une démo
                   <ArrowRight className="w-4 h-4 group-hover:translate-x-1 transition-transform" />
                 </span>
               </Button>
@@ -156,6 +158,10 @@ export default function Footer() {
           </div>
         </div>
       </footer>
+      <ContactModal 
+        isOpen={isContactModalOpen} 
+        onClose={() => setIsContactModalOpen(false)} 
+      />
     </>
   )
 }

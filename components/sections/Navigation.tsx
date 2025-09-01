@@ -61,7 +61,10 @@ export default function Navigation() {
           </div>
 
           <div className="hidden md:flex items-center gap-4">
-            <Button size="sm">
+            <Button 
+              size="sm"
+              onClick={() => window.open('https://forms.fillout.com/t/nU9QEqNRRRus', '_blank')}
+            >
               Essayer gratuitement
             </Button>
           </div>
@@ -99,7 +102,11 @@ export default function Navigation() {
                 </motion.a>
               ))}
               <div className="flex items-center gap-4 pt-4 border-t border-white/10 mt-4">
-                <Button size="sm" className="w-full">
+                <Button 
+                  size="sm" 
+                  className="w-full"
+                  onClick={() => window.open('https://forms.fillout.com/t/nU9QEqNRRRus', '_blank')}
+                >
                   Essayer gratuitement
                 </Button>
               </div>

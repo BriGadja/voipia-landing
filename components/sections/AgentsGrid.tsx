@@ -1,24 +1,12 @@
 'use client'
 
-import { useState } from 'react'
 import { motion } from 'framer-motion'
 import GlassCard from '@/components/ui/GlassCard'
-import Button from '@/components/ui/Button'
 import FadeIn from '@/components/animations/FadeIn'
 import { agents } from '@/lib/constants'
-import { Play, Pause, CheckCircle, Volume2 } from 'lucide-react'
+import { CheckCircle } from 'lucide-react'
 
 export default function AgentsGrid() {
-  const [playingAudio, setPlayingAudio] = useState<string | null>(null)
-
-  const handleAudioDemo = (agentId: string) => {
-    if (playingAudio === agentId) {
-      setPlayingAudio(null)
-    } else {
-      setPlayingAudio(agentId)
-    }
-  }
-
   return (
     <section id="agents" className="py-20 lg:py-32 relative">
       <div className="container mx-auto px-4 sm:px-6 lg:px-8">
@@ -86,68 +74,6 @@ export default function AgentsGrid() {
                     </motion.div>
                   ))}
                 </div>
-
-                <div className="flex gap-3">
-                  <Button
-                    variant="secondary"
-                    size="sm"
-                    className="flex-1"
-                    onClick={() => handleAudioDemo(agent.id)}
-                  >
-                    <span className="flex items-center gap-2">
-                      {playingAudio === agent.id ? (
-                        <>
-                          <Pause className="w-4 h-4" />
-                          Pause
-                        </>
-                      ) : (
-                        <>
-                          <Play className="w-4 h-4" />
-                          Écouter la démo
-                        </>
-                      )}
-                    </span>
-                  </Button>
-                  <Button
-                    variant="ghost"
-                    size="sm"
-                    className="px-3"
-                  >
-                    <Volume2 className="w-4 h-4" />
-                  </Button>
-                </div>
-
-                {playingAudio === agent.id && (
-                  <motion.div
-                    initial={{ height: 0, opacity: 0 }}
-                    animate={{ height: 'auto', opacity: 1 }}
-                    exit={{ height: 0, opacity: 0 }}
-                    className="mt-4 pt-4 border-t border-white/10"
-                  >
-                    <div className="flex items-center gap-2">
-                      <div className="flex gap-1">
-                        {[...Array(5)].map((_, i) => (
-                          <motion.div
-                            key={i}
-                            className="w-1 h-8 bg-gradient-to-t from-purple-500 to-blue-500 rounded-full"
-                            animate={{ 
-                              scaleY: [1, 0.3, 1],
-                              opacity: [1, 0.5, 1]
-                            }}
-                            transition={{ 
-                              duration: 0.5,
-                              repeat: Infinity,
-                              delay: i * 0.1
-                            }}
-                          />
-                        ))}
-                      </div>
-                      <span className="text-xs text-white/60 ml-auto">
-                        Démo audio en cours...
-                      </span>
-                    </div>
-                  </motion.div>
-                )}
               </GlassCard>
             </FadeIn>
           ))}

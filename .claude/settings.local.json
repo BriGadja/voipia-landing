@@ -28,7 +28,14 @@
       "mcp__playwright__browser_snapshot",
       "mcp__playwright__browser_evaluate",
       "mcp__playwright__browser_wait_for",
-      "Bash(npx tsc:*)"
+      "Bash(npx tsc:*)",
+      "mcp__playwright__browser_tab_select",
+      "mcp__playwright__browser_type",
+      "mcp__playwright__browser_handle_dialog",
+      "mcp__playwright__browser_press_key",
+      "Bash(pkill:*)",
+      "mcp__filesystem__edit_file",
+      "Bash(rm:*)"
     ],
     "deny": []
   }

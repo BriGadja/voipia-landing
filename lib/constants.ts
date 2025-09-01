@@ -63,7 +63,7 @@ export const metrics = [
     gradient: 'from-blue-500 to-cyan-500'
   },
   {
-    value: '<2s',
+    value: '500ms',
     label: 'Temps de latence',
     description: 'Conversation naturelle et fluide',
     gradient: 'from-green-500 to-emerald-500'

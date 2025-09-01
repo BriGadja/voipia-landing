@@ -35,7 +35,8 @@
       "mcp__playwright__browser_press_key",
       "Bash(pkill:*)",
       "mcp__filesystem__edit_file",
-      "Bash(rm:*)"
+      "Bash(rm:*)",
+      "Bash(git config:*)"
     ],
     "deny": []
   }

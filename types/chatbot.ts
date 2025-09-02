@@ -4,7 +4,7 @@ export interface ChatMessage {
   content: string
   timestamp: Date
   metadata?: {
-    agent?: 'chatbot-iapreneurs'
+    agent?: string
     confidence?: number
     error?: boolean
   }

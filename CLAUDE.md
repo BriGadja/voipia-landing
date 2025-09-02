@@ -85,3 +85,83 @@ Custom animations include:
 - Dark theme as default with purple/violet primary colors
 - Gradient backgrounds extensively used for visual appeal
 - Consistent spacing using Tailwind's scale
+
+## PRP (Product Requirements Proposal) System
+
+This project uses a PRP system for planning and implementing features with comprehensive context and validation loops.
+
+### Quick Commands
+
+- **`/generate-prp "feature description"`** - Generate a comprehensive PRP for a new feature
+- **`/execute-prp PRPs/feature-name.md`** - Execute an existing PRP with full validation
+
+### PRP Workflow
+
+#### 1. Creating a PRP
+When planning a new feature:
+1. Use `/generate-prp "your feature description"` OR
+2. Manually use the base template at `PRPs/templates/prp_base.md`
+3. Fill in all sections with specific details about the feature
+4. Include all necessary context, references, and validation steps
+5. Save the PRP in the `PRPs/` directory with a descriptive name
+
+#### 2. PRP Structure
+- **Goal**: Clear definition of what needs to be built
+- **Context**: All documentation, files, and references needed
+- **Implementation Blueprint**: Step-by-step plan with pseudocode
+- **Validation Loops**: Commands to verify the implementation
+- **Anti-patterns**: Common mistakes to avoid
+
+#### 3. Using PRPs
+
+**Method 1: Automated Commands**
+1. Generate: `/generate-prp "Add testimonials section with carousel"`
+2. Execute: `/execute-prp PRPs/testimonials-section.md`
+
+**Method 2: Manual Process**
+1. **Planning Phase**: Create a PRP document for complex features
+2. **Implementation**: Follow the PRP's task breakdown and pseudocode
+3. **Validation**: Run all commands in the validation loops section
+4. **Iteration**: Fix issues based on validation results
+
+#### 4. Example PRPs
+- See `PRPs/EXAMPLE_testimonials_section.md` for a complete feature PRP
+- Reference `INITIAL.md` for overall project context and requirements
+
+### PRP Best Practices
+- Include ALL necessary context upfront
+- Define clear success criteria with measurable outcomes
+- Provide executable validation commands
+- Reference existing code patterns and components
+- Always verify UI changes with browser snapshots
+- Run lint and build checks as part of validation
+
+### Directory Structure
+```
+PRPs/
+├── templates/
+│   └── prp_base.md         # Base template for new PRPs
+├── ai_docs/                # Additional documentation for AI context
+└── [feature-name].md       # Individual feature PRPs
+
+.claude/
+└── commands/
+    ├── generate-prp.md     # Command to generate new PRPs
+    └── execute-prp.md      # Command to execute PRPs
+```
+
+### Command Examples
+
+```bash
+# Generate a new PRP for a pricing section
+/generate-prp "Add a pricing section with three tiers for each agent"
+
+# Execute an existing PRP
+/execute-prp PRPs/pricing-section.md
+
+# Generate and execute in sequence
+/generate-prp "Add FAQ section with collapsible questions"
+/execute-prp PRPs/faq-section.md
+```
+
+This system ensures consistent, high-quality implementations with proper context and validation at every step.

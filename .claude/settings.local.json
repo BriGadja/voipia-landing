@@ -36,7 +36,9 @@
       "Bash(pkill:*)",
       "mcp__filesystem__edit_file",
       "Bash(rm:*)",
-      "Bash(git config:*)"
+      "Bash(git config:*)",
+      "WebFetch(domain:github.com)",
+      "WebFetch(domain:raw.githubusercontent.com)"
     ],
     "deny": []
   }

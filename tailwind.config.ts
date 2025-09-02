@@ -16,7 +16,15 @@ const config: Config = {
     'to-green-600',
     'text-louis',
     'text-arthur',
-    'text-alexandra'
+    'text-alexandra',
+    // Chatbot classes
+    'voipia-chatbot-trigger',
+    'voipia-chatbot-window',
+    'voipia-chatbot-header',
+    'voipia-chatbot-messages',
+    'voipia-chatbot-input',
+    'voipia-chatbot-message',
+    'voipia-chatbot-widget'
   ],
   theme: {
     extend: {

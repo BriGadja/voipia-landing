@@ -38,7 +38,10 @@
       "Bash(rm:*)",
       "Bash(git config:*)",
       "WebFetch(domain:github.com)",
-      "WebFetch(domain:raw.githubusercontent.com)"
+      "WebFetch(domain:raw.githubusercontent.com)",
+      "mcp__gdrive__gdrive_read_file",
+      "mcp__gdrive__gdrive_search",
+      "mcp__playwright__browser_hover"
     ],
     "deny": []
   }

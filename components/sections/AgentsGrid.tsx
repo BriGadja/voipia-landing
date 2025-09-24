@@ -4,7 +4,9 @@ import { motion } from 'framer-motion'
 import GlassCard from '@/components/ui/GlassCard'
 import FadeIn from '@/components/animations/FadeIn'
 import { agents } from '@/lib/constants'
-import { CheckCircle } from 'lucide-react'
+import { CheckCircle, ArrowRight } from 'lucide-react'
+import Link from 'next/link'
+import Button from '@/components/ui/Button'
 
 export default function AgentsGrid() {
   return (
@@ -17,14 +19,14 @@ export default function AgentsGrid() {
               <span className="text-gradient"> agents vocaux</span>
             </h2>
             <p className="text-xl text-gray-300 dark:text-gray-400 max-w-3xl mx-auto">
-              Trois personnalités IA spécialisées pour couvrir tous vos besoins téléphoniques
+              Deux personnalités IA spécialisées pour couvrir tous vos besoins téléphoniques
             </p>
           </div>
         </FadeIn>
 
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
+        <div className="grid grid-cols-1 lg:grid-cols-2 gap-8 max-w-5xl mx-auto">
           {agents.map((agent, index) => (
-            <FadeIn key={agent.id} delay={index * 0.2}>
+            <FadeIn key={agent.id} delay={index * 0.1}>
               <GlassCard className="p-8 h-full flex flex-col">
                 <div className="flex items-start justify-between mb-6">
                   <motion.div 
@@ -60,12 +62,12 @@ export default function AgentsGrid() {
 
                 <div className="space-y-3 mb-8 flex-grow">
                   {agent.capabilities.map((capability, capIndex) => (
-                    <motion.div 
+                    <motion.div
                       key={capIndex}
                       className="flex items-start gap-3"
                       initial={{ opacity: 0, x: -20 }}
-                      whileInView={{ opacity: 1, x: 0 }}
-                      transition={{ delay: capIndex * 0.1 }}
+                      animate={{ opacity: 1, x: 0 }}
+                      transition={{ delay: (index * 0.1) + (capIndex * 0.05) + 0.3 }}
                     >
                       <CheckCircle className={`w-5 h-5 text-${agent.color} flex-shrink-0 mt-0.5`} />
                       <span className="text-sm text-gray-300 dark:text-gray-400">
@@ -73,6 +75,21 @@ export default function AgentsGrid() {
                       </span>
                     </motion.div>
                   ))}
+                </div>
+
+                <div className="mt-auto">
+                  <Link href={`/agents/${agent.id}`}>
+                    <Button
+                      variant="secondary"
+                      size="sm"
+                      className="w-full group"
+                    >
+                      <span className="flex items-center justify-center gap-2">
+                        En savoir plus sur {agent.name}
+                        <ArrowRight className="w-4 h-4 group-hover:translate-x-1 transition-transform" />
+                      </span>
+                    </Button>
+                  </Link>
                 </div>
               </GlassCard>
             </FadeIn>

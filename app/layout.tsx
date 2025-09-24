@@ -10,8 +10,8 @@ const inter = Inter({
 })
 
 export const metadata: Metadata = {
-  title: 'Voipia - Agents Vocaux IA 24/7 | Louis, Arthur & Alexandra',
-  description: 'Transformez vos appels en opportunités avec nos agents vocaux IA. Louis pour les rappels de leads, Arthur pour la prospection, Alexandra comme standardiste. Performance garantie 24/7.',
+  title: 'Voipia - Agents Vocaux IA 24/7 | Louis & Arthur',
+  description: 'Transformez vos appels en opportunités avec nos agents vocaux IA. Louis pour les rappels de leads, Arthur pour la prospection. Performance garantie 24/7.',
   keywords: ['agent vocal IA', 'intelligence artificielle', 'prospection téléphonique', 'CRM', 'automatisation commerciale'],
   authors: [{ name: 'Voipia', url: 'https://voipia.fr' }],
   creator: 'Voipia',
@@ -33,7 +33,7 @@ export const metadata: Metadata = {
     url: 'https://voipia.fr',
     siteName: 'Voipia',
     title: 'Voipia - Agents Vocaux IA 24/7',
-    description: 'Transformez vos appels en opportunités avec Louis, Arthur & Alexandra - vos agents vocaux IA disponibles 24/7',
+    description: 'Transformez vos appels en opportunités avec Louis & Arthur - vos agents vocaux IA disponibles 24/7',
     images: [
       {
         url: '/og-image.jpg',
@@ -46,7 +46,7 @@ export const metadata: Metadata = {
   twitter: {
     card: 'summary_large_image',
     title: 'Voipia - Agents Vocaux IA 24/7',
-    description: 'Transformez vos appels en opportunités avec Louis, Arthur & Alexandra',
+    description: 'Transformez vos appels en opportunités avec Louis & Arthur',
     images: ['/twitter-image.jpg'],
   },
   icons: {

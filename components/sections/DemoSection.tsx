@@ -56,15 +56,6 @@ const conversations: Record<string, Record<string, Array<{ speaker: string; text
       { speaker: 'agent', text: 'Nos agents IA peuvent maintenant qualifier automatiquement vos prospects 24/7. Voulez-vous qu\'on en discute ?' }
     ]
   },
-  alexandra: {
-    'lead-callback': [
-      { speaker: 'agent', text: 'Bonjour, Voipia, Alexandra à votre écoute. Comment puis-je vous aider ?' },
-      { speaker: 'appelant', text: 'Bonjour, j\'aimerais parler à quelqu\'un au sujet de vos solutions IA.' },
-      { speaker: 'agent', text: 'Bien sûr ! Pour mieux vous orienter, s\'agit-il d\'une demande commerciale ou technique ?' },
-      { speaker: 'appelant', text: 'Plutôt commercial, j\'aimerais comprendre vos offres.' },
-      { speaker: 'agent', text: 'Parfait ! Je vais vous mettre en relation avec Louis, notre expert commercial. Un instant s\'il vous plaît.' }
-    ]
-  }
 }
 
 export default function DemoSection() {
@@ -127,7 +118,7 @@ export default function DemoSection() {
                 <h3 className="text-2xl font-bold text-white mb-4">
                   Choisissez votre agent
                 </h3>
-                <div className="grid grid-cols-1 sm:grid-cols-3 gap-4">
+                <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
                   {agents.map((agent) => (
                     <motion.button
                       key={agent.id}

@@ -41,7 +41,7 @@ export default function Hero() {
 
           <FadeIn delay={0.3}>
             <p className="text-xl sm:text-2xl text-gray-300 dark:text-gray-400 mb-12 max-w-3xl mx-auto">
-              Louis, Arthur et Alexandra transforment vos appels en opportunités. 
+              Louis et Arthur transforment vos appels en opportunités.
               Augmentez votre performance commerciale avec l&apos;IA conversationnelle.
             </p>
           </FadeIn>

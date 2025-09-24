@@ -30,22 +30,6 @@ export const agents = [
     ],
     stats: '31% de contacts réactivés',
     audioDemo: '/demos/arthur-demo.mp3'
-  },
-  {
-    id: 'alexandra',
-    name: 'Alexandra',
-    title: 'Standardiste IA',
-    color: 'alexandra',
-    gradient: 'from-alexandra to-green-600',
-    description: 'Votre réceptionniste virtuelle disponible 24/7',
-    capabilities: [
-      'Accueil professionnel de tous vos appels',
-      'Transfert intelligent vers le bon interlocuteur',
-      'Prise de messages détaillés',
-      'Gestion des urgences selon vos protocoles'
-    ],
-    stats: '24/7 disponibilité',
-    audioDemo: '/demos/alexandra-demo.mp3'
   }
 ]
 

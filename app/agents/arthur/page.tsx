@@ -59,7 +59,7 @@ export default function ArthurPage() {
           <div className="flex items-center gap-4 mb-8">
             <Link href="/" className="flex items-center gap-2 text-white/80 hover:text-white transition-colors">
               <ArrowLeft className="w-5 h-5" />
-              Retour à l'accueil
+              Retour à l&apos;accueil
             </Link>
           </div>
 
@@ -95,7 +95,7 @@ export default function ArthurPage() {
               <div>
                 <h2 className="text-2xl font-bold text-white mb-4">Mission</h2>
                 <p className="text-lg text-gray-300 leading-relaxed">
-                  Réactiver vos bases de contacts dormants et les travailler jusqu'à obtenir un statut final clair :
+                  Réactiver vos bases de contacts dormants et les travailler jusqu&apos;à obtenir un statut final clair :
                   rendez-vous, à recontacter ou lead mort.
                 </p>
               </div>
@@ -164,7 +164,7 @@ export default function ArthurPage() {
               <div className="w-10 h-10 rounded-lg bg-purple-500/20 flex items-center justify-center">
                 <Calendar className="w-5 h-5 text-purple-400" />
               </div>
-              <h3 className="text-2xl font-bold text-white">Ce que comprend l'activation d'Arthur</h3>
+              <h3 className="text-2xl font-bold text-white">Ce que comprend l&apos;activation d&apos;Arthur</h3>
             </div>
             <div className="grid md:grid-cols-2 gap-4">
               {included.map((item, index) => (
@@ -193,14 +193,14 @@ export default function ArthurPage() {
                   <Phone className="w-8 h-8 text-orange-400" />
                 </div>
                 <h4 className="text-lg font-semibold text-white mb-2">5 Appels</h4>
-                <p className="text-gray-400 text-sm">Tentatives d'appel personnalisées avec scripts adaptatifs</p>
+                <p className="text-gray-400 text-sm">Tentatives d&apos;appel personnalisées avec scripts adaptatifs</p>
               </div>
               <div className="text-center">
                 <div className="w-16 h-16 rounded-full bg-blue-500/20 flex items-center justify-center mx-auto mb-4">
                   <span className="text-blue-400 font-bold">SMS</span>
                 </div>
                 <h4 className="text-lg font-semibold text-white mb-2">2 SMS</h4>
-                <p className="text-gray-400 text-sm">Messages texte ciblés pour maintenir l'engagement</p>
+                <p className="text-gray-400 text-sm">Messages texte ciblés pour maintenir l&apos;engagement</p>
               </div>
               <div className="text-center">
                 <div className="w-16 h-16 rounded-full bg-purple-500/20 flex items-center justify-center mx-auto mb-4">
@@ -254,7 +254,7 @@ export default function ArthurPage() {
           <GlassCard className="p-8 mb-12">
             <h3 className="text-2xl font-bold text-white mb-6">Pourquoi chaque action est facturée ?</h3>
             <p className="text-gray-300 mb-4">
-              Chaque relance d'un lead dormant active un enchaînement complet :
+              Chaque relance d&apos;un lead dormant active un enchaînement complet :
             </p>
             <div className="grid md:grid-cols-2 gap-4">
               <div className="flex items-center gap-3">

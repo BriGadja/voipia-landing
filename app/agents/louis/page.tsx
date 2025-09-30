@@ -61,7 +61,7 @@ export default function LouisPage() {
           <div className="flex items-center gap-4 mb-8">
             <Link href="/" className="flex items-center gap-2 text-white/80 hover:text-white transition-colors">
               <ArrowLeft className="w-5 h-5" />
-              Retour à l'accueil
+              Retour à l&apos;accueil
             </Link>
           </div>
 
@@ -97,8 +97,8 @@ export default function LouisPage() {
               <div>
                 <h2 className="text-2xl font-bold text-white mb-4">Mission</h2>
                 <p className="text-lg text-gray-300 leading-relaxed">
-                  Rappeler instantanément (&lt;1 min) chaque lead entrant issu d'un formulaire, d'une publicité
-                  ou d'une landing page, et transformer ce contact en rendez-vous confirmé.
+                  Rappeler instantanément (&lt;1 min) chaque lead entrant issu d&apos;un formulaire, d&apos;une publicité
+                  ou d&apos;une landing page, et transformer ce contact en rendez-vous confirmé.
                 </p>
               </div>
             </div>
@@ -166,7 +166,7 @@ export default function LouisPage() {
               <div className="w-10 h-10 rounded-lg bg-purple-500/20 flex items-center justify-center">
                 <Calendar className="w-5 h-5 text-purple-400" />
               </div>
-              <h3 className="text-2xl font-bold text-white">Ce que comprend l'activation de Louis</h3>
+              <h3 className="text-2xl font-bold text-white">Ce que comprend l&apos;activation de Louis</h3>
             </div>
             <div className="grid md:grid-cols-2 gap-4">
               {included.map((item, index) => (

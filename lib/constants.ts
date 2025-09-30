@@ -96,3 +96,41 @@ export const chatbotConfig = {
   title: 'Assistant Voipia',
   subtitle: 'Découvrez nos agents IA'
 }
+
+export const calculatorDefaults = {
+  volume: {
+    perDay: 50,
+    perWeek: 350,
+    perMonth: 1500
+  },
+  averageCallDuration: 3,
+  pricing: {
+    perProcessing: 0.15,
+    perMinute: 0.08
+  },
+  additionalCosts: {
+    integration: 2000,
+    monthlyFee: 299
+  }
+}
+
+export const calculatorLimits = {
+  volume: {
+    max: 300000,
+    min: 0
+  },
+  duration: {
+    max: 30,
+    min: 0.5,
+    step: 0.5
+  },
+  pricing: {
+    maxPerCall: 50,
+    maxPerMinute: 5,
+    step: 0.01
+  },
+  costs: {
+    maxIntegration: 50000,
+    maxMonthly: 10000
+  }
+}

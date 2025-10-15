@@ -3,7 +3,7 @@
 import { useState, useEffect } from 'react'
 import { motion, AnimatePresence } from 'framer-motion'
 import Button from '@/components/ui/Button'
-import { Menu, X, ChevronDown, LayoutDashboard } from 'lucide-react'
+import { Menu, X, ChevronDown } from 'lucide-react'
 import Link from 'next/link'
 
 export default function Navigation() {
@@ -115,9 +115,8 @@ export default function Navigation() {
             <Link href="/login">
               <Button
                 size="sm"
-                className="bg-gradient-to-r from-blue-600 to-cyan-600 hover:from-blue-700 hover:to-cyan-700"
+                className="bg-gradient-to-r from-emerald-600 to-teal-600 hover:from-emerald-700 hover:to-teal-700"
               >
-                <LayoutDashboard className="w-4 h-4 mr-2" />
                 Accès Dashboard
               </Button>
             </Link>
@@ -180,16 +179,15 @@ export default function Navigation() {
                 <Link href="/login" onClick={() => setIsMobileMenuOpen(false)}>
                   <Button
                     size="sm"
-                    className="w-full bg-gradient-to-r from-blue-600 to-cyan-600 hover:from-blue-700 hover:to-cyan-700"
+                    className="w-full bg-gradient-to-r from-emerald-600 to-teal-600 hover:from-emerald-700 hover:to-teal-700"
                   >
-                    <LayoutDashboard className="w-4 h-4 mr-2" />
                     Accès Dashboard
                   </Button>
                 </Link>
                 <Button
                   size="sm"
                   className="w-full"
-                  onClick={() => window.open('https://forms.fillout.com/t/nU9QEqNRRRus', '_blank')}
+                  onClick={() => window.open('https://forms.fillout.com/t/nU9QEqNRRRRus', '_blank')}
                 >
                   Essayer gratuitement
                 </Button>

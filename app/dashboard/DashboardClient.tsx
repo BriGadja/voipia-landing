@@ -3,8 +3,9 @@
 import { useState, useEffect } from 'react'
 import { useQuery } from '@tanstack/react-query'
 import { subDays } from 'date-fns'
-import { Download, User } from 'lucide-react'
+import { Download, User, Loader2 } from 'lucide-react'
 import { createClient } from '@/lib/supabase/client'
+import { useRouter } from 'next/navigation'
 import { fetchKPIMetrics, fetchChartData, exportCallsToCSV } from '@/lib/queries/dashboard'
 import { DateRangeFilter } from '@/components/dashboard/Filters/DateRangeFilter'
 import { ClientAgentFilter } from '@/components/dashboard/Filters/ClientAgentFilter'
@@ -17,17 +18,40 @@ import { LogoutButton } from '@/components/auth/LogoutButton'
 
 export function DashboardClient() {
   const [userEmail, setUserEmail] = useState<string>('')
+  const [isLoading, setIsLoading] = useState(true)
   const supabase = createClient()
+  const router = useRouter()
 
   useEffect(() => {
-    const getUser = async () => {
+    const checkAuth = async () => {
       const { data: { user } } = await supabase.auth.getUser()
-      if (user) {
-        setUserEmail(user.email || '')
+
+      if (!user) {
+        // Si pas d'utilisateur, rediriger vers la page de login
+        router.push('/login')
+        return
       }
+
+      setUserEmail(user.email || '')
+      setIsLoading(false)
     }
-    getUser()
-  }, [])
+
+    checkAuth()
+
+    // Écouter les changements d'authentification
+    const { data: { subscription } } = supabase.auth.onAuthStateChange((event, session) => {
+      if (event === 'SIGNED_OUT') {
+        router.push('/login')
+      } else if (event === 'SIGNED_IN' && session?.user) {
+        setUserEmail(session.user.email || '')
+        setIsLoading(false)
+      }
+    })
+
+    return () => {
+      subscription.unsubscribe()
+    }
+  }, [supabase, router])
   const [startDate, setStartDate] = useState(subDays(new Date(), 30))
   const [endDate, setEndDate] = useState(new Date())
   const [selectedClientIds, setSelectedClientIds] = useState<string[]>([])
@@ -92,6 +116,18 @@ export function DashboardClient() {
     } finally {
       setIsExporting(false)
     }
+  }
+
+  // Afficher un écran de chargement pendant la vérification de l'authentification
+  if (isLoading) {
+    return (
+      <main className="min-h-screen flex items-center justify-center">
+        <div className="text-center">
+          <Loader2 className="w-8 h-8 text-white animate-spin mx-auto mb-4" />
+          <p className="text-white/60">Vérification de l&apos;authentification...</p>
+        </div>
+      </main>
+    )
   }
 
   return (

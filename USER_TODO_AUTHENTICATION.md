@@ -553,7 +553,7 @@ WHERE schemaname = 'public'
 - Vérifier les permissions de la function
 
 **Problème : Le profil n'est pas créé automatiquement**
-- Vérifier que le trigger existe :
+- Vérifier que le trigger existe :  
 ```sql
 SELECT * FROM information_schema.triggers WHERE trigger_name = 'on_auth_user_created';
 ```

@@ -148,6 +148,16 @@ export function LoginForm() {
             </motion.div>
           )}
 
+          {/* Forgot password link */}
+          <div className="text-right">
+            <a
+              href="/auth/reset-password"
+              className="text-sm text-purple-400 hover:text-purple-300 transition-colors"
+            >
+              Mot de passe oublié ?
+            </a>
+          </div>
+
           {/* Submit button */}
           <button
             type="submit"

@@ -83,7 +83,7 @@ export function LoginForm() {
             Connexion Dashboard
           </h1>
           <p className="text-white/60">
-            Accédez à vos statistiques d'agents IA
+            Accédez à vos statistiques d&apos;agents IA
           </p>
         </div>
 
@@ -171,12 +171,12 @@ export function LoginForm() {
         {/* Footer */}
         <div className="mt-6 text-center">
           <p className="text-sm text-white/60">
-            Vous n'avez pas de compte ?{' '}
+            Vous n&apos;avez pas de compte ?{' '}
             <a
               href="mailto:brice@voipia.fr"
               className="text-purple-400 hover:text-purple-300 transition-colors"
             >
-              Contactez l'administrateur
+              Contactez l&apos;administrateur
             </a>
           </p>
         </div>

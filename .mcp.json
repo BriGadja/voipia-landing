@@ -1,0 +1,16 @@
+{
+  "mcpServers": {
+    "supabase-voipia": {
+      "command": "C:\\Program Files\\nodejs\\npx.cmd",
+      "args": [
+        "-y",
+        "@supabase/mcp-server-supabase@latest",
+        "--read-only",
+        "--project-ref=tcpecjoeelbnnvdkvgvg"
+      ],
+      "env": {
+        "SUPABASE_ACCESS_TOKEN": "sbp_384510571e34a850b47ec80cd9ca5940ab854bc9"
+      }
+    }
+  }
+}

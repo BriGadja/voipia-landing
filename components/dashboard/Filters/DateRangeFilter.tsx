@@ -44,7 +44,7 @@ export function DateRangeFilter({
   }
 
   return (
-    <div className="flex flex-col gap-3">
+    <div className="flex flex-col gap-2">
       <div className="flex flex-wrap items-center gap-2">
         <DatePicker
           selected={startDate}
@@ -54,7 +54,7 @@ export function DateRangeFilter({
           endDate={endDate}
           dateFormat="dd/MM/yyyy"
           locale="fr"
-          className="px-3 py-2 border border-white/20 rounded-lg bg-black/20 text-white focus:outline-none focus:ring-2 focus:ring-purple-500"
+          className="px-2 py-1.5 text-sm border border-white/20 rounded-lg bg-black/20 text-white focus:outline-none focus:ring-2 focus:ring-purple-500"
           placeholderText="Date début"
         />
         <span className="text-white/60">→</span>
@@ -67,45 +67,45 @@ export function DateRangeFilter({
           minDate={startDate}
           dateFormat="dd/MM/yyyy"
           locale="fr"
-          className="px-3 py-2 border border-white/20 rounded-lg bg-black/20 text-white focus:outline-none focus:ring-2 focus:ring-purple-500"
+          className="px-2 py-1.5 text-sm border border-white/20 rounded-lg bg-black/20 text-white focus:outline-none focus:ring-2 focus:ring-purple-500"
           placeholderText="Date fin"
         />
       </div>
 
-      <div className="flex flex-wrap gap-2">
+      <div className="flex flex-wrap gap-1.5">
         <button
           onClick={() => handlePreset('today')}
-          className="px-3 py-1.5 text-sm border border-white/20 rounded-lg hover:bg-white/10 text-white transition-colors"
+          className="px-2 py-1 text-xs border border-white/20 rounded-lg hover:bg-white/10 text-white transition-colors"
         >
           Aujourd&apos;hui
         </button>
         <button
           onClick={() => handlePreset('last7Days')}
-          className="px-3 py-1.5 text-sm border border-white/20 rounded-lg hover:bg-white/10 text-white transition-colors"
+          className="px-2 py-1 text-xs border border-white/20 rounded-lg hover:bg-white/10 text-white transition-colors"
         >
           7 derniers jours
         </button>
         <button
           onClick={() => handlePreset('last30Days')}
-          className="px-3 py-1.5 text-sm border border-white/20 rounded-lg hover:bg-white/10 text-white transition-colors"
+          className="px-2 py-1 text-xs border border-white/20 rounded-lg hover:bg-white/10 text-white transition-colors"
         >
           30 derniers jours
         </button>
         <button
           onClick={() => handlePreset('thisMonth')}
-          className="px-3 py-1.5 text-sm border border-white/20 rounded-lg hover:bg-white/10 text-white transition-colors"
+          className="px-2 py-1 text-xs border border-white/20 rounded-lg hover:bg-white/10 text-white transition-colors"
         >
           Ce mois
         </button>
         <button
           onClick={() => handlePreset('lastMonth')}
-          className="px-3 py-1.5 text-sm border border-white/20 rounded-lg hover:bg-white/10 text-white transition-colors"
+          className="px-2 py-1 text-xs border border-white/20 rounded-lg hover:bg-white/10 text-white transition-colors"
         >
           Mois dernier
         </button>
         <button
           onClick={() => handlePreset('thisYear')}
-          className="px-3 py-1.5 text-sm border border-white/20 rounded-lg hover:bg-white/10 text-white transition-colors"
+          className="px-2 py-1 text-xs border border-white/20 rounded-lg hover:bg-white/10 text-white transition-colors"
         >
           Cette année
         </button>

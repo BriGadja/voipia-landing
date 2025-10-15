@@ -8,6 +8,7 @@ import {
   CartesianGrid,
   Tooltip,
   ResponsiveContainer,
+  Cell,
 } from 'recharts'
 
 interface OutcomeBreakdownProps {
@@ -31,6 +32,21 @@ const outcomeLabels: Record<string, string> = {
   do_not_call: 'Ne pas appeler',
 }
 
+// Palette de couleurs distinctes pour chaque résultat
+const colors = [
+  '#06b6d4', // cyan
+  '#8b5cf6', // violet
+  '#10b981', // emerald
+  '#f59e0b', // amber
+  '#ef4444', // red
+  '#ec4899', // pink
+  '#14b8a6', // teal
+  '#f97316', // orange
+  '#6366f1', // indigo
+  '#84cc16', // lime
+  '#a855f7', // purple
+]
+
 export function OutcomeBreakdown({ data }: OutcomeBreakdownProps) {
   const chartData = data
     .map((item) => ({
@@ -40,11 +56,11 @@ export function OutcomeBreakdown({ data }: OutcomeBreakdownProps) {
     .sort((a, b) => b.Appels - a.Appels)
 
   return (
-    <div className="bg-black/20 border border-white/20 rounded-xl p-6">
-      <h3 className="text-lg font-semibold text-white mb-4">
+    <div className="bg-black/20 border border-white/20 rounded-xl p-3">
+      <h3 className="text-sm font-semibold text-white mb-2">
         Résultats d&apos;appels
       </h3>
-      <ResponsiveContainer width="100%" height={320}>
+      <ResponsiveContainer width="100%" height={210}>
         <BarChart data={chartData}>
           <CartesianGrid strokeDasharray="3 3" stroke="rgba(255,255,255,0.1)" />
           <XAxis
@@ -64,7 +80,11 @@ export function OutcomeBreakdown({ data }: OutcomeBreakdownProps) {
               color: '#fff',
             }}
           />
-          <Bar dataKey="Appels" fill="#06b6d4" radius={[4, 4, 0, 0]} />
+          <Bar dataKey="Appels" radius={[4, 4, 0, 0]}>
+            {chartData.map((entry, index) => (
+              <Cell key={`cell-${index}`} fill={colors[index % colors.length]} />
+            ))}
+          </Bar>
         </BarChart>
       </ResponsiveContainer>
     </div>

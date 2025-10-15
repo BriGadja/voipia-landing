@@ -55,31 +55,31 @@ export function ClientAgentFilter({
   }
 
   return (
-    <div className="flex flex-col sm:flex-row gap-4">
-      <div className="w-full sm:w-64">
-        <label className="block text-sm font-medium text-white/80 mb-2">
-          Client
+    <div className="flex flex-col sm:flex-row gap-3">
+      <div className="w-full sm:w-56">
+        <label className="block text-xs font-medium text-white/80 mb-1.5">
+          Entreprise
         </label>
         <div className="relative">
           <select
             value={selectedClientIds[0] || 'all'}
             onChange={(e) => handleClientChange(e.target.value)}
             disabled={isLoadingClients}
-            className="w-full px-3 py-2 border border-white/20 rounded-lg bg-black/20 text-white focus:outline-none focus:ring-2 focus:ring-purple-500 appearance-none cursor-pointer disabled:opacity-50"
+            className="w-full px-2 py-1.5 text-sm border border-white/20 rounded-lg bg-black/20 text-white focus:outline-none focus:ring-2 focus:ring-purple-500 appearance-none cursor-pointer disabled:opacity-50 [&>option]:bg-black [&>option]:text-white"
           >
-            <option value="all">Tous les clients</option>
+            <option value="all">Toutes les entreprises</option>
             {clients?.map((client) => (
               <option key={client.id} value={client.id}>
                 {client.name}
               </option>
             ))}
           </select>
-          <ChevronDown className="absolute right-3 top-1/2 -translate-y-1/2 w-4 h-4 text-white/60 pointer-events-none" />
+          <ChevronDown className="absolute right-2 top-1/2 -translate-y-1/2 w-3 h-3 text-white/60 pointer-events-none" />
         </div>
       </div>
 
-      <div className="w-full sm:w-64">
-        <label className="block text-sm font-medium text-white/80 mb-2">
+      <div className="w-full sm:w-56">
+        <label className="block text-xs font-medium text-white/80 mb-1.5">
           Agent
         </label>
         <div className="relative">
@@ -87,7 +87,7 @@ export function ClientAgentFilter({
             value={selectedAgentIds[0] || 'all'}
             onChange={(e) => handleAgentChange(e.target.value)}
             disabled={isLoadingAgents || !agents || agents.length === 0}
-            className="w-full px-3 py-2 border border-white/20 rounded-lg bg-black/20 text-white focus:outline-none focus:ring-2 focus:ring-purple-500 appearance-none cursor-pointer disabled:opacity-50"
+            className="w-full px-2 py-1.5 text-sm border border-white/20 rounded-lg bg-black/20 text-white focus:outline-none focus:ring-2 focus:ring-purple-500 appearance-none cursor-pointer disabled:opacity-50 [&>option]:bg-black [&>option]:text-white"
           >
             <option value="all">Tous les agents</option>
             {agents?.map((agent) => (
@@ -96,7 +96,7 @@ export function ClientAgentFilter({
               </option>
             ))}
           </select>
-          <ChevronDown className="absolute right-3 top-1/2 -translate-y-1/2 w-4 h-4 text-white/60 pointer-events-none" />
+          <ChevronDown className="absolute right-2 top-1/2 -translate-y-1/2 w-3 h-3 text-white/60 pointer-events-none" />
         </div>
       </div>
     </div>

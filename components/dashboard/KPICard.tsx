@@ -57,6 +57,10 @@ export function KPICard({
     if (previousValue === undefined || typeof value === 'string') return null
 
     const numValue = typeof value === 'number' ? value : parseFloat(value)
+
+    // Si la valeur précédente est 0, on ne peut pas calculer de pourcentage
+    if (previousValue === 0) return null
+
     const change = ((numValue - previousValue) / previousValue) * 100
 
     if (Math.abs(change) < 0.1) return { value: 0, trend: 'neutral' }
@@ -79,11 +83,11 @@ export function KPICard({
       {/* Decoration bar */}
       <div className={`absolute top-0 left-0 right-0 h-1 ${decorationColors[decorationColor]}`} />
 
-      <div className="p-6">
+      <div className="p-4">
         <div className="flex items-start justify-between">
           <div className="flex-1">
             <p className="text-sm font-medium text-white/60 mb-1">{label}</p>
-            <p className="text-3xl font-bold text-white mb-2">
+            <p className="text-2xl font-bold text-white">
               {formatValue(value)}
             </p>
           </div>

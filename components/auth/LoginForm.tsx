@@ -68,6 +68,21 @@ export function LoginForm() {
       className="w-full max-w-md"
     >
       <div className="bg-black/40 backdrop-blur-xl border border-white/20 rounded-2xl p-8 shadow-2xl">
+        {/* Info banner for prospects */}
+        <div className="mb-6 p-4 bg-blue-500/10 border border-blue-500/30 rounded-lg">
+          <p className="text-sm text-blue-300 text-center">
+            <span className="font-semibold">Espace réservé aux clients.</span> Pas encore client ?{' '}
+            <a
+              href="https://forms.fillout.com/t/nU9QEqNRRRus"
+              target="_blank"
+              rel="noopener noreferrer"
+              className="underline hover:text-blue-200 transition-colors"
+            >
+              Découvrez nos solutions
+            </a>
+          </p>
+        </div>
+
         <div className="text-center mb-8">
           <motion.div
             initial={{ scale: 0.8 }}
@@ -179,16 +194,32 @@ export function LoginForm() {
         </form>
 
         {/* Footer */}
-        <div className="mt-6 text-center">
-          <p className="text-sm text-white/60">
-            Vous n&apos;avez pas de compte ?{' '}
+        <div className="mt-6 space-y-3">
+          <div className="text-center">
+            <p className="text-sm text-white/60">
+              Vous n&apos;avez pas de compte ?{' '}
+              <a
+                href="mailto:brice@voipia.fr"
+                className="text-purple-400 hover:text-purple-300 transition-colors"
+              >
+                Contactez l&apos;administrateur
+              </a>
+            </p>
+          </div>
+          <div className="text-center pt-3 border-t border-white/10">
+            <p className="text-xs text-white/40 mb-2">
+              Pas encore client ?
+            </p>
             <a
-              href="mailto:brice@voipia.fr"
-              className="text-purple-400 hover:text-purple-300 transition-colors"
+              href="https://forms.fillout.com/t/nU9QEqNRRRus"
+              target="_blank"
+              rel="noopener noreferrer"
+              className="inline-flex items-center gap-2 text-sm text-purple-400 hover:text-purple-300 transition-colors"
             >
-              Contactez l&apos;administrateur
+              <span>Essayer Voipia gratuitement</span>
+              <span>→</span>
             </a>
-          </p>
+          </div>
         </div>
       </div>
     </motion.div>

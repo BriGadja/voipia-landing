@@ -3,7 +3,7 @@
 import { useState, useEffect } from 'react'
 import { motion, AnimatePresence } from 'framer-motion'
 import Button from '@/components/ui/Button'
-import { Menu, X, ChevronDown, Calculator } from 'lucide-react'
+import { Menu, X, ChevronDown, LayoutDashboard } from 'lucide-react'
 import Link from 'next/link'
 
 export default function Navigation() {
@@ -112,17 +112,15 @@ export default function Navigation() {
           </div>
 
           <div className="hidden md:flex items-center gap-4">
-            <Button
-              variant="secondary"
-              size="sm"
-              onClick={() => {
-                const element = document.getElementById('roi-calculator')
-                element?.scrollIntoView({ behavior: 'smooth' })
-              }}
-            >
-              <Calculator className="w-4 h-4 mr-2" />
-              Calculer mon ROI
-            </Button>
+            <Link href="/login">
+              <Button
+                variant="secondary"
+                size="sm"
+              >
+                <LayoutDashboard className="w-4 h-4 mr-2" />
+                Accès Dashboard
+              </Button>
+            </Link>
             <Button
               size="sm"
               onClick={() => window.open('https://forms.fillout.com/t/nU9QEqNRRRus', '_blank')}
@@ -179,19 +177,16 @@ export default function Navigation() {
                 </div>
               ))}
               <div className="flex flex-col gap-2 pt-4 border-t border-white/10 mt-4">
-                <Button
-                  variant="secondary"
-                  size="sm"
-                  className="w-full"
-                  onClick={() => {
-                    const element = document.getElementById('roi-calculator')
-                    element?.scrollIntoView({ behavior: 'smooth' })
-                    setIsMobileMenuOpen(false)
-                  }}
-                >
-                  <Calculator className="w-4 h-4 mr-2" />
-                  Calculer mon ROI
-                </Button>
+                <Link href="/login" onClick={() => setIsMobileMenuOpen(false)}>
+                  <Button
+                    variant="secondary"
+                    size="sm"
+                    className="w-full"
+                  >
+                    <LayoutDashboard className="w-4 h-4 mr-2" />
+                    Accès Dashboard
+                  </Button>
+                </Link>
                 <Button
                   size="sm"
                   className="w-full"

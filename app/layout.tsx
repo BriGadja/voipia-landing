@@ -2,6 +2,7 @@ import type { Metadata } from 'next'
 import { Inter } from 'next/font/google'
 import './globals.css'
 import ClientChatbot from '@/components/chatbot/ClientChatbot'
+import { Providers } from './providers'
 
 const inter = Inter({ 
   subsets: ['latin'],
@@ -68,8 +69,10 @@ export default function RootLayout({
   return (
     <html lang="fr" className="dark">
       <body className={`${inter.variable} font-inter antialiased bg-black text-white min-h-screen`}>
-        {children}
-        <ClientChatbot />
+        <Providers>
+          {children}
+          <ClientChatbot />
+        </Providers>
       </body>
     </html>
   )

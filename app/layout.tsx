@@ -3,6 +3,7 @@ import { Inter } from 'next/font/google'
 import './globals.css'
 import ClientChatbot from '@/components/chatbot/ClientChatbot'
 import { Providers } from './providers'
+import { AuthHashHandler } from '@/components/auth/AuthHashHandler'
 
 const inter = Inter({ 
   subsets: ['latin'],
@@ -70,6 +71,7 @@ export default function RootLayout({
     <html lang="fr" className="dark">
       <body className={`${inter.variable} font-inter antialiased bg-black text-white min-h-screen`}>
         <Providers>
+          <AuthHashHandler />
           {children}
           <ClientChatbot />
         </Providers>

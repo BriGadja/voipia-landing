@@ -56,11 +56,11 @@ export function OutcomeBreakdown({ data }: OutcomeBreakdownProps) {
     .sort((a, b) => b.Appels - a.Appels)
 
   return (
-    <div className="bg-black/20 border border-white/20 rounded-xl p-3">
-      <h3 className="text-sm font-semibold text-white mb-2">
+    <div className="bg-black/20 border border-white/20 rounded-xl p-3 flex flex-col h-full">
+      <h3 className="text-sm font-semibold text-white mb-2 flex-shrink-0">
         Résultats d&apos;appels
       </h3>
-      <ResponsiveContainer width="100%" height={210}>
+      <ResponsiveContainer width="100%" height="100%">
         <BarChart data={chartData}>
           <CartesianGrid strokeDasharray="3 3" stroke="rgba(255,255,255,0.1)" />
           <XAxis

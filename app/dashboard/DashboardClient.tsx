@@ -131,9 +131,9 @@ export function DashboardClient() {
   }
 
   return (
-    <main className="min-h-screen p-3 max-w-[1600px] mx-auto">
+    <main className="h-screen p-3 max-w-[1600px] mx-auto flex flex-col overflow-hidden">
       {/* Header */}
-      <div className="mb-2.5 flex flex-col sm:flex-row justify-between items-start sm:items-center gap-2">
+      <div className="mb-3 flex flex-col sm:flex-row justify-between items-start sm:items-center gap-2 flex-shrink-0">
         <div>
           <h1 className="text-2xl font-bold text-white mb-0.5">
             Dashboard Analytics
@@ -149,7 +149,7 @@ export function DashboardClient() {
       </div>
 
       {/* Filters */}
-      <div className="mb-2.5 p-2.5 bg-black/20 border border-white/20 rounded-xl backdrop-blur-sm">
+      <div className="mb-3 p-2.5 bg-black/20 border border-white/20 rounded-xl backdrop-blur-sm flex-shrink-0">
         <div className="flex flex-col lg:flex-row gap-2.5 items-start lg:items-center justify-between">
           <DateRangeFilter
             startDate={startDate}
@@ -166,7 +166,7 @@ export function DashboardClient() {
 
       {/* KPI Cards */}
       {isLoadingKPIs ? (
-        <div className="grid grid-cols-1 sm:grid-cols-3 lg:grid-cols-5 gap-2.5 mb-2.5">
+        <div className="grid grid-cols-1 sm:grid-cols-3 lg:grid-cols-5 gap-2.5 mb-3 flex-shrink-0">
           {[...Array(5)].map((_, i) => (
             <div
               key={i}
@@ -175,7 +175,7 @@ export function DashboardClient() {
           ))}
         </div>
       ) : kpiData ? (
-        <div className="grid grid-cols-1 sm:grid-cols-3 lg:grid-cols-5 gap-2.5 mb-2.5">
+        <div className="grid grid-cols-1 sm:grid-cols-3 lg:grid-cols-5 gap-2.5 mb-3 flex-shrink-0">
           <KPICard
             label="Total Appels"
             value={kpiData.current_period.total_calls}
@@ -219,28 +219,28 @@ export function DashboardClient() {
         </div>
       ) : null}
 
-      {/* Charts */}
+      {/* Charts - Flex container pour remplir l'espace restant */}
       {isLoadingCharts ? (
-        <div className="grid grid-cols-1 lg:grid-cols-2 gap-2.5 mb-2.5">
+        <div className="grid grid-cols-1 lg:grid-cols-2 gap-3 flex-1 min-h-0">
           {[...Array(4)].map((_, i) => (
             <div
               key={i}
-              className="h-64 bg-black/20 border border-white/20 rounded-xl animate-pulse"
+              className="bg-black/20 border border-white/20 rounded-xl animate-pulse"
             />
           ))}
         </div>
       ) : chartData ? (
-        <>
-          <div className="grid grid-cols-1 lg:grid-cols-2 gap-2.5 mb-2.5">
+        <div className="flex-1 min-h-0 flex flex-col gap-3">
+          <div className="grid grid-cols-1 lg:grid-cols-2 gap-3 flex-1 min-h-0">
             <CallVolumeChart data={chartData.call_volume_by_day || []} />
             <EmotionDistribution data={chartData.emotion_distribution || []} />
           </div>
 
-          <div className="grid grid-cols-1 lg:grid-cols-2 gap-2.5">
+          <div className="grid grid-cols-1 lg:grid-cols-2 gap-3 flex-1 min-h-0">
             <OutcomeBreakdown data={chartData.outcome_distribution || []} />
             <VoicemailByAgent data={chartData.voicemail_by_agent || []} />
           </div>
-        </>
+        </div>
       ) : null}
     </main>
   )

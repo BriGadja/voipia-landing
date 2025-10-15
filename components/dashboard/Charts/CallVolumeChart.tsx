@@ -32,11 +32,11 @@ export function CallVolumeChart({ data }: CallVolumeChartProps) {
   }))
 
   return (
-    <div className="bg-black/20 border border-white/20 rounded-xl p-3">
-      <h3 className="text-sm font-semibold text-white mb-2">
+    <div className="bg-black/20 border border-white/20 rounded-xl p-3 flex flex-col h-full">
+      <h3 className="text-sm font-semibold text-white mb-2 flex-shrink-0">
         Volume d&apos;appels par jour
       </h3>
-      <ResponsiveContainer width="100%" height={210}>
+      <ResponsiveContainer width="100%" height="100%">
         <AreaChart data={chartData}>
           <defs>
             <linearGradient id="colorTotal" x1="0" y1="0" x2="0" y2="1">

@@ -63,11 +63,11 @@ export function EmotionDistribution({ data }: EmotionDistributionProps) {
   }
 
   return (
-    <div className="bg-black/20 border border-white/20 rounded-xl p-3">
-      <h3 className="text-sm font-semibold text-white mb-2">
+    <div className="bg-black/20 border border-white/20 rounded-xl p-3 flex flex-col h-full">
+      <h3 className="text-sm font-semibold text-white mb-2 flex-shrink-0">
         Distribution des émotions
       </h3>
-      <ResponsiveContainer width="100%" height={210}>
+      <ResponsiveContainer width="100%" height="100%">
         <PieChart>
           <Pie
             data={chartData}

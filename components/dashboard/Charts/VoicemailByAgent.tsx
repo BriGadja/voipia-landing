@@ -42,11 +42,11 @@ export function VoicemailByAgent({ data }: VoicemailByAgentProps) {
     .sort((a, b) => b['Taux de messagerie'] - a['Taux de messagerie'])
 
   return (
-    <div className="bg-black/20 border border-white/20 rounded-xl p-3">
-      <h3 className="text-sm font-semibold text-white mb-2">
+    <div className="bg-black/20 border border-white/20 rounded-xl p-3 flex flex-col h-full">
+      <h3 className="text-sm font-semibold text-white mb-2 flex-shrink-0">
         Taux de messagerie par agent
       </h3>
-      <ResponsiveContainer width="100%" height={210}>
+      <ResponsiveContainer width="100%" height="100%">
         <BarChart data={chartData} layout="vertical">
           <CartesianGrid strokeDasharray="3 3" stroke="rgba(255,255,255,0.1)" />
           <XAxis

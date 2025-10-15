@@ -114,8 +114,8 @@ export default function Navigation() {
           <div className="hidden md:flex items-center gap-4">
             <Link href="/login">
               <Button
-                variant="secondary"
                 size="sm"
+                className="bg-gradient-to-r from-blue-600 to-cyan-600 hover:from-blue-700 hover:to-cyan-700"
               >
                 <LayoutDashboard className="w-4 h-4 mr-2" />
                 Accès Dashboard
@@ -179,9 +179,8 @@ export default function Navigation() {
               <div className="flex flex-col gap-2 pt-4 border-t border-white/10 mt-4">
                 <Link href="/login" onClick={() => setIsMobileMenuOpen(false)}>
                   <Button
-                    variant="secondary"
                     size="sm"
-                    className="w-full"
+                    className="w-full bg-gradient-to-r from-blue-600 to-cyan-600 hover:from-blue-700 hover:to-cyan-700"
                   >
                     <LayoutDashboard className="w-4 h-4 mr-2" />
                     Accès Dashboard

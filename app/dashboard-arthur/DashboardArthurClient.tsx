@@ -6,17 +6,21 @@ import { subDays } from 'date-fns'
 import { Download, User, Loader2 } from 'lucide-react'
 import { createClient } from '@/lib/supabase/client'
 import { useRouter } from 'next/navigation'
-import { fetchKPIMetrics, fetchChartData, exportCallsToCSV } from '@/lib/queries/dashboard'
+import {
+  fetchArthurKPIMetrics,
+  fetchArthurChartData,
+  exportArthurCallsToCSV,
+} from '@/lib/queries/arthur'
 import { DateRangeFilter } from '@/components/dashboard/Filters/DateRangeFilter'
 import { ClientAgentFilter } from '@/components/dashboard/Filters/ClientAgentFilter'
 import { KPICard } from '@/components/dashboard/KPICard'
-import { CallVolumeChart } from '@/components/dashboard/Charts/CallVolumeChart'
-import { EmotionDistribution } from '@/components/dashboard/Charts/EmotionDistribution'
-import { OutcomeBreakdown } from '@/components/dashboard/Charts/OutcomeBreakdown'
-import { VoicemailByAgent } from '@/components/dashboard/Charts/VoicemailByAgent'
+import { CallVolumeChart } from '@/components/dashboard-arthur/Charts/CallVolumeChart'
+import { ConversionFunnelChart } from '@/components/dashboard-arthur/Charts/ConversionFunnelChart'
+import { OutcomeBreakdownChart } from '@/components/dashboard-arthur/Charts/OutcomeBreakdownChart'
+import { SegmentPerformanceChart } from '@/components/dashboard-arthur/Charts/SegmentPerformanceChart'
 import { LogoutButton } from '@/components/auth/LogoutButton'
 
-export function DashboardClient() {
+export function DashboardArthurClient() {
   const [userEmail, setUserEmail] = useState<string>('')
   const [isLoading, setIsLoading] = useState(true)
   const supabase = createClient()
@@ -24,10 +28,11 @@ export function DashboardClient() {
 
   useEffect(() => {
     const checkAuth = async () => {
-      const { data: { user } } = await supabase.auth.getUser()
+      const {
+        data: { user },
+      } = await supabase.auth.getUser()
 
       if (!user) {
-        // Si pas d'utilisateur, rediriger vers la page de login
         router.push('/login')
         return
       }
@@ -38,8 +43,9 @@ export function DashboardClient() {
 
     checkAuth()
 
-    // Écouter les changements d'authentification
-    const { data: { subscription } } = supabase.auth.onAuthStateChange((event, session) => {
+    const {
+      data: { subscription },
+    } = supabase.auth.onAuthStateChange((event, session) => {
       if (event === 'SIGNED_OUT') {
         router.push('/login')
       } else if (event === 'SIGNED_IN' && session?.user) {
@@ -52,35 +58,48 @@ export function DashboardClient() {
       subscription.unsubscribe()
     }
   }, [supabase, router])
+
   const [startDate, setStartDate] = useState(subDays(new Date(), 30))
   const [endDate, setEndDate] = useState(new Date())
   const [selectedClientIds, setSelectedClientIds] = useState<string[]>([])
-  const [selectedDeploymentIds, setSelectedDeploymentIds] = useState<string[]>([]) // ⚠️ CHANGED: agentIds → deploymentIds
+  const [selectedAgentIds, setSelectedAgentIds] = useState<string[]>([])
   const [isExporting, setIsExporting] = useState(false)
 
   const { data: kpiData, isLoading: isLoadingKPIs } = useQuery({
-    queryKey: ['kpi-metrics', startDate, endDate, selectedClientIds, selectedDeploymentIds],
+    queryKey: [
+      'arthur-kpi-metrics',
+      startDate,
+      endDate,
+      selectedClientIds,
+      selectedAgentIds,
+    ],
     queryFn: () =>
-      fetchKPIMetrics(
+      fetchArthurKPIMetrics(
         startDate,
         endDate,
         selectedClientIds[0] || null,
-        selectedDeploymentIds[0] || null // ⚠️ CHANGED: agentId → deploymentId
+        selectedAgentIds[0] || null
       ),
     refetchInterval: 3600000, // 1 hour
     staleTime: 3600000,
   })
 
   const { data: chartData, isLoading: isLoadingCharts } = useQuery({
-    queryKey: ['chart-data', startDate, endDate, selectedClientIds, selectedDeploymentIds],
+    queryKey: [
+      'arthur-chart-data',
+      startDate,
+      endDate,
+      selectedClientIds,
+      selectedAgentIds,
+    ],
     queryFn: () =>
-      fetchChartData(
+      fetchArthurChartData(
         startDate,
         endDate,
         selectedClientIds[0] || null,
-        selectedDeploymentIds[0] || null // ⚠️ CHANGED: agentId → deploymentId
+        selectedAgentIds[0] || null
       ),
-    refetchInterval: 3600000, // 1 hour
+    refetchInterval: 3600000,
     staleTime: 3600000,
   })
 
@@ -91,40 +110,40 @@ export function DashboardClient() {
 
   const handleFilterChange = (clientIds: string[], agentIds: string[]) => {
     setSelectedClientIds(clientIds)
-    setSelectedDeploymentIds(agentIds) // ⚠️ Note: agentIds est en fait deploymentIds maintenant
+    setSelectedAgentIds(agentIds)
   }
 
   const handleExport = async () => {
     try {
       setIsExporting(true)
-      const csv = await exportCallsToCSV(
+      const csv = await exportArthurCallsToCSV(
         startDate,
         endDate,
         selectedClientIds[0] || null,
-        selectedDeploymentIds[0] || null // ⚠️ CHANGED: agentId → deploymentId
+        selectedAgentIds[0] || null
       )
 
-      // Create and download file
       const blob = new Blob([csv], { type: 'text/csv;charset=utf-8;' })
       const link = document.createElement('a')
       link.href = URL.createObjectURL(blob)
-      link.download = `voipia-calls-export-${new Date().toISOString().split('T')[0]}.csv`
+      link.download = `arthur-calls-export-${new Date().toISOString().split('T')[0]}.csv`
       link.click()
     } catch (error) {
       console.error('Error exporting data:', error)
-      alert('Erreur lors de l\'export des données')
+      alert("Erreur lors de l'export des données")
     } finally {
       setIsExporting(false)
     }
   }
 
-  // Afficher un écran de chargement pendant la vérification de l'authentification
   if (isLoading) {
     return (
       <main className="min-h-screen flex items-center justify-center">
         <div className="text-center">
           <Loader2 className="w-8 h-8 text-white animate-spin mx-auto mb-4" />
-          <p className="text-white/60">Vérification de l&apos;authentification...</p>
+          <p className="text-white/60">
+            Vérification de l&apos;authentification...
+          </p>
         </div>
       </main>
     )
@@ -136,12 +155,13 @@ export function DashboardClient() {
       <div className="mb-3 flex flex-col sm:flex-row justify-between items-start sm:items-center gap-2 flex-shrink-0">
         <div>
           <h1 className="text-2xl font-bold text-white mb-0.5">
-            Dashboard Analytics
+            Dashboard Arthur - Réactivation
           </h1>
           <div className="flex items-center gap-2 text-white/60">
             <User className="w-3.5 h-3.5" />
             <p className="text-xs">
-              Connecté en tant que <span className="text-white/80 font-medium">{userEmail}</span>
+              Connecté en tant que{' '}
+              <span className="text-white/80 font-medium">{userEmail}</span>
             </p>
           </div>
         </div>
@@ -156,11 +176,21 @@ export function DashboardClient() {
             endDate={endDate}
             onChange={handleDateChange}
           />
-          <ClientAgentFilter
-            selectedClientIds={selectedClientIds}
-            selectedAgentIds={selectedDeploymentIds} // ⚠️ Note: agentIds = deploymentIds maintenant
-            onChange={handleFilterChange}
-          />
+          <div className="flex items-center gap-2.5">
+            <ClientAgentFilter
+              selectedClientIds={selectedClientIds}
+              selectedAgentIds={selectedAgentIds}
+              onChange={handleFilterChange}
+            />
+            <button
+              onClick={handleExport}
+              disabled={isExporting}
+              className="flex items-center gap-2 px-3 py-1.5 text-sm bg-violet-600 hover:bg-violet-700 disabled:opacity-50 text-white rounded-lg transition-colors"
+            >
+              <Download className="w-4 h-4" />
+              {isExporting ? 'Export...' : 'Export CSV'}
+            </button>
+          </div>
         </div>
       </div>
 
@@ -177,41 +207,49 @@ export function DashboardClient() {
       ) : kpiData ? (
         <div className="grid grid-cols-1 sm:grid-cols-3 lg:grid-cols-5 gap-2.5 mb-3 flex-shrink-0">
           <KPICard
-            label="Total Appels"
-            value={kpiData.current_period.total_calls}
-            previousValue={kpiData.previous_period.total_calls || undefined}
-            format="number"
-            decorationColor="blue"
+            label="Taux de Réactivation"
+            value={kpiData.current_period.reactivation_rate}
+            previousValue={kpiData.previous_period.reactivation_rate || undefined}
+            format="percentage"
+            decorationColor="emerald"
             delay={0}
           />
           <KPICard
-            label="Taux de Décroché"
-            value={kpiData.current_period.answer_rate}
-            previousValue={kpiData.previous_period.answer_rate || undefined}
-            format="percentage"
-            decorationColor="emerald"
+            label="Coût par Conversion"
+            value={kpiData.current_period.cost_per_conversion}
+            previousValue={
+              kpiData.previous_period.cost_per_conversion || undefined
+            }
+            format="currency"
+            decorationColor="blue"
             delay={0.05}
           />
           <KPICard
-            label="Durée Moyenne"
-            value={kpiData.current_period.avg_duration}
-            previousValue={kpiData.previous_period.avg_duration || undefined}
+            label="Durée Moy./Tentative"
+            value={kpiData.current_period.avg_duration_per_attempt}
+            previousValue={
+              kpiData.previous_period.avg_duration_per_attempt || undefined
+            }
             format="duration"
             decorationColor="amber"
             delay={0.1}
           />
           <KPICard
-            label="RDV Pris"
+            label="RDV Planifiés"
             value={kpiData.current_period.appointments_scheduled}
-            previousValue={kpiData.previous_period.appointments_scheduled || undefined}
+            previousValue={
+              kpiData.previous_period.appointments_scheduled || undefined
+            }
             format="number"
             decorationColor="violet"
             delay={0.15}
           />
           <KPICard
-            label="Taux de Conversion"
-            value={kpiData.current_period.conversion_rate}
-            previousValue={kpiData.previous_period.conversion_rate || undefined}
+            label="Taux Décroché T1"
+            value={kpiData.current_period.answer_rate_attempt_1}
+            previousValue={
+              kpiData.previous_period.answer_rate_attempt_1 || undefined
+            }
             format="percentage"
             decorationColor="blue"
             delay={0.2}
@@ -219,7 +257,7 @@ export function DashboardClient() {
         </div>
       ) : null}
 
-      {/* Charts - Flex container pour remplir l'espace restant */}
+      {/* Charts */}
       {isLoadingCharts ? (
         <div className="grid grid-cols-1 lg:grid-cols-2 gap-3 flex-1 min-h-0">
           {[...Array(4)].map((_, i) => (
@@ -233,12 +271,16 @@ export function DashboardClient() {
         <div className="flex-1 min-h-0 flex flex-col gap-3">
           <div className="grid grid-cols-1 lg:grid-cols-2 gap-3 flex-1 min-h-0">
             <CallVolumeChart data={chartData.call_volume_by_day || []} />
-            <EmotionDistribution data={chartData.emotion_distribution || []} />
+            <ConversionFunnelChart data={chartData.conversion_funnel || []} />
           </div>
 
           <div className="grid grid-cols-1 lg:grid-cols-2 gap-3 flex-1 min-h-0">
-            <OutcomeBreakdown data={chartData.outcome_distribution || []} />
-            <VoicemailByAgent data={chartData.voicemail_by_agent || []} />
+            <OutcomeBreakdownChart
+              data={chartData.outcome_distribution || []}
+            />
+            <SegmentPerformanceChart
+              data={chartData.segment_performance || []}
+            />
           </div>
         </div>
       ) : null}

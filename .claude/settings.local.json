@@ -41,8 +41,45 @@
       "WebFetch(domain:raw.githubusercontent.com)",
       "mcp__gdrive__gdrive_read_file",
       "mcp__gdrive__gdrive_search",
-      "mcp__playwright__browser_hover"
+      "mcp__playwright__browser_hover",
+      "Bash(npm install:*)",
+      "Bash(netstat:*)",
+      "Bash(findstr:*)",
+      "Bash(taskkill:*)",
+      "Bash(timeout:*)",
+      "Bash(git log:*)",
+      "mcp__supabase-voipia__query",
+      "mcp__supabase-voipia__list_tables",
+      "mcp__supabase-voipia__get_table_schema",
+      "mcp__supabase-voipia__list_resources",
+      "Bash(npx:*)",
+      "mcp__supabase-voipia__execute_sql",
+      "SlashCommand(/generate-prp \"Dashboard dynamique pour afficher les données d'appels avec filtres de date et client, KPIs animés (taux de conversion, coût par acquisition, durée moyenne, ROI), graphiques interactifs (évolution temporelle, distribution des outcomes, performance par client), design moderne avec glassmorphism et gradients, responsive, et export de données en CSV\")",
+      "WebSearch",
+      "Bash(mkdir:*)",
+      "Bash(git fetch:*)",
+      "Bash(xcopy:*)",
+      "Bash(copy componentssectionsDashboard.tsx dashboard-backup-2025-10-15 )",
+      "Bash(copy DASHBOARD_SETUP.md dashboard-backup-2025-10-15 )",
+      "Bash(copy PRPsdashboard.md dashboard-backup-2025-10-15)",
+      "Bash(cp:*)",
+      "Bash(git restore:*)",
+      "mcp__supabase-voipia__list_migrations",
+      "Bash(test:*)",
+      "mcp__MCP_DOCKER__get_me",
+      "mcp__MCP_DOCKER__list_workflows",
+      "Bash(tasklist:*)",
+      "mcp__MCP_DOCKER__sequentialthinking",
+      "mcp__supabase-voipia__apply_migration",
+      "Bash(python:*)",
+      "Bash(dir:*)",
+      "Bash(tee:*)",
+      "Bash(cat:*)"
     ],
     "deny": []
-  }
+  },
+  "enableAllProjectMcpServers": true,
+  "enabledMcpjsonServers": [
+    "supabase-voipia"
+  ]
 }

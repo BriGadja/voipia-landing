@@ -5,7 +5,7 @@ export async function fetchKPIMetrics(
   startDate: Date,
   endDate: Date,
   clientId?: string | null,
-  agentId?: string | null
+  deploymentId?: string | null
 ): Promise<KPIMetrics> {
   const supabase = createClient()
 
@@ -13,7 +13,7 @@ export async function fetchKPIMetrics(
     p_start_date: startDate.toISOString(),
     p_end_date: endDate.toISOString(),
     p_client_id: clientId || null,
-    p_agent_id: agentId || null,
+    p_deployment_id: deploymentId || null, // ⚠️ CHANGED: p_agent_id → p_deployment_id
   })
 
   if (error) {
@@ -28,7 +28,7 @@ export async function fetchChartData(
   startDate: Date,
   endDate: Date,
   clientId?: string | null,
-  agentId?: string | null
+  deploymentId?: string | null
 ): Promise<ChartData> {
   const supabase = createClient()
 
@@ -36,7 +36,7 @@ export async function fetchChartData(
     p_start_date: startDate.toISOString(),
     p_end_date: endDate.toISOString(),
     p_client_id: clientId || null,
-    p_agent_id: agentId || null,
+    p_deployment_id: deploymentId || null, // ⚠️ CHANGED: p_agent_id → p_deployment_id
   })
 
   if (error) {
@@ -63,13 +63,20 @@ export async function fetchClients(): Promise<Client[]> {
   return data
 }
 
+// ⚠️ CHANGED: Récupère les deployments Louis au lieu des agents
 export async function fetchAgents(clientIds?: string[]): Promise<Agent[]> {
   const supabase = createClient()
 
   let query = supabase
-    .from('agents')
-    .select('*')
+    .from('agent_deployments')
+    .select(`
+      id,
+      name,
+      client_id,
+      agent_types!inner(name)
+    `)
     .eq('status', 'active')
+    .eq('agent_types.name', 'louis') // Filtre Louis uniquement
     .order('name')
 
   if (clientIds && clientIds.length > 0) {
@@ -79,38 +86,45 @@ export async function fetchAgents(clientIds?: string[]): Promise<Agent[]> {
   const { data, error } = await query
 
   if (error) {
-    console.error('Error fetching agents:', error)
+    console.error('Error fetching agent deployments:', error)
     throw error
   }
 
-  return data
+  // Retourner les deployments avec le même format que les agents
+  return data as Agent[]
 }
 
 export async function exportCallsToCSV(
   startDate: Date,
   endDate: Date,
   clientId?: string | null,
-  agentId?: string | null
+  deploymentId?: string | null
 ): Promise<string> {
   const supabase = createClient()
 
+  // ⚠️ CHANGED: Query agent_calls avec JOINs
   let query = supabase
-    .from('calls')
+    .from('agent_calls')
     .select(`
       *,
-      clients(name),
-      agents(name)
+      agent_deployments!inner(
+        name,
+        client_id,
+        clients(name),
+        agent_types!inner(name)
+      )
     `)
     .gte('started_at', startDate.toISOString())
     .lte('started_at', endDate.toISOString())
+    .eq('agent_deployments.agent_types.name', 'louis') // Filtre Louis uniquement
     .order('started_at', { ascending: false })
 
   if (clientId) {
-    query = query.eq('client_id', clientId)
+    query = query.eq('agent_deployments.client_id', clientId)
   }
 
-  if (agentId) {
-    query = query.eq('agent_id', agentId)
+  if (deploymentId) {
+    query = query.eq('deployment_id', deploymentId)
   }
 
   const { data, error } = await query
@@ -124,7 +138,7 @@ export async function exportCallsToCSV(
   const headers = [
     'Date',
     'Client',
-    'Agent',
+    'Agent Deployment',
     'First Name',
     'Last Name',
     'Phone',
@@ -138,18 +152,18 @@ export async function exportCallsToCSV(
 
   const rows = data.map((call: any) => [
     new Date(call.started_at).toLocaleString('fr-FR'),
-    call.clients?.name || '',
-    call.agents?.name || '',
+    call.agent_deployments?.clients?.name || '',
+    call.agent_deployments?.name || '',
     call.first_name || '',
     call.last_name || '',
-    call.phone || '',
+    call.phone_number || '', // ⚠️ CHANGED: phone → phone_number
     call.email || '',
     call.duration_seconds || '',
     call.cost ? call.cost.toFixed(2) : '',
-    call.call_outcome || '',
+    call.outcome || '', // ⚠️ CHANGED: call_outcome → outcome
     call.emotion || '',
-    call.appointment_scheduled_at
-      ? new Date(call.appointment_scheduled_at).toLocaleString('fr-FR')
+    call.metadata?.appointment_scheduled_at // ⚠️ CHANGED: colonne → metadata
+      ? new Date(call.metadata.appointment_scheduled_at).toLocaleString('fr-FR')
       : '',
   ])
 

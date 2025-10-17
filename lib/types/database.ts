@@ -115,3 +115,10 @@ export interface DashboardFilters {
   clientIds: string[]
   agentIds: string[]
 }
+
+// Type pour les déploiements d'agents retournés par fetchAgents
+export interface AgentDeploymentListItem {
+  id: string
+  name: string
+  client_id: string
+}

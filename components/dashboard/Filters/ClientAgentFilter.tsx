@@ -36,6 +36,7 @@ export function ClientAgentFilter({
         onChange(selectedClientIds, newAgentIds)
       }
     }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [selectedClientIds, agents])
 
   const handleClientChange = (clientId: string) => {

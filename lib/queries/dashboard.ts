@@ -1,5 +1,5 @@
 import { createClient } from '@/lib/supabase/client'
-import type { KPIMetrics, ChartData, Client, Agent } from '@/lib/types/database'
+import type { KPIMetrics, ChartData, Client, AgentDeploymentListItem } from '@/lib/types/database'
 
 export async function fetchKPIMetrics(
   startDate: Date,
@@ -64,7 +64,7 @@ export async function fetchClients(): Promise<Client[]> {
 }
 
 // ⚠️ CHANGED: Récupère les deployments Louis au lieu des agents
-export async function fetchAgents(clientIds?: string[]): Promise<Agent[]> {
+export async function fetchAgents(clientIds?: string[]): Promise<AgentDeploymentListItem[]> {
   const supabase = createClient()
 
   let query = supabase
@@ -90,8 +90,12 @@ export async function fetchAgents(clientIds?: string[]): Promise<Agent[]> {
     throw error
   }
 
-  // Retourner les deployments avec le même format que les agents
-  return data as Agent[]
+  // Mapper pour retourner seulement les champs nécessaires
+  return data.map(({ id, name, client_id }) => ({
+    id,
+    name,
+    client_id,
+  }))
 }
 
 export async function exportCallsToCSV(

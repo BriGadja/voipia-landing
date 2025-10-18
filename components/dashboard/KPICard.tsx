@@ -5,7 +5,7 @@ import { TrendingUp, TrendingDown, Minus } from 'lucide-react'
 
 interface KPICardProps {
   label: string
-  value: string | number
+  value: string | number | undefined
   previousValue?: number
   format?: 'number' | 'currency' | 'percentage' | 'duration'
   decorationColor?: 'blue' | 'emerald' | 'amber' | 'red' | 'violet'
@@ -36,7 +36,8 @@ export function KPICard({
   decorationColor = 'blue',
   delay = 0,
 }: KPICardProps) {
-  const formatValue = (val: number | string): string => {
+  const formatValue = (val: number | string | undefined): string => {
+    if (val === undefined || val === null) return '—'
     if (typeof val === 'string') return val
 
     switch (format) {
@@ -54,7 +55,7 @@ export function KPICard({
   }
 
   const calculateDelta = (): { value: number; trend: 'up' | 'down' | 'neutral' } | null => {
-    if (previousValue === undefined || typeof value === 'string') return null
+    if (previousValue === undefined || typeof value === 'string' || value === undefined) return null
 
     const numValue = typeof value === 'number' ? value : parseFloat(value)
 

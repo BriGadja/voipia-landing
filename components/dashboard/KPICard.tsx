@@ -8,7 +8,7 @@ interface KPICardProps {
   value: string | number | undefined
   previousValue?: number
   format?: 'number' | 'currency' | 'percentage' | 'duration'
-  decorationColor?: 'blue' | 'emerald' | 'amber' | 'red' | 'violet'
+  decorationColor?: 'blue' | 'emerald' | 'amber' | 'red' | 'violet' | 'teal'
   delay?: number
 }
 
@@ -18,6 +18,7 @@ const colorClasses = {
   amber: 'from-amber-500/20 to-amber-500/5 border-amber-500/30',
   red: 'from-red-500/20 to-red-500/5 border-red-500/30',
   violet: 'from-violet-500/20 to-violet-500/5 border-violet-500/30',
+  teal: 'from-teal-500/20 to-teal-500/5 border-teal-500/30',
 }
 
 const decorationColors = {
@@ -26,6 +27,7 @@ const decorationColors = {
   amber: 'bg-amber-500',
   red: 'bg-red-500',
   violet: 'bg-violet-500',
+  teal: 'bg-teal-500',
 }
 
 export function KPICard({

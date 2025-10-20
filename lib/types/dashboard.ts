@@ -60,6 +60,7 @@ export interface ChartData {
   emotion_distribution?: EmotionData[]
   agent_type_performance?: AgentTypePerformance[]
   top_clients?: TopClientData[]
+  voicemail_by_agent?: VoicemailByAgentData[]
 }
 
 /**
@@ -94,6 +95,14 @@ export interface EmotionData {
   emotion: 'positive' | 'neutral' | 'negative' | 'unknown'
   count: number
   percentage: number                     // 0-100
+}
+
+/**
+ * Voicemail by agent data point (for horizontal bar chart)
+ */
+export interface VoicemailByAgentData {
+  agent: string
+  rate: number                           // 0-100
 }
 
 /**

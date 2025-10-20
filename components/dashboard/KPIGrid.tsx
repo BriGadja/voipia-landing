@@ -38,6 +38,45 @@ export function KPIGrid({ data, isLoading, agentType = 'global' }: KPIGridProps)
 
   const { current_period, previous_period } = data
 
+  // Louis Original Dashboard - 5 KPIs specifiques
+  const louisOriginalKPIs = [
+    {
+      label: 'Total Appels',
+      value: current_period.total_calls,
+      previousValue: previous_period.total_calls,
+      format: 'number' as const,
+      decorationColor: 'blue' as const, // cyan #06b6d4
+    },
+    {
+      label: 'Taux de Décroché',
+      value: current_period.answer_rate,
+      previousValue: previous_period.answer_rate,
+      format: 'percentage' as const,
+      decorationColor: 'teal' as const, // teal #14b8a6
+    },
+    {
+      label: 'Durée Moyenne',
+      value: current_period.avg_duration,
+      previousValue: previous_period.avg_duration,
+      format: 'duration' as const,
+      decorationColor: 'amber' as const, // amber #f59e0b
+    },
+    {
+      label: 'RDV Pris',
+      value: current_period.appointments_scheduled,
+      previousValue: previous_period.appointments_scheduled,
+      format: 'number' as const,
+      decorationColor: 'violet' as const, // violet #8b5cf6
+    },
+    {
+      label: 'Taux de Conversion',
+      value: current_period.conversion_rate,
+      previousValue: previous_period.conversion_rate,
+      format: 'percentage' as const,
+      decorationColor: 'blue' as const, // cyan #06b6d4
+    },
+  ]
+
   // Core KPIs (all dashboards)
   const coreKPIs = [
     {
@@ -188,15 +227,21 @@ export function KPIGrid({ data, isLoading, agentType = 'global' }: KPIGridProps)
   ] : []
 
   // Combine KPIs based on agent type
-  const allKPIs = [
-    ...coreKPIs,
-    ...(agentType === 'louis' ? louisKPIs : []),
-    ...(agentType === 'arthur' ? arthurKPIs : []),
-    ...(agentType === 'global' ? globalKPIs : []),
-  ]
+  const allKPIs = agentType === 'louis'
+    ? louisOriginalKPIs  // Use simplified 5 KPIs for Louis
+    : [
+        ...coreKPIs,
+        ...(agentType === 'arthur' ? arthurKPIs : []),
+        ...(agentType === 'global' ? globalKPIs : []),
+      ]
+
+  // Grid columns: 5 for Louis (5 KPIs), 4 for others
+  const gridCols = agentType === 'louis'
+    ? 'grid-cols-1 md:grid-cols-3 lg:grid-cols-5'
+    : 'grid-cols-1 md:grid-cols-2 lg:grid-cols-4'
 
   return (
-    <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
+    <div className={`grid ${gridCols} gap-6`}>
       {allKPIs.map((kpi, index) => (
         <KPICard
           key={kpi.label}

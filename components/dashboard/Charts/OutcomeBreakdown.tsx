@@ -19,12 +19,12 @@ interface OutcomeBreakdownProps {
 }
 
 const outcomeLabels: Record<string, string> = {
-  appointment_scheduled: 'RDV pris',
+  appointment_scheduled: 'RDV PRIS',
   appointment_refused: 'RDV refusé',
   not_interested: 'Pas intéressé',
   callback_requested: 'Rappel demandé',
   voicemail: 'Messagerie',
-  too_short: 'Trop court',
+  too_short: 'TOO_CONF',
   no_answer: 'Pas de réponse',
   busy: 'Occupé',
   invalid_number: 'Numéro invalide',
@@ -32,7 +32,15 @@ const outcomeLabels: Record<string, string> = {
   do_not_call: 'Ne pas appeler',
 }
 
-// Palette de couleurs distinctes pour chaque résultat
+// Couleurs spécifiques pour chaque résultat (Louis Dashboard)
+const outcomeColors: Record<string, string> = {
+  'Messagerie': '#06b6d4',    // cyan
+  'RDV refusé': '#8b5cf6',    // violet
+  'TOO_CONF': '#10b981',      // emerald
+  'RDV PRIS': '#f59e0b',      // amber/orange
+}
+
+// Fallback colors for other outcomes
 const colors = [
   '#06b6d4', // cyan
   '#8b5cf6', // violet
@@ -48,7 +56,11 @@ const colors = [
 ]
 
 export function OutcomeBreakdown({ data }: OutcomeBreakdownProps) {
+  // Filter to show only 4 specific outcomes for Louis dashboard
+  const specificOutcomes = ['voicemail', 'appointment_refused', 'too_short', 'appointment_scheduled']
+
   const chartData = data
+    .filter((item) => specificOutcomes.includes(item.outcome))
     .map((item) => ({
       outcome: outcomeLabels[item.outcome] || item.outcome,
       Appels: item.count,
@@ -82,7 +94,7 @@ export function OutcomeBreakdown({ data }: OutcomeBreakdownProps) {
           />
           <Bar dataKey="Appels" radius={[4, 4, 0, 0]}>
             {chartData.map((entry, index) => (
-              <Cell key={`cell-${index}`} fill={colors[index % colors.length]} />
+              <Cell key={`cell-${index}`} fill={outcomeColors[entry.outcome] || colors[index % colors.length]} />
             ))}
           </Bar>
         </BarChart>

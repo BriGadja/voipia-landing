@@ -51,7 +51,7 @@ export function LouisDashboardClient({ userEmail }: LouisDashboardClientProps) {
       <DashboardHeader userEmail={userEmail} title="Dashboard Analytics" />
 
       {/* Main Content */}
-      <div className="container mx-auto px-4 py-8 space-y-8">
+      <div className="container mx-auto px-4 py-4 space-y-4">
         {/* Filters Row */}
         <div className="flex flex-col lg:flex-row gap-4 items-start lg:items-center justify-between">
           <div className="flex flex-col sm:flex-row gap-4 w-full lg:w-auto">
@@ -78,23 +78,23 @@ export function LouisDashboardClient({ userEmail }: LouisDashboardClientProps) {
         <KPIGrid data={kpiData} isLoading={isLoadingKPIs} agentType="louis" />
 
         {/* Charts Grid - 2x2 */}
-        <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
-          <div className="h-[400px]">
+        <div className="grid grid-cols-1 lg:grid-cols-2 gap-4">
+          <div className="h-[320px]">
             <CallVolumeChart
               data={chartData?.call_volume_by_day || []}
             />
           </div>
-          <div className="h-[400px]">
+          <div className="h-[320px]">
             <EmotionDistribution
               data={chartData?.emotion_distribution || []}
             />
           </div>
-          <div className="h-[400px]">
+          <div className="h-[320px]">
             <OutcomeBreakdown
               data={chartData?.outcome_distribution || []}
             />
           </div>
-          <div className="h-[400px]">
+          <div className="h-[320px]">
             <VoicemailByAgent
               data={chartData?.voicemail_by_agent || []}
             />

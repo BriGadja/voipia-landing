@@ -21,6 +21,7 @@ export async function fetchLouisKPIMetrics(
     p_end_date: filters.endDate,
     p_client_id: filters.clientIds.length === 1 ? filters.clientIds[0] : null,
     p_deployment_id: filters.deploymentId || null,
+    p_agent_type_name: 'louis', // CRITICAL: Only show Louis data
   })
 
   if (error) {
@@ -46,6 +47,7 @@ export async function fetchLouisChartData(
     p_end_date: filters.endDate,
     p_client_id: filters.clientIds.length === 1 ? filters.clientIds[0] : null,
     p_deployment_id: filters.deploymentId || null,
+    p_agent_type_name: 'louis', // CRITICAL: Only show Louis data
   })
 
   if (error) {

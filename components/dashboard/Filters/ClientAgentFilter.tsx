@@ -16,10 +16,26 @@ export function ClientAgentFilter({
   onChange,
 }: ClientAgentFilterProps) {
   // Fetch all accessible clients
-  const { data: clients, isLoading: isLoadingClients } = useAccessibleClients()
+  const { data: clientsRaw, isLoading: isLoadingClients } = useAccessibleClients()
+
+  // Deduplicate clients by client_id (in case the view returns duplicates)
+  const clients = clientsRaw?.reduce((acc, client) => {
+    if (!acc.find((c) => c.client_id === client.client_id)) {
+      acc.push(client)
+    }
+    return acc
+  }, [] as typeof clientsRaw)
 
   // Fetch ALL accessible agents (regardless of client selection)
-  const { data: allAgents, isLoading: isLoadingAgents } = useAccessibleAgents()
+  const { data: allAgentsRaw, isLoading: isLoadingAgents } = useAccessibleAgents()
+
+  // Deduplicate agents by deployment_id (in case the view returns duplicates)
+  const allAgents = allAgentsRaw?.reduce((acc, agent) => {
+    if (!acc.find((a) => a.deployment_id === agent.deployment_id)) {
+      acc.push(agent)
+    }
+    return acc
+  }, [] as typeof allAgentsRaw)
 
   // Filter agents based on selected client (if any)
   const agents = selectedClientIds.length > 0

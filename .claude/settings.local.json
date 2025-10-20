@@ -74,7 +74,11 @@
       "Bash(python:*)",
       "Bash(dir:*)",
       "Bash(tee:*)",
-      "Bash(cat:*)"
+      "Bash(cat:*)",
+      "SlashCommand(/generate-prp \"Reconstruire le dashboard Louis selon la capture d'écran originale avec : en-tête 'Dashboard Analytics' avec email utilisateur et bouton déconnexion, filtres de dates avec sélecteurs rapides (Aujourd'hui, 7 derniers jours, 30 derniers jours, Ce mois, Mois dernier, Cette année), filtres Entreprise et Agent, 5 KPIs (Total Appels bleu, Taux de Décroché teal, Durée Moyenne ambre, RDV Pris violet, Taux de Conversion bleu), 4 graphiques : Volume d'appels par jour (area chart avec 3 séries : Appels répondus lime, RDV pris violet, Total appels cyan), Distribution des émotions (donut chart : Neutre jaune, Négatif rose, Positif vert), Résultats d'appels (bar chart vertical avec Messagerie cyan, RDV refusé violet, TOO_CONF teal, RDV PRIS orange), Taux de messagerie par agent (bar chart horizontal avec barres colorées par agent). Design fond noir avec cartes glassmorphism, coins arrondis, bordures subtiles.\")",
+      "Bash(if exist .next rmdir /s /q .next)",
+      "mcp__playwright__browser_console_messages",
+      "Bash(git rm app/dashboard/DashboardClient.tsx)"
     ],
     "deny": []
   },

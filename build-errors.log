@@ -1,0 +1,48 @@
+
+> voipia-landing@0.1.0 build
+> next build
+
+   ▲ Next.js 15.1.0
+   - Environments: .env.local
+
+   Creating an optimized production build ...
+ ✓ Compiled successfully
+   Linting and checking validity of types ...
+   Collecting page data ...
+   Generating static pages (0/16) ...
+ ⚠ metadataBase property in metadata export is not set for resolving social open graph or twitter images, using "http://localhost:3000". See https://nextjs.org/docs/app/api-reference/functions/generate-metadata#metadatabase
+   Generating static pages (4/16) 
+   Generating static pages (8/16) 
+   Generating static pages (12/16) 
+ ✓ Generating static pages (16/16)
+   Finalizing page optimization ...
+   Collecting build traces ...
+
+Route (app)                              Size     First Load JS
+┌ ○ /                                    21.4 kB         174 kB
+├ ○ /_not-found                          986 B           107 kB
+├ ○ /agents/arthur                       6.94 kB         160 kB
+├ ○ /agents/louis                        6.35 kB         159 kB
+├ ƒ /auth/callback                       142 B           106 kB
+├ ○ /auth/confirm                        1.8 kB          155 kB
+├ ○ /auth/error                          1.2 kB          147 kB
+├ ○ /auth/reset-password                 2.28 kB         195 kB
+├ ○ /auth/update-password                2.76 kB         192 kB
+├ ƒ /dashboard                           2.12 kB         368 kB
+├ ● /dashboard/[agentType]               3.47 kB         359 kB
+├   ├ /dashboard/louis
+├   ├ /dashboard/arthur
+├   └ /dashboard/alexandra
+└ ○ /login                               2.77 kB         192 kB
++ First Load JS shared by all            106 kB
+  ├ chunks/4bd1b696-7ce02545d4988336.js  53 kB
+  ├ chunks/517-15feb1846831fe68.js       50.7 kB
+  └ other shared chunks (total)          2.08 kB
+
+
+ƒ Middleware                             72.4 kB
+
+○  (Static)   prerendered as static content
+●  (SSG)      prerendered as static HTML (uses generateStaticParams)
+ƒ  (Dynamic)  server-rendered on demand
+

@@ -252,3 +252,64 @@ export interface KPICardData {
   unit?: string
   trend?: 'up' | 'down' | 'neutral'
 }
+
+/**
+ * Client card data for dynamic dashboard cards
+ * Shows aggregated metrics for a specific client
+ */
+export interface ClientCardData {
+  client_id: string
+  client_name: string
+  industry: string | null
+  total_agents: number
+  active_agents: number
+  total_calls: number
+  answered_calls: number
+  appointments_scheduled: number
+  answer_rate: number                    // 0-100
+  conversion_rate: number                // 0-100
+  total_cost: number                     // EUR
+  last_call_at: string | null
+  agent_types: string[]                  // ['louis', 'arthur']
+}
+
+/**
+ * Agent card data for dynamic dashboard cards
+ * Shows aggregated metrics for a specific agent deployment
+ */
+export interface AgentCardData {
+  deployment_id: string
+  deployment_name: string
+  slug: string
+  agent_type_name: 'louis' | 'arthur' | 'alexandra'
+  agent_display_name: string
+  client_name: string
+  total_calls: number
+  answered_calls: number
+  appointments_scheduled: number
+  answer_rate: number                    // 0-100
+  conversion_rate: number                // 0-100
+  avg_duration: number                   // seconds
+  total_cost: number                     // EUR
+  last_call_at: string | null
+  deployment_status: 'active' | 'paused' | 'archived'
+}
+
+/**
+ * Agent type card data for dynamic dashboard cards
+ * Shows aggregated metrics for ALL deployments of a specific agent type
+ * (e.g., one card for all "Louis" agents, one for all "Arthur" agents)
+ */
+export interface AgentTypeCardData {
+  agent_type_name: 'louis' | 'arthur' | 'alexandra'
+  agent_display_name: string
+  total_deployments: number              // Total number of deployments
+  active_deployments: number             // Number of active deployments
+  total_calls: number
+  answered_calls: number
+  appointments_scheduled: number
+  answer_rate: number                    // 0-100
+  conversion_rate: number                // 0-100
+  avg_duration: number                   // seconds
+  last_call_at: string | null
+}

@@ -95,7 +95,12 @@ export function ArthurDashboardClient({ userEmail }: ArthurDashboardClientProps)
   return (
     <>
       {/* Header */}
-      <DashboardHeader userEmail={userEmail} title="Dashboard Arthur" />
+      <DashboardHeader
+        userEmail={userEmail}
+        title="Dashboard Arthur"
+        backLink="/dashboard"
+        backLabel="Dashboard Global"
+      />
 
       {/* Main Content */}
       <div className="container mx-auto px-4 py-8 space-y-8">

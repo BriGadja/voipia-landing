@@ -48,7 +48,12 @@ export function LouisDashboardClient({ userEmail }: LouisDashboardClientProps) {
   return (
     <>
       {/* Header */}
-      <DashboardHeader userEmail={userEmail} title="Dashboard Analytics" />
+      <DashboardHeader
+        userEmail={userEmail}
+        title="Dashboard Louis"
+        backLink="/dashboard"
+        backLabel="Dashboard Global"
+      />
 
       {/* Main Content */}
       <div className="container mx-auto px-4 py-4 space-y-4">

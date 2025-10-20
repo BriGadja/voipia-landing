@@ -1,23 +1,16 @@
 'use client'
 
-import Link from 'next/link'
-import { Users, Target, Sparkles, ArrowRight } from 'lucide-react'
 import { useDashboardFilters } from '@/lib/hooks/useDashboardFilters'
 import {
-  useGlobalKPIs,
-  useGlobalChartData,
-  useAgentTypePerformance,
+  useClientCardsData,
+  useAgentTypeCardsData,
 } from '@/lib/hooks/useDashboardData'
 import { exportGlobalCallsToCSV } from '@/lib/queries/global'
 import { DashboardHeader } from '@/components/dashboard/DashboardHeader'
 import { DateRangeFilter } from '@/components/dashboard/Filters/DateRangeFilter'
-import { ClientAgentFilter } from '@/components/dashboard/Filters/ClientAgentFilter'
-import { KPIGrid } from '@/components/dashboard/KPIGrid'
 import { ExportCSVButton } from '@/components/dashboard/ExportCSVButton'
-import { CallVolumeChart } from '@/components/dashboard/Charts/CallVolumeChart'
-import { OutcomeBreakdown } from '@/components/dashboard/Charts/OutcomeBreakdown'
-import { EmotionDistribution } from '@/components/dashboard/Charts/EmotionDistribution'
-import { cn } from '@/lib/utils'
+import { ClientCard } from '@/components/dashboard/Cards/ClientCard'
+import { AgentTypeCard } from '@/components/dashboard/Cards/AgentTypeCard'
 
 interface GlobalDashboardClientProps {
   userEmail: string
@@ -25,59 +18,28 @@ interface GlobalDashboardClientProps {
 
 /**
  * Global Dashboard Client Component
- * Displays aggregated analytics across all agents and clients
- * Allows filtering by client, agent type, and date range
+ * Displays dynamic cards based on user permissions:
+ * - Admin users see: Client cards + Agent type cards
+ * - Regular users see: Only the agent types they have access to
+ *
+ * All cards are dynamically generated from Supabase data
  */
 export function GlobalDashboardClient({ userEmail }: GlobalDashboardClientProps) {
   // URL-based filters
-  const { filters, setClientIds, setAgentTypeName, setDateRange } =
-    useDashboardFilters()
+  const { filters, setDateRange } = useDashboardFilters()
 
-  // Fetch global metrics
-  const { data: kpiData, isLoading: isLoadingKPIs } = useGlobalKPIs(filters)
-  const { data: chartData, isLoading: isLoadingCharts } =
-    useGlobalChartData(filters)
-  const { data: agentTypePerformance } = useAgentTypePerformance(filters)
+  // Fetch dynamic cards data
+  const { data: clientCards, isLoading: isLoadingClients } = useClientCardsData(filters)
+  const { data: agentTypeCards, isLoading: isLoadingAgentTypes } = useAgentTypeCardsData(filters)
 
   // Handle filter changes
   const handleDateChange = (start: Date, end: Date) => {
     setDateRange(start.toISOString().split('T')[0], end.toISOString().split('T')[0])
   }
 
-  const handleFilterChange = (clientIds: string[], _agentIds: string[]) => {
-    setClientIds(clientIds)
-  }
-
-  // Agent type stats
-  const agentTypeStats = [
-    {
-      type: 'louis' as const,
-      name: 'Louis',
-      icon: Users,
-      color: 'from-blue-500/20 to-blue-500/5 border-blue-500/30',
-      iconColor: 'text-blue-400',
-      description: 'Rappel de leads',
-      performance: agentTypePerformance?.find((p) => p.agent_type === 'louis'),
-    },
-    {
-      type: 'arthur' as const,
-      name: 'Arthur',
-      icon: Target,
-      color: 'from-orange-500/20 to-orange-500/5 border-orange-500/30',
-      iconColor: 'text-orange-400',
-      description: 'Prospection active',
-      performance: agentTypePerformance?.find((p) => p.agent_type === 'arthur'),
-    },
-    {
-      type: 'alexandra' as const,
-      name: 'Alexandra',
-      icon: Sparkles,
-      color: 'from-green-500/20 to-green-500/5 border-green-500/30',
-      iconColor: 'text-green-400',
-      description: 'SAV & Support',
-      performance: agentTypePerformance?.find((p) => p.agent_type === 'alexandra'),
-    },
-  ]
+  const hasClientCards = clientCards && clientCards.length > 0
+  const hasAgentTypeCards = agentTypeCards && agentTypeCards.length > 0
+  const isLoading = isLoadingClients || isLoadingAgentTypes
 
   return (
     <>
@@ -88,18 +50,11 @@ export function GlobalDashboardClient({ userEmail }: GlobalDashboardClientProps)
       <div className="container mx-auto px-4 py-8 space-y-8">
         {/* Filters Row */}
         <div className="flex flex-col lg:flex-row gap-4 items-start lg:items-center justify-between">
-          <div className="flex flex-col sm:flex-row gap-4 w-full lg:w-auto">
-            <DateRangeFilter
-              startDate={new Date(filters.startDate)}
-              endDate={new Date(filters.endDate)}
-              onChange={handleDateChange}
-            />
-            <ClientAgentFilter
-              selectedClientIds={filters.clientIds}
-              selectedAgentIds={[]}
-              onChange={handleFilterChange}
-            />
-          </div>
+          <DateRangeFilter
+            startDate={new Date(filters.startDate)}
+            endDate={new Date(filters.endDate)}
+            onChange={handleDateChange}
+          />
 
           <ExportCSVButton
             filters={filters}
@@ -108,98 +63,103 @@ export function GlobalDashboardClient({ userEmail }: GlobalDashboardClientProps)
           />
         </div>
 
-        {/* KPIs Grid */}
-        <KPIGrid data={kpiData} isLoading={isLoadingKPIs} agentType="global" />
-
-        {/* Agent Type Cards */}
-        <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
-          {agentTypeStats.map((agent) => {
-            const perf = agent.performance
-
-            return (
-              <Link
-                key={agent.type}
-                href={`/dashboard/${agent.type}`}
-                className={cn(
-                  'group relative overflow-hidden rounded-xl border bg-gradient-to-br backdrop-blur-sm transition-all hover:scale-[1.02]',
-                  agent.color
+        {/* Two Column Layout */}
+        <div className="grid grid-cols-1 lg:grid-cols-2 gap-8">
+          {/* Left Column: Agent Type Cards */}
+          {(hasAgentTypeCards || isLoadingAgentTypes) && (
+            <div className="space-y-4">
+              <div className="flex items-center justify-between">
+                <h2 className="text-2xl font-bold text-white">
+                  Agents déployés
+                </h2>
+                {hasAgentTypeCards && (
+                  <span className="text-sm text-white/60">
+                    {agentTypeCards.length} type{agentTypeCards.length > 1 ? 's' : ''} d'agent
+                  </span>
                 )}
-              >
-                <div className="p-6 space-y-4">
-                  {/* Header */}
-                  <div className="flex items-start justify-between">
-                    <div className="flex items-center gap-3">
-                      <div
-                        className={cn(
-                          'p-3 rounded-lg bg-white/10',
-                          agent.iconColor
-                        )}
-                      >
-                        <agent.icon className="w-6 h-6" />
-                      </div>
-                      <div>
-                        <h3 className="text-lg font-bold text-white">
-                          {agent.name}
-                        </h3>
-                        <p className="text-sm text-white/60">
-                          {agent.description}
-                        </p>
-                      </div>
-                    </div>
-                    <ArrowRight className="w-5 h-5 text-white/40 group-hover:text-white/80 transition-colors" />
-                  </div>
+              </div>
 
-                  {/* Stats */}
-                  {perf && (
-                    <div className="grid grid-cols-2 gap-4 pt-4 border-t border-white/10">
-                      <div>
-                        <p className="text-xs text-white/60 mb-1">Appels</p>
-                        <p className="text-xl font-bold text-white">
-                          {perf.total_calls.toLocaleString()}
-                        </p>
-                      </div>
-                      <div>
-                        <p className="text-xs text-white/60 mb-1">
-                          Taux réponse
-                        </p>
-                        <p className="text-xl font-bold text-white">
-                          {perf.answer_rate.toFixed(1)}%
-                        </p>
-                      </div>
-                      <div>
-                        <p className="text-xs text-white/60 mb-1">
-                          Conversion
-                        </p>
-                        <p className="text-xl font-bold text-white">
-                          {perf.conversion_rate.toFixed(1)}%
-                        </p>
-                      </div>
-                      <div>
-                        <p className="text-xs text-white/60 mb-1">Clients</p>
-                        <p className="text-xl font-bold text-white">
-                          {perf.total_clients}
-                        </p>
-                      </div>
-                    </div>
-                  )}
+              {isLoadingAgentTypes ? (
+                <div className="space-y-6">
+                  {[...Array(2)].map((_, i) => (
+                    <div
+                      key={i}
+                      className="h-64 bg-black/20 border border-white/20 rounded-xl animate-pulse"
+                    />
+                  ))}
                 </div>
-              </Link>
-            )
-          })}
+              ) : (
+                <div className="space-y-6">
+                  {agentTypeCards?.map((agentType) => (
+                    <AgentTypeCard key={agentType.agent_type_name} agentType={agentType} />
+                  ))}
+                </div>
+              )}
+            </div>
+          )}
+
+          {/* Right Column: Client Cards */}
+          {(hasClientCards || isLoadingClients) && (
+            <div className="space-y-4">
+              <div className="flex items-center justify-between">
+                <h2 className="text-2xl font-bold text-white">
+                  Entreprises
+                </h2>
+                {hasClientCards && (
+                  <span className="text-sm text-white/60">
+                    {clientCards.length} {clientCards.length > 1 ? 'clients' : 'client'}
+                  </span>
+                )}
+              </div>
+
+              {isLoadingClients ? (
+                <div className="space-y-6">
+                  {[...Array(3)].map((_, i) => (
+                    <div
+                      key={i}
+                      className="h-64 bg-black/20 border border-white/20 rounded-xl animate-pulse"
+                    />
+                  ))}
+                </div>
+              ) : (
+                <div className="space-y-6">
+                  {clientCards?.map((client) => (
+                    <ClientCard key={client.client_id} client={client} />
+                  ))}
+                </div>
+              )}
+            </div>
+          )}
         </div>
 
-        {/* Charts Grid */}
-        <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
-          <CallVolumeChart
-            data={chartData?.call_volume_by_day || []}
-          />
-          <OutcomeBreakdown
-            data={chartData?.outcome_distribution || []}
-          />
-          <EmotionDistribution
-            data={chartData?.emotion_distribution || []}
-          />
-        </div>
+        {/* Empty State - Only show when not loading and no data */}
+        {!isLoading && !hasClientCards && !hasAgentTypeCards && (
+          <div className="flex flex-col items-center justify-center py-16 space-y-4">
+            <div className="p-4 rounded-full bg-white/5">
+              <svg
+                className="w-12 h-12 text-white/20"
+                fill="none"
+                stroke="currentColor"
+                viewBox="0 0 24 24"
+              >
+                <path
+                  strokeLinecap="round"
+                  strokeLinejoin="round"
+                  strokeWidth={2}
+                  d="M20 13V6a2 2 0 00-2-2H6a2 2 0 00-2 2v7m16 0v5a2 2 0 01-2 2H6a2 2 0 01-2-2v-5m16 0h-2.586a1 1 0 00-.707.293l-2.414 2.414a1 1 0 01-.707.293h-3.172a1 1 0 01-.707-.293l-2.414-2.414A1 1 0 006.586 13H4"
+                />
+              </svg>
+            </div>
+            <div className="text-center space-y-2">
+              <p className="text-lg font-semibold text-white">
+                Aucune donnée disponible
+              </p>
+              <p className="text-sm text-white/60">
+                Aucun agent ou entreprise trouvé pour cette période
+              </p>
+            </div>
+          </div>
+        )}
       </div>
     </>
   )

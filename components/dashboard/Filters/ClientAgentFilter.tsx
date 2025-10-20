@@ -1,9 +1,8 @@
 'use client'
 
 import { useEffect } from 'react'
-import { useQuery } from '@tanstack/react-query'
-import { fetchClients, fetchAgents } from '@/lib/queries/dashboard'
 import { ChevronDown } from 'lucide-react'
+import { useAccessibleClients, useAccessibleAgents } from '@/lib/hooks/useDashboardData'
 
 interface ClientAgentFilterProps {
   selectedClientIds: string[]
@@ -16,21 +15,21 @@ export function ClientAgentFilter({
   selectedAgentIds,
   onChange,
 }: ClientAgentFilterProps) {
-  const { data: clients, isLoading: isLoadingClients } = useQuery({
-    queryKey: ['clients'],
-    queryFn: fetchClients,
-  })
+  // Fetch all accessible clients
+  const { data: clients, isLoading: isLoadingClients } = useAccessibleClients()
 
-  const { data: agents, isLoading: isLoadingAgents } = useQuery({
-    queryKey: ['agents', selectedClientIds],
-    queryFn: () => fetchAgents(selectedClientIds.length > 0 ? selectedClientIds : undefined),
-    enabled: !!clients && clients.length > 0,
-  })
+  // Fetch ALL accessible agents (regardless of client selection)
+  const { data: allAgents, isLoading: isLoadingAgents } = useAccessibleAgents()
 
-  // Reset agents selection if clients change
+  // Filter agents based on selected client (if any)
+  const agents = selectedClientIds.length > 0
+    ? allAgents?.filter((agent) => selectedClientIds.includes(agent.client_id))
+    : allAgents
+
+  // Reset agents selection if clients change and selected agent is no longer valid
   useEffect(() => {
     if (selectedClientIds.length > 0 && agents) {
-      const validAgentIds = agents.map((a) => a.id)
+      const validAgentIds = agents.map((a) => a.deployment_id)
       const newAgentIds = selectedAgentIds.filter((id) => validAgentIds.includes(id))
       if (newAgentIds.length !== selectedAgentIds.length) {
         onChange(selectedClientIds, newAgentIds)
@@ -70,8 +69,8 @@ export function ClientAgentFilter({
           >
             <option value="all">Toutes les entreprises</option>
             {clients?.map((client) => (
-              <option key={client.id} value={client.id}>
-                {client.name}
+              <option key={client.client_id} value={client.client_id}>
+                {client.client_name}
               </option>
             ))}
           </select>
@@ -79,7 +78,7 @@ export function ClientAgentFilter({
         </div>
       </div>
 
-      <div className="w-full sm:w-56">
+      <div className="w-full sm:w-64">
         <label className="block text-xs font-medium text-white/80 mb-1.5">
           Agent
         </label>
@@ -92,8 +91,8 @@ export function ClientAgentFilter({
           >
             <option value="all">Tous les agents</option>
             {agents?.map((agent) => (
-              <option key={agent.id} value={agent.id}>
-                {agent.name}
+              <option key={agent.deployment_id} value={agent.deployment_id}>
+                {agent.deployment_name} - {agent.client_name}
               </option>
             ))}
           </select>

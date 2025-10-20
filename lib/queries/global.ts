@@ -7,6 +7,9 @@ import type {
   AccessibleAgent,
   AgentTypePerformance,
   TopClientData,
+  ClientCardData,
+  AgentCardData,
+  AgentTypeCardData,
 } from '@/lib/types/dashboard'
 
 /**
@@ -182,6 +185,122 @@ export async function fetchAgentTypePerformance(
   }
 
   return data as AgentTypePerformance[]
+}
+
+/**
+ * Fetch client card data with aggregated metrics for the dashboard
+ * Uses RPC function get_client_cards_data
+ * @param filters - Dashboard filters (startDate, endDate)
+ */
+export async function fetchClientCardsData(
+  filters: DashboardFilters
+): Promise<ClientCardData[]> {
+  const supabase = createClient()
+
+  const { data, error } = await supabase.rpc('get_client_cards_data', {
+    p_start_date: filters.startDate,
+    p_end_date: filters.endDate,
+  })
+
+  if (error) {
+    console.error('Error fetching client cards data:', error)
+    throw error
+  }
+
+  return data as ClientCardData[]
+}
+
+/**
+ * Fetch agent card data with aggregated metrics for the dashboard
+ * Uses RPC function get_agent_cards_data
+ * @param filters - Dashboard filters (startDate, endDate, optional clientIds)
+ */
+export async function fetchAgentCardsData(
+  filters: DashboardFilters
+): Promise<AgentCardData[]> {
+  const supabase = createClient()
+
+  const { data, error } = await supabase.rpc('get_agent_cards_data', {
+    p_start_date: filters.startDate,
+    p_end_date: filters.endDate,
+    p_client_ids: filters.clientIds.length > 0 ? filters.clientIds : null,
+  })
+
+  if (error) {
+    console.error('Error fetching agent cards data:', error)
+    throw error
+  }
+
+  return data as AgentCardData[]
+}
+
+/**
+ * Fetch agent type card data with aggregated metrics for ALL deployments of each agent type
+ * Uses RPC function get_agent_type_cards_data
+ * Returns one card per agent type (e.g., one "Louis" card for all Louis deployments)
+ * @param filters - Dashboard filters (startDate, endDate, optional clientIds)
+ */
+export async function fetchAgentTypeCardsData(
+  filters: DashboardFilters
+): Promise<AgentTypeCardData[]> {
+  const supabase = createClient()
+
+  const { data, error } = await supabase.rpc('get_agent_type_cards_data', {
+    p_start_date: filters.startDate,
+    p_end_date: filters.endDate,
+    p_client_ids: filters.clientIds.length > 0 ? filters.clientIds : null,
+  })
+
+  if (error) {
+    console.error('Error fetching agent type cards data:', error)
+    throw error
+  }
+
+  return data as AgentTypeCardData[]
+}
+
+/**
+ * Determine the default dashboard destination for a user
+ * Returns null if user should see global dashboard
+ * Returns agent type name if user should be redirected to specific agent dashboard
+ *
+ * Logic:
+ * - If user has access to >= 2 clients OR >= 2 agents → Global dashboard (null)
+ * - If user has access to exactly 1 agent → Redirect to that agent's dashboard
+ * - Otherwise → Global dashboard (null) as fallback
+ */
+export async function getDashboardDestination(): Promise<{
+  shouldRedirect: boolean
+  agentType?: 'louis' | 'arthur' | 'alexandra'
+}> {
+  try {
+    // Fetch accessible clients and agents
+    const [clients, agents] = await Promise.all([
+      fetchAccessibleClients(),
+      fetchAccessibleAgents(),
+    ])
+
+    // If user has 2+ clients or 2+ agents, show global dashboard
+    if (clients.length >= 2 || agents.length >= 2) {
+      return { shouldRedirect: false }
+    }
+
+    // If user has exactly 1 agent, redirect to that agent's dashboard
+    if (agents.length === 1) {
+      const agentType = agents[0].agent_type_name
+      return {
+        shouldRedirect: true,
+        agentType: agentType as 'louis' | 'arthur' | 'alexandra',
+      }
+    }
+
+    // Fallback: show global dashboard
+    return { shouldRedirect: false }
+  } catch (error) {
+    console.error('Error determining dashboard destination:', error)
+    // On error, default to global dashboard
+    return { shouldRedirect: false }
+  }
 }
 
 /**

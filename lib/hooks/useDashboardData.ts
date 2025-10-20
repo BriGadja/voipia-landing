@@ -8,6 +8,9 @@ import type {
   AgentTypePerformance,
   TopClientData,
   AgentPerformanceData,
+  ClientCardData,
+  AgentCardData,
+  AgentTypeCardData,
 } from '@/lib/types/dashboard'
 import {
   fetchAccessibleClients,
@@ -16,6 +19,9 @@ import {
   fetchGlobalChartData,
   fetchTopClients,
   fetchAgentTypePerformance,
+  fetchClientCardsData,
+  fetchAgentCardsData,
+  fetchAgentTypeCardsData,
 } from '@/lib/queries/global'
 import {
   fetchLouisKPIMetrics,
@@ -160,6 +166,52 @@ export function useLouisAgentPerformance(
   return useQuery({
     queryKey: ['louis-agent-performance', filters],
     queryFn: () => fetchLouisAgentPerformance(filters),
+    staleTime: STALE_TIME,
+    refetchInterval: REFETCH_INTERVAL,
+  })
+}
+
+/**
+ * Hook to fetch client cards data for dynamic dashboard
+ * @param filters - Dashboard filters (startDate, endDate)
+ */
+export function useClientCardsData(
+  filters: DashboardFilters
+): UseQueryResult<ClientCardData[]> {
+  return useQuery({
+    queryKey: ['client-cards-data', filters.startDate, filters.endDate],
+    queryFn: () => fetchClientCardsData(filters),
+    staleTime: STALE_TIME,
+    refetchInterval: REFETCH_INTERVAL,
+  })
+}
+
+/**
+ * Hook to fetch agent cards data for dynamic dashboard
+ * @param filters - Dashboard filters (startDate, endDate, clientIds)
+ */
+export function useAgentCardsData(
+  filters: DashboardFilters
+): UseQueryResult<AgentCardData[]> {
+  return useQuery({
+    queryKey: ['agent-cards-data', filters],
+    queryFn: () => fetchAgentCardsData(filters),
+    staleTime: STALE_TIME,
+    refetchInterval: REFETCH_INTERVAL,
+  })
+}
+
+/**
+ * Hook to fetch agent type cards data for dynamic dashboard
+ * Aggregates ALL deployments of each agent type (e.g., all Louis, all Arthur)
+ * @param filters - Dashboard filters (startDate, endDate, clientIds)
+ */
+export function useAgentTypeCardsData(
+  filters: DashboardFilters
+): UseQueryResult<AgentTypeCardData[]> {
+  return useQuery({
+    queryKey: ['agent-type-cards-data', filters],
+    queryFn: () => fetchAgentTypeCardsData(filters),
     staleTime: STALE_TIME,
     refetchInterval: REFETCH_INTERVAL,
   })

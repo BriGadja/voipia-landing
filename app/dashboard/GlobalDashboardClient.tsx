@@ -74,7 +74,7 @@ export function GlobalDashboardClient({ userEmail }: GlobalDashboardClientProps)
                 </h2>
                 {hasAgentTypeCards && (
                   <span className="text-sm text-white/60">
-                    {agentTypeCards.length} type{agentTypeCards.length > 1 ? 's' : ''} d'agent
+                    {agentTypeCards.length} type{agentTypeCards.length > 1 ? 's' : ''} d&apos;agent
                   </span>
                 )}
               </div>

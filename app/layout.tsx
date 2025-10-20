@@ -4,6 +4,7 @@ import './globals.css'
 import ClientChatbot from '@/components/chatbot/ClientChatbot'
 import { Providers } from './providers'
 import { AuthHashHandler } from '@/components/auth/AuthHashHandler'
+import { Analytics } from '@vercel/analytics/next'
 
 const inter = Inter({ 
   subsets: ['latin'],
@@ -75,6 +76,7 @@ export default function RootLayout({
           {children}
           <ClientChatbot />
         </Providers>
+        <Analytics />
       </body>
     </html>
   )

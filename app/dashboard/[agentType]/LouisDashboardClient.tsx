@@ -79,22 +79,22 @@ export function LouisDashboardClient({ userEmail }: LouisDashboardClientProps) {
 
         {/* Charts Grid - 2x2 */}
         <div className="grid grid-cols-1 lg:grid-cols-2 gap-4">
-          <div className="h-[320px]">
+          <div className="h-[310px]">
             <CallVolumeChart
               data={chartData?.call_volume_by_day || []}
             />
           </div>
-          <div className="h-[320px]">
+          <div className="h-[310px]">
             <EmotionDistribution
               data={chartData?.emotion_distribution || []}
             />
           </div>
-          <div className="h-[320px]">
+          <div className="h-[310px]">
             <OutcomeBreakdown
               data={chartData?.outcome_distribution || []}
             />
           </div>
-          <div className="h-[320px]">
+          <div className="h-[310px]">
             <VoicemailByAgent
               data={chartData?.voicemail_by_agent || []}
             />

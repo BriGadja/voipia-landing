@@ -1,14 +1,12 @@
 'use client'
 
 import {
-  BarChart,
-  Bar,
-  XAxis,
-  YAxis,
-  CartesianGrid,
+  PieChart,
+  Pie,
   Tooltip,
   ResponsiveContainer,
   Cell,
+  Legend,
 } from 'recharts'
 
 interface OutcomeBreakdownProps {
@@ -62,10 +60,37 @@ export function OutcomeBreakdown({ data }: OutcomeBreakdownProps) {
   const chartData = data
     .filter((item) => specificOutcomes.includes(item.outcome))
     .map((item) => ({
-      outcome: outcomeLabels[item.outcome] || item.outcome,
-      Appels: item.count,
+      name: outcomeLabels[item.outcome] || item.outcome,
+      value: item.count,
+      color: outcomeColors[outcomeLabels[item.outcome]] || colors[0],
     }))
-    .sort((a, b) => b.Appels - a.Appels)
+    .sort((a, b) => b.value - a.value)
+
+  // Calculate total for percentages
+  const total = chartData.reduce((sum, item) => sum + item.value, 0)
+
+  // Custom legend formatter with percentages
+  const renderLegend = (props: any) => {
+    const { payload } = props
+    return (
+      <ul className="flex flex-col gap-2 text-sm text-white">
+        {payload.map((entry: any, index: number) => {
+          const percentage = total > 0 ? ((entry.payload.value / total) * 100).toFixed(1) : 0
+          return (
+            <li key={`legend-${index}`} className="flex items-center gap-2">
+              <span
+                className="w-3 h-3 rounded-full flex-shrink-0"
+                style={{ backgroundColor: entry.color }}
+              />
+              <span className="whitespace-nowrap">
+                {entry.value} : {percentage}%
+              </span>
+            </li>
+          )
+        })}
+      </ul>
+    )
+  }
 
   return (
     <div className="bg-black/20 border border-white/20 rounded-xl p-3 flex flex-col h-full">
@@ -73,31 +98,49 @@ export function OutcomeBreakdown({ data }: OutcomeBreakdownProps) {
         Résultats d&apos;appels
       </h3>
       <ResponsiveContainer width="100%" height="100%">
-        <BarChart data={chartData}>
-          <CartesianGrid strokeDasharray="3 3" stroke="rgba(255,255,255,0.1)" />
-          <XAxis
-            dataKey="outcome"
-            stroke="rgba(255,255,255,0.6)"
-            style={{ fontSize: '11px' }}
-            angle={-45}
-            textAnchor="end"
-            height={100}
-          />
-          <YAxis stroke="rgba(255,255,255,0.6)" style={{ fontSize: '12px' }} />
+        <PieChart>
+          <Pie
+            data={chartData}
+            cx="40%"
+            cy="50%"
+            innerRadius={50}
+            outerRadius={80}
+            paddingAngle={2}
+            dataKey="value"
+          >
+            {chartData.map((entry, index) => (
+              <Cell key={`cell-${index}`} fill={entry.color} />
+            ))}
+          </Pie>
           <Tooltip
             contentStyle={{
-              backgroundColor: 'rgba(0,0,0,0.8)',
-              border: '1px solid rgba(255,255,255,0.2)',
+              backgroundColor: 'rgba(0,0,0,0.95)',
+              border: '1px solid rgba(255,255,255,0.3)',
               borderRadius: '8px',
+              padding: '8px 12px',
+            }}
+            labelStyle={{
+              color: '#fff',
+              fontWeight: 'bold',
+              marginBottom: '4px',
+            }}
+            itemStyle={{
               color: '#fff',
             }}
+            separator=" : "
+            formatter={(value: number) => {
+              const percentage = total > 0 ? ((value / total) * 100).toFixed(1) : 0
+              return `${value} appels (${percentage}%)`
+            }}
           />
-          <Bar dataKey="Appels" radius={[4, 4, 0, 0]}>
-            {chartData.map((entry, index) => (
-              <Cell key={`cell-${index}`} fill={outcomeColors[entry.outcome] || colors[index % colors.length]} />
-            ))}
-          </Bar>
-        </BarChart>
+          <Legend
+            layout="vertical"
+            align="right"
+            verticalAlign="middle"
+            content={renderLegend}
+            wrapperStyle={{ paddingLeft: '20px' }}
+          />
+        </PieChart>
       </ResponsiveContainer>
     </div>
   )

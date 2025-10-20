@@ -116,6 +116,7 @@ export function ArthurDashboardClient({ userEmail }: ArthurDashboardClientProps)
               selectedClientIds={selectedClientIds}
               selectedAgentIds={selectedAgentIds}
               onChange={handleFilterChange}
+              agentType="arthur"
             />
           </div>
 

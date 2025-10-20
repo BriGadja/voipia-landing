@@ -57,9 +57,17 @@ export function CallVolumeChart({ data }: CallVolumeChartProps) {
           <YAxis stroke="rgba(255,255,255,0.6)" style={{ fontSize: '12px' }} />
           <Tooltip
             contentStyle={{
-              backgroundColor: 'rgba(0,0,0,0.8)',
-              border: '1px solid rgba(255,255,255,0.2)',
+              backgroundColor: 'rgba(0,0,0,0.95)',
+              border: '1px solid rgba(255,255,255,0.3)',
               borderRadius: '8px',
+              padding: '8px 12px',
+            }}
+            labelStyle={{
+              color: '#fff',
+              fontWeight: 'bold',
+              marginBottom: '4px',
+            }}
+            itemStyle={{
               color: '#fff',
             }}
           />

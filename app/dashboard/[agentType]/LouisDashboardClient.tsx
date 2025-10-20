@@ -69,6 +69,7 @@ export function LouisDashboardClient({ userEmail }: LouisDashboardClientProps) {
               selectedClientIds={filters.clientIds}
               selectedAgentIds={filters.deploymentId ? [filters.deploymentId] : []}
               onChange={handleFilterChange}
+              agentType="louis"
             />
           </div>
 
@@ -84,22 +85,22 @@ export function LouisDashboardClient({ userEmail }: LouisDashboardClientProps) {
 
         {/* Charts Grid - 2x2 */}
         <div className="grid grid-cols-1 lg:grid-cols-2 gap-4">
-          <div className="h-[310px]">
+          <div className="h-[300px]">
             <CallVolumeChart
               data={chartData?.call_volume_by_day || []}
             />
           </div>
-          <div className="h-[310px]">
+          <div className="h-[300px]">
             <EmotionDistribution
               data={chartData?.emotion_distribution || []}
             />
           </div>
-          <div className="h-[310px]">
+          <div className="h-[300px]">
             <OutcomeBreakdown
               data={chartData?.outcome_distribution || []}
             />
           </div>
-          <div className="h-[310px]">
+          <div className="h-[300px]">
             <VoicemailByAgent
               data={chartData?.voicemail_by_agent || []}
             />

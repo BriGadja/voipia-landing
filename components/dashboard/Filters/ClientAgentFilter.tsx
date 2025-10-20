@@ -8,12 +8,14 @@ interface ClientAgentFilterProps {
   selectedClientIds: string[]
   selectedAgentIds: string[]
   onChange: (clientIds: string[], agentIds: string[]) => void
+  agentType?: 'louis' | 'arthur' | 'alexandra' // Optional filter by agent type
 }
 
 export function ClientAgentFilter({
   selectedClientIds,
   selectedAgentIds,
   onChange,
+  agentType,
 }: ClientAgentFilterProps) {
   // Fetch all accessible clients
   const { data: clientsRaw, isLoading: isLoadingClients } = useAccessibleClients()
@@ -26,8 +28,11 @@ export function ClientAgentFilter({
     return acc
   }, [] as typeof clientsRaw)
 
-  // Fetch ALL accessible agents (regardless of client selection)
-  const { data: allAgentsRaw, isLoading: isLoadingAgents } = useAccessibleAgents()
+  // Fetch accessible agents filtered by agent type
+  const { data: allAgentsRaw, isLoading: isLoadingAgents } = useAccessibleAgents(
+    undefined, // clientIds (will be filtered after)
+    agentType // Filter by agent type
+  )
 
   // Deduplicate agents by deployment_id (in case the view returns duplicates)
   const allAgents = allAgentsRaw?.reduce((acc, agent) => {

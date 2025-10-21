@@ -22,7 +22,7 @@ const outcomeLabels: Record<string, string> = {
   not_interested: 'Pas intéressé',
   callback_requested: 'Rappel demandé',
   voicemail: 'Messagerie',
-  too_short: 'TOO_CONF',
+  too_short: 'Non significatifs',
   no_answer: 'Pas de réponse',
   busy: 'Occupé',
   invalid_number: 'Numéro invalide',
@@ -34,7 +34,7 @@ const outcomeLabels: Record<string, string> = {
 const outcomeColors: Record<string, string> = {
   'Messagerie': '#06b6d4',    // cyan
   'RDV refusé': '#8b5cf6',    // violet
-  'TOO_CONF': '#10b981',      // emerald
+  'Non significatifs': '#10b981',      // emerald
   'RDV PRIS': '#f59e0b',      // amber/orange
 }
 
@@ -68,6 +68,30 @@ export function OutcomeBreakdown({ data }: OutcomeBreakdownProps) {
 
   // Calculate total for percentages
   const total = chartData.reduce((sum, item) => sum + item.value, 0)
+
+  // Custom label renderer with external labels and connecting lines
+  const renderCustomLabel = (props: any) => {
+    const { cx, cy, midAngle, outerRadius, name, value } = props
+    const RADIAN = Math.PI / 180
+    const radius = outerRadius + 30 // Distance from pie to label
+    const x = cx + radius * Math.cos(-midAngle * RADIAN)
+    const y = cy + radius * Math.sin(-midAngle * RADIAN)
+
+    const percentage = total > 0 ? ((value / total) * 100).toFixed(1) : 0
+
+    return (
+      <text
+        x={x}
+        y={y}
+        fill="#fff"
+        textAnchor={x > cx ? 'start' : 'end'}
+        dominantBaseline="central"
+        className="text-xs font-medium"
+      >
+        {`${name} : ${value} (${percentage}%)`}
+      </text>
+    )
+  }
 
   // Custom legend formatter with percentages
   const renderLegend = (props: any) => {
@@ -107,6 +131,11 @@ export function OutcomeBreakdown({ data }: OutcomeBreakdownProps) {
             outerRadius={80}
             paddingAngle={2}
             dataKey="value"
+            label={renderCustomLabel}
+            labelLine={{
+              stroke: 'rgba(255,255,255,0.3)',
+              strokeWidth: 1,
+            }}
           >
             {chartData.map((entry, index) => (
               <Cell key={`cell-${index}`} fill={entry.color} />

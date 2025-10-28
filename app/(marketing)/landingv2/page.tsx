@@ -7,6 +7,7 @@ import { SDRComparison } from '@/components/landing/SDRComparison';
 import { CustomDevelopment } from '@/components/landing/CustomDevelopment';
 import { FAQAccordion } from '@/components/landing/FAQAccordion';
 import { CTAFinal } from '@/components/landing/CTAFinal';
+import { faqs } from '@/lib/data/faqs';
 
 export default function LandingV2Page() {
   return (
@@ -33,7 +34,7 @@ export default function LandingV2Page() {
       <CustomDevelopment />
 
       {/* FAQ Accordion */}
-      <FAQAccordion />
+      <FAQAccordion faqs={faqs.home} />
 
       {/* Final CTA */}
       <CTAFinal />

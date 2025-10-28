@@ -2,14 +2,14 @@ import { TestimonialData } from '@/lib/types/landing';
 
 export const testimonials: Record<string, TestimonialData> = {
   louis: {
-    quote: "Louis a transformé notre process de qualification. Avant, on perdait 60% des leads par manque de réactivité. Maintenant, chaque lead est rappelé en moins d'une minute. Notre taux de prise de RDV a été multiplié par 3.",
-    author: 'Stefano Valentino',
-    role: 'CEO',
+    quote: "Depuis que nous avons intégré Louis, 100 % de nos leads sont rappelés dans la minute. Le nombre de rendez-vous pris a triplé et nous n'avons plus besoin de rappeler manuellement. Cela a complètement transformé notre approche de la gestion des leads : mon équipe peut enfin se concentrer uniquement sur les rendez-vous qualifiés. Louis nous a fait économiser un temps colossal et nous a évité d'embaucher 2 SDR supplémentaires.",
+    author: 'Valentin',
+    role: 'Dirigeant',
     company: 'Stefano Design',
     metrics: [
-      { label: 'Taux de contact', value: '+72%' },
-      { label: 'RDV qualifiés', value: 'x3' },
-      { label: 'Temps de réponse', value: '<60s' },
+      { label: 'Réduction du taux de perte de leads', value: '87%' },
+      { label: 'Augmentation des rendez-vous qualifiés', value: 'x3' },
+      { label: 'Économisées par semaine sur le rappel manuel', value: '+21H' },
     ],
   },
   arthur: {

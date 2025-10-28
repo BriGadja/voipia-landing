@@ -2,12 +2,15 @@
 
 import { useState } from 'react';
 import { Card } from '@/components/shared/Card';
-import { faqs } from '@/lib/data/faqs';
+import { FAQItem } from '@/lib/types/landing';
 import { ChevronDown, HelpCircle } from 'lucide-react';
 
-export function FAQAccordion() {
+interface FAQAccordionProps {
+  faqs: FAQItem[];
+}
+
+export function FAQAccordion({ faqs }: FAQAccordionProps) {
   const [openIndex, setOpenIndex] = useState<number | null>(0);
-  const homeFaqs = faqs.home;
 
   const toggleFAQ = (index: number) => {
     setOpenIndex(openIndex === index ? null : index);
@@ -42,7 +45,7 @@ export function FAQAccordion() {
 
         {/* FAQ Accordion */}
         <div className="max-w-4xl mx-auto space-y-4">
-          {homeFaqs.map((faq, index) => {
+          {faqs.map((faq, index) => {
             const isOpen = openIndex === index;
 
             return (

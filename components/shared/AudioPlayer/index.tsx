@@ -5,12 +5,16 @@ import { Play, Pause } from 'lucide-react';
 import { cn } from '@/lib/utils';
 
 interface AudioPlayerProps {
-  audioSrc: string;
+  src?: string; // Alias for audioSrc
+  audioSrc?: string;
+  variant?: 'louis' | 'arthur' | 'alexandra' | 'default';
   agentColor?: string;
   className?: string;
 }
 
-export function AudioPlayer({ audioSrc, agentColor = 'violet', className }: AudioPlayerProps) {
+export function AudioPlayer({ src, audioSrc, variant = 'default', agentColor = 'violet', className }: AudioPlayerProps) {
+  const finalAudioSrc = src || audioSrc || '';
+  const finalColor = variant === 'louis' ? 'blue' : variant === 'arthur' ? 'orange' : variant === 'alexandra' ? 'green' : agentColor;
   const [isPlaying, setIsPlaying] = useState(false);
   const [currentTime, setCurrentTime] = useState(0);
   const [duration, setDuration] = useState(0);
@@ -60,10 +64,10 @@ export function AudioPlayer({ audioSrc, agentColor = 'violet', className }: Audi
           'flex items-center justify-center w-12 h-12 rounded-full transition-all',
           'bg-gradient-to-r shadow-lg',
           {
-            'from-blue-600 to-cyan-500 hover:from-blue-700 hover:to-cyan-600': agentColor === 'blue',
-            'from-orange-600 to-amber-500 hover:from-orange-700 hover:to-amber-600': agentColor === 'orange',
-            'from-green-600 to-emerald-500 hover:from-green-700 hover:to-emerald-600': agentColor === 'green',
-            'from-violet-600 to-purple-600 hover:from-violet-700 hover:to-purple-700': agentColor === 'violet',
+            'from-blue-600 to-cyan-500 hover:from-blue-700 hover:to-cyan-600': finalColor === 'blue',
+            'from-orange-600 to-amber-500 hover:from-orange-700 hover:to-amber-600': finalColor === 'orange',
+            'from-green-600 to-emerald-500 hover:from-green-700 hover:to-emerald-600': finalColor === 'green',
+            'from-violet-600 to-purple-600 hover:from-violet-700 hover:to-purple-700': finalColor === 'violet',
           }
         )}
       >
@@ -98,7 +102,7 @@ export function AudioPlayer({ audioSrc, agentColor = 'violet', className }: Audi
       {/* Hidden Audio Element */}
       <audio
         ref={audioRef}
-        src={audioSrc}
+        src={finalAudioSrc}
         onTimeUpdate={handleTimeUpdate}
         onLoadedMetadata={handleLoadedMetadata}
         onEnded={() => setIsPlaying(false)}

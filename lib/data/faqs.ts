@@ -41,6 +41,14 @@ export const arthurFAQs: FAQItem[] = [];
 // FAQs spécifiques à Alexandra (à remplir dans Phase 5)
 export const alexandraFAQs: FAQItem[] = [];
 
+// Export FAQs object for easy access
+export const faqs = {
+  home: homeFAQs,
+  louis: louisFAQs,
+  arthur: arthurFAQs,
+  alexandra: alexandraFAQs,
+};
+
 // Helper pour récupérer les FAQs d'un agent
 export const getFAQsByAgent = (agentType: string): FAQItem[] => {
   if (agentType === 'louis') return louisFAQs;

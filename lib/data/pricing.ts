@@ -1,4 +1,5 @@
 import { PricingTier } from '@/lib/types/landing';
+import { agents } from './agents';
 
 export const pricingTiers: PricingTier[] = [
   {
@@ -7,6 +8,7 @@ export const pricingTiers: PricingTier[] = [
     price: 190,
     currency: 'EUR',
     period: 'month',
+    color: agents.louis.color,
     included: [
       'Rappel automatique de tous vos leads',
       'Prise de RDV dans votre agenda',
@@ -29,7 +31,7 @@ export const pricingTiers: PricingTier[] = [
         total: 357.6,
       },
     },
-    badge: 'Le plus populaire',
+    badge: 'Populaire',
     cta: {
       text: 'Tester Louis gratuitement',
       action: 'calendar',
@@ -41,6 +43,7 @@ export const pricingTiers: PricingTier[] = [
     price: 490,
     currency: 'EUR',
     period: 'month',
+    color: agents.arthur.color,
     included: [
       'Relance automatique de votre base',
       'Séquences multi-canaux progressives',
@@ -74,6 +77,7 @@ export const pricingTiers: PricingTier[] = [
     price: 290,
     currency: 'EUR',
     period: 'month',
+    color: agents.alexandra.color,
     included: [
       'Réception 24/7 de tous vos appels',
       'Qualification et transfert intelligent',
@@ -102,6 +106,8 @@ export const pricingTiers: PricingTier[] = [
     },
   },
 ];
+
+export const pricing = pricingTiers;
 
 export const getPricingByAgent = (agentType: string): PricingTier | undefined => {
   return pricingTiers.find(tier => tier.agentType === agentType);

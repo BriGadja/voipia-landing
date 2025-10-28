@@ -1,0 +1,142 @@
+'use client';
+
+import { Card } from '@/components/shared/Card';
+import { Button } from '@/components/shared/Button';
+import { AudioPlayer } from '@/components/shared/AudioPlayer';
+import { agents } from '@/lib/data/agents';
+import { ArrowRight, TrendingUp } from 'lucide-react';
+import Link from 'next/link';
+
+const agentStats = {
+  louis: [
+    { label: '< 60 secondes', description: 'Délai de rappel' },
+    { label: '+72%', description: 'Taux de contact' },
+    { label: 'x3', description: 'Rendez-vous qualifiés' },
+  ],
+  arthur: [
+    { label: '+40k€', description: 'CA généré (Norloc)' },
+    { label: '800%', description: 'ROI moyen' },
+    { label: '15%', description: 'Taux de réactivation' },
+  ],
+  alexandra: [
+    { label: '24/7', description: 'Disponibilité' },
+    { label: '100%', description: 'Taux de réponse' },
+    { label: '+45%', description: 'Satisfaction client' },
+  ],
+};
+
+const audioSamples = {
+  louis: '/audio/louis-demo.mp3',
+  arthur: '/audio/arthur-demo.mp3',
+  alexandra: '/audio/alexandra-demo.mp3',
+};
+
+export function AgentsGridHome() {
+  const agentsList = Object.values(agents);
+
+  return (
+    <section className="py-24 relative">
+      {/* Background decoration */}
+      <div className="absolute inset-0 bg-gradient-to-b from-transparent via-purple-900/5 to-transparent" />
+
+      <div className="container mx-auto px-4 relative z-10">
+
+        {/* Section header */}
+        <div className="text-center max-w-3xl mx-auto mb-16">
+          <h2 className="text-4xl md:text-5xl font-bold mb-6">
+            <span className="text-white">Trois agents IA,</span>
+            <br />
+            <span className="bg-gradient-to-r from-violet-400 to-purple-400 bg-clip-text text-transparent">
+              des résultats mesurables
+            </span>
+          </h2>
+          <p className="text-xl text-gray-300">
+            Chaque agent est spécialisé dans un cas d&apos;usage précis pour maximiser vos conversions.
+          </p>
+        </div>
+
+        {/* Agents grid */}
+        <div className="grid md:grid-cols-3 gap-8 max-w-7xl mx-auto">
+          {agentsList.map((agent) => {
+            const stats = agentStats[agent.id as keyof typeof agentStats];
+            const audioSrc = audioSamples[agent.id as keyof typeof audioSamples];
+
+            return (
+              <Card
+                key={agent.id}
+                variant="gradient"
+                className="p-8 flex flex-col gap-6 hover:scale-105 transition-transform duration-300"
+              >
+                {/* Header */}
+                <div>
+                  <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-white/10 border border-white/20 mb-4">
+                    <span className="text-2xl">{agent.icon}</span>
+                    <span className="text-sm font-semibold text-white">
+                      {agent.badge}
+                    </span>
+                  </div>
+                  <h3 className={`text-2xl font-bold mb-3 bg-gradient-to-r ${agent.color.gradient} bg-clip-text text-transparent`}>
+                    {agent.displayName}
+                  </h3>
+                  <p className="text-gray-300 text-sm leading-relaxed">
+                    {agent.description}
+                  </p>
+                </div>
+
+                {/* Stats */}
+                <div className="grid grid-cols-3 gap-4 py-4 border-y border-white/10">
+                  {stats.map((stat, idx) => (
+                    <div key={idx} className="text-center">
+                      <div className={`text-lg font-bold bg-gradient-to-r ${agent.color.gradient} bg-clip-text text-transparent mb-1`}>
+                        {stat.label}
+                      </div>
+                      <div className="text-xs text-gray-400 leading-tight">
+                        {stat.description}
+                      </div>
+                    </div>
+                  ))}
+                </div>
+
+                {/* Audio player */}
+                <div className="bg-black/20 rounded-lg p-4 border border-white/5">
+                  <p className="text-xs text-gray-400 mb-3 flex items-center gap-2">
+                    <span className="w-2 h-2 bg-green-400 rounded-full animate-pulse" />
+                    Écoutez {agent.displayName} en action
+                  </p>
+                  <AudioPlayer
+                    src={audioSrc}
+                    variant={agent.id as 'louis' | 'arthur' | 'alexandra'}
+                  />
+                </div>
+
+                {/* CTA */}
+                <Button
+                  variant="outline"
+                  size="md"
+                  className={`w-full group border-2 hover:bg-gradient-to-r ${agent.color.gradient} hover:border-transparent`}
+                  asChild
+                >
+                  <Link href={`/${agent.id}`}>
+                    Découvrir {agent.displayName}
+                    <ArrowRight className="w-4 h-4 ml-2 group-hover:translate-x-1 transition-transform" />
+                  </Link>
+                </Button>
+              </Card>
+            );
+          })}
+        </div>
+
+        {/* Bottom CTA */}
+        <div className="text-center mt-16">
+          <div className="inline-flex items-center gap-2 px-4 py-2 rounded-full bg-green-500/10 border border-green-500/20 backdrop-blur-sm">
+            <TrendingUp className="w-4 h-4 text-green-400" />
+            <span className="text-sm font-medium text-green-300">
+              Combine plusieurs agents pour des résultats encore meilleurs
+            </span>
+          </div>
+        </div>
+
+      </div>
+    </section>
+  );
+}

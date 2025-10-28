@@ -27,6 +27,7 @@ export interface HeroSection {
 
 export interface CTAButton {
   text: string;
+  label?: string; // Alias for text
   action: 'calendar' | 'audio' | 'link' | 'modal';
   href?: string;
   variant?: 'primary' | 'secondary' | 'outline';
@@ -58,9 +59,15 @@ export interface TestimonialData {
 export interface PricingTier {
   agentType: AgentType;
   name: string;
+  description?: string;
   price: number;
   currency: 'EUR' | 'USD';
   period: 'month' | 'year';
+  color?: {
+    primary: string;
+    secondary: string;
+    gradient: string;
+  };
   included: string[];
   consumption: {
     calls: number;

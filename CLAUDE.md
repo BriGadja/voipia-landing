@@ -86,6 +86,278 @@ Custom animations include:
 - Gradient backgrounds extensively used for visual appeal
 - Consistent spacing using Tailwind's scale
 
+---
+
+## 🚀 REFONTE LANDING PAGE - ARCHITECTURE HOME + 3 LP DÉDIÉES
+
+### Vue d'ensemble
+
+Le site Voipia fait actuellement l'objet d'une **refonte majeure** pour passer d'une page unique à une architecture **Home + 3 Landing Pages dédiées** (une pour chaque agent).
+
+**Objectifs** :
+- Améliorer le ciblage et les conversions par agent
+- Optimiser le SEO avec des URLs dédiées (`/louis`, `/arthur`, `/alexandra`)
+- Faciliter les campagnes publicitaires ciblées
+- Améliorer l'attribution et le tracking
+
+**Documentation complète** : `proposition_restructuration_landing/INITIAL/`
+
+---
+
+### Architecture Cible
+
+**⚠️ STRATÉGIE DE DÉVELOPPEMENT** : Pour ne pas impacter la home actuelle, la nouvelle Home sera développée sur `/landingv2` jusqu'à validation complète.
+
+```
+/landingv2           → Nouvelle Home (en développement, remplacera / après validation)
+/louis               → Landing Page Louis (Rappel automatique)
+/arthur              → Landing Page Arthur (Réactivation)
+/alexandra           → Landing Page Alexandra (Réception 24/7)
+/dashboard           → Dashboard global (existant)
+/                    → Home actuelle (ne pas toucher pendant la refonte)
+```
+
+**Plan de migration** :
+1. Phases 1-7 : Développer sur `/landingv2` + pages agents
+2. Validation complète de la refonte
+3. Migration : `/landingv2` → `/` (remplace la home actuelle)
+4. Nettoyage : Suppression de `/landingv2`
+
+---
+
+### Plan de Refonte en 7 Phases
+
+Le projet est structuré en 7 phases chronologiques documentées dans `proposition_restructuration_landing/INITIAL/` :
+
+#### **Phase 1 : Fondations et Architecture** 🔴 CRITIQUE
+- **Fichier** : `INITIAL_refonte_01_fondations.md`
+- **Durée** : 2-3 jours
+- **Livrables** :
+  - Structure de routing Next.js (`app/(marketing)/`)
+  - Composants réutilisables (`components/landing/`, `components/shared/`)
+  - Système de données centralisé (`lib/data/`)
+  - Types TypeScript (`lib/types/landing.ts`)
+
+#### **Phase 2 : Page Home (Restructurée)** 🏠
+- **Fichier** : `INITIAL_refonte_02_home.md`
+- **Durée** : 3-4 jours
+- **Livrables** :
+  - Hero repensé
+  - Section "Les 3 Agents" avec cartes cliquables
+  - Comparatif SDR vs VoIPIA
+  - Tarifs, FAQ, développements sur-mesure
+
+#### **Phase 3 : Landing Page Louis** 🔵
+- **Fichier** : `INITIAL_refonte_03_louis.md`
+- **Durée** : 3-4 jours
+- **Source** : `proposition_restructuration_landing/LP Louis.txt`
+- **Livrables** :
+  - Page `/louis` complète (10 sections)
+  - FAQ spécifique (9 questions)
+  - Témoignage Stefano Design
+  - Tarification 190€/mois
+
+#### **Phase 4 : Landing Page Arthur** 🟠
+- **Fichier** : `INITIAL_refonte_04_arthur.md`
+- **Durée** : 3-4 jours
+- **Source** : `proposition_restructuration_landing/LP Arthur.txt`
+- **Livrables** :
+  - Page `/arthur` complète (10 sections)
+  - FAQ spécifique (9 questions)
+  - Témoignage Norloc
+  - Tarification 490€/mois
+
+#### **Phase 5 : Landing Page Alexandra** 🟢
+- **Fichier** : `INITIAL_refonte_05_alexandra.md`
+- **Durée** : 3-4 jours
+- **Source** : `proposition_restructuration_landing/LP Alexandra.txt`
+- **Livrables** :
+  - Page `/alexandra` complète (10 sections)
+  - FAQ spécifique (9 questions)
+  - Témoignage Stefano Design
+  - Tarification 290€/mois
+
+#### **Phase 6 : Navigation et Cross-Selling** 🔗
+- **Fichier** : `INITIAL_refonte_06_navigation.md`
+- **Durée** : 2-3 jours
+- **Livrables** :
+  - Header avec dropdown "Solutions"
+  - Quiz de qualification sur Home
+  - Section "Découvrez nos autres agents" sur chaque LP
+  - Bundles tarifaires (Pack Complet)
+  - Liens croisés intelligents
+
+#### **Phase 7 : SEO, Analytics et Optimisations** 📈
+- **Fichier** : `INITIAL_refonte_07_seo_analytics.md`
+- **Durée** : 2 jours
+- **Livrables** :
+  - Meta descriptions uniques par page
+  - Structured data (JSON-LD)
+  - Sitemap.xml et robots.txt
+  - Google Analytics 4 tracking
+  - Performance optimizations (Lighthouse > 90)
+
+---
+
+### Dépendances Entre Phases
+
+```
+Phase 1 (Fondations) ← DOIT ÊTRE TERMINÉE EN PREMIER
+    ↓
+Phase 2 (Home) + Phase 3 (Louis) + Phase 4 (Arthur) + Phase 5 (Alexandra)
+    ↓ (peuvent être faites en parallèle)
+Phase 6 (Navigation) ← Nécessite que les pages soient créées
+    ↓
+Phase 7 (SEO/Analytics) ← Finalisation
+```
+
+---
+
+### Protocole d'Exécution
+
+Pour chaque phase :
+
+1. **Lire le fichier INITIAL** : `proposition_restructuration_landing/INITIAL/INITIAL_refonte_XX.md`
+2. **Générer le PRP** : `/generate-prp "Phase X : [titre de la phase]"`
+3. **Review du PRP** : Valider la structure et le contenu
+4. **Exécuter le PRP** : `/execute-prp PRPs/refonte-phase-X.md`
+5. **Validation** :
+   - Tests de build : `npm run build`
+   - Tests visuels : MCP Playwright (navigate + snapshot)
+   - Tests fonctionnels : CTAs, navigation, responsive
+6. **Commit** : Git commit avec message descriptif
+
+---
+
+### Composants Clés à Créer
+
+**Composants Partagés** (`components/shared/`) :
+- `Header.tsx` - Header avec dropdown Solutions
+- `Footer.tsx` - Footer commun
+- `Button.tsx` - Bouton réutilisable avec variants
+- `Card.tsx` - Card glassmorphism avec hover effects
+- `AudioPlayer.tsx` - Player audio pour démos
+
+**Composants Landing** (`components/landing/`) :
+- `Hero[Agent].tsx` - Hero spécifique par agent
+- `IntegrationBar.tsx` - Barre logos tech/intégrations
+- `HowItWorks[Agent].tsx` - Process en 4 étapes
+- `UseCases[Agent].tsx` - 6 cas d'utilisation
+- `BenefitsTable.tsx` - Tableau de statistiques
+- `ComparisonTable.tsx` - Avant/Après
+- `Testimonial[Agent].tsx` - Témoignage client
+- `Pricing[Agent].tsx` - Tarification
+- `FAQAccordion.tsx` - FAQ accordion
+- `CTAFinal[Agent].tsx` - CTA final
+- `QualificationQuiz.tsx` - Quiz Home
+- `OtherAgents.tsx` - Cross-selling autres agents
+- `BundlePricing.tsx` - Pack 3 agents
+
+**Système de Données** (`lib/data/`) :
+- `agents.ts` - Données des 3 agents
+- `pricing.ts` - Tarifs et formules
+- `testimonials.ts` - Témoignages clients
+- `integrations.ts` - Logos intégrations
+- `faqs.ts` - FAQs par agent
+
+**Types** (`lib/types/`) :
+- `landing.ts` - Types pour les LP (Agent, HeroSection, UseCaseCard, etc.)
+
+---
+
+### KPIs de Succès
+
+**Conversions** :
+- ✅ +30-50% taux de conversion vs landing actuelle
+- ✅ -20% coût d'acquisition client
+
+**SEO** :
+- ✅ +40% trafic organique sur 3 mois
+- ✅ Position #1-3 sur requêtes ciblées par agent
+
+**Technique** :
+- ✅ Score Lighthouse > 90 (Performance, SEO, Accessibility)
+- ✅ Time to Interactive < 2s
+- ✅ 0 erreur console
+
+**Business** :
+- ✅ Tracking précis par source/agent
+- ✅ ROI publicitaire amélioré de 25%
+
+---
+
+### Points d'Attention Critiques
+
+1. **Cohérence de marque** : Maintenir l'identité visuelle Voipia entre toutes les pages
+2. **Performance** : Optimiser images (next/image), lazy loading, code splitting
+3. **Mobile-first** : Responsive design parfait sur tous les breakpoints
+4. **SEO** : Éviter duplicate content, meta descriptions uniques
+5. **Maintenance** : Composants réutilisables pour faciliter les mises à jour
+6. **Accessibilité** : WCAG 2.1 AA compliance
+
+---
+
+### Conventions de Fichiers et Suivi
+
+#### Rangement des Fichiers
+
+**IMPORTANT** : Tous les nouveaux fichiers créés pendant la refonte (PRPs, documentation, notes) doivent être rangés dans :
+```
+C:\Users\pc\Documents\Projets\voipia-landing\proposition_restructuration_landing\
+```
+
+**Structure recommandée** :
+```
+proposition_restructuration_landing/
+├── INITIAL/                  # Fichiers de planification
+├── PRPs/                     # PRPs générés pour chaque phase
+├── PROGRESS_REFONTE.md      # Fichier de suivi (MAJ automatique)
+├── assets/                   # Screenshots, designs, mockups
+└── notes/                    # Notes diverses
+```
+
+#### Fichier de Suivi des Évolutions
+
+Un fichier **`PROGRESS_REFONTE.md`** doit être **mis à jour automatiquement à la fin de chaque PRP exécuté**.
+
+Ce fichier contient :
+- Date de complétion de chaque phase
+- Composants créés
+- Tests effectués
+- Problèmes rencontrés et solutions
+- Liens vers les commits Git
+- Captures d'écran de validation
+
+**À la fin de chaque PRP** :
+1. Mettre à jour la section de la phase concernée dans `PROGRESS_REFONTE.md`
+2. Renseigner : dates, livrables, tests, commit, screenshots, notes
+3. Mettre à jour la progression globale (% de phases complétées)
+
+---
+
+### État d'Avancement
+
+**Statut actuel** : 📋 Planification complète
+**Prochaine étape** : Phase 1 - Fondations
+**Suivi** : Consulter `proposition_restructuration_landing/PROGRESS_REFONTE.md`
+
+Pour démarrer la refonte :
+```bash
+# 1. Lire le plan de la phase 1
+cat proposition_restructuration_landing/INITIAL/INITIAL_refonte_01_fondations.md
+
+# 2. Générer le PRP de la phase 1
+/generate-prp "Phase 1 : Fondations et Architecture - Structure routing Next.js avec /landingv2, composants réutilisables, système de données"
+
+# 3. Exécuter le PRP
+/execute-prp proposition_restructuration_landing/PRPs/refonte-phase-1-fondations.md
+
+# 4. Mettre à jour le suivi
+# Éditer proposition_restructuration_landing/PROGRESS_REFONTE.md avec les résultats
+```
+
+---
+
 ## PRP (Product Requirements Proposal) System
 
 This project uses a PRP system for planning and implementing features with comprehensive context and validation loops.

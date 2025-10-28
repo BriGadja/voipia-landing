@@ -10,6 +10,7 @@ import { PricingLouis } from '@/components/landing/PricingLouis';
 import { FAQAccordion } from '@/components/landing/FAQAccordion';
 import { CTAFinalLouis } from '@/components/landing/CTAFinalLouis';
 import { faqs } from '@/lib/data/faqs';
+import { louisBenefits } from '@/lib/data/benefits';
 
 export default function LouisPage() {
   return (
@@ -18,7 +19,7 @@ export default function LouisPage() {
       <IntegrationBar />
       <HowItWorksLouis />
       <UseCasesLouis />
-      <BenefitsTable />
+      <BenefitsTable benefits={louisBenefits} />
       <CTAIntermediate />
       <ComparisonTable />
       <TestimonialLouis />

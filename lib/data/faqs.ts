@@ -72,8 +72,45 @@ export const louisFAQs: FAQItem[] = [
   },
 ];
 
-// FAQs spécifiques à Arthur (à remplir dans Phase 4)
-export const arthurFAQs: FAQItem[] = [];
+// FAQs spécifiques à Arthur
+export const arthurFAQs: FAQItem[] = [
+  {
+    question: 'Que fait exactement Arthur ?',
+    answer: 'Arthur réactive automatiquement tous vos leads dormants avec une approche douce et progressive. Il combine appels, SMS et emails de manière personnalisée, qualifie chaque lead, prend des rendez-vous directement dans votre agenda et transfère les opportunités chaudes à votre équipe commerciale. Il fonctionne 24h/24 et 7j/7.',
+  },
+  {
+    question: 'Qu\'est-ce qu\'un "lead dormant" exactement ?',
+    answer: 'Un lead dormant est un contact dans votre base de données qui n\'a pas été rappelé, qui n\'a jamais répondu (NRP), qui est resté en attente, ou qui a été contacté il y a plusieurs mois sans suite. Ce sont toutes ces opportunités inexploitées qui représentent un potentiel de CA énorme pour votre entreprise.',
+  },
+  {
+    question: 'Arthur peut-il gérer ma base de données Excel ou mon fichier CRM ?',
+    answer: 'Oui, absolument. Vous nous fournissez votre fichier Excel ou votre export CRM, et Arthur intègre automatiquement tous les contacts dans son système de relance. Il peut traiter des bases de 1 000 à 50 000 contacts sans aucun problème.',
+  },
+  {
+    question: 'Arthur peut-il s\'adapter à notre ton ou notre marque ?',
+    answer: 'Oui, totalement. Les relances d\'Arthur utilisent votre identité verbale et vos arguments commerciaux, pour que chaque message reste fidèle à votre image de marque. Arthur s\'adapte à votre secteur, votre vocabulaire et votre approche commerciale.',
+  },
+  {
+    question: 'Combien de leads Arthur peut-il traiter par mois ?',
+    answer: 'Arthur peut gérer des volumes massifs : de 500 à 10 000+ leads par mois selon votre abonnement. Il orchestre des campagnes parallèles sur plusieurs segments et peut traiter simultanément des centaines de relances progressives.',
+  },
+  {
+    question: 'Que se passe-t-il si un lead répond positivement ?',
+    answer: 'Si un lead montre des signes d\'intérêt, Arthur propose immédiatement un rendez-vous dans votre agenda. Si le lead a besoin d\'une conversation humaine approfondie, Arthur transfère intelligemment vers un commercial disponible avec tout l\'historique complet des interactions.',
+  },
+  {
+    question: 'Arthur est-il intrusif ou agressif dans ses relances ?',
+    answer: 'Non, au contraire. Arthur déploie une approche douce et progressive qui respecte vos prospects. Ses relances sont espacées intelligemment, personnalisées selon la réaction du lead, et toujours professionnelles. L\'objectif est de réactiver sans agacer.',
+  },
+  {
+    question: 'Peut-on personnaliser la stratégie de relance ?',
+    answer: 'Oui, totalement. Vous définissez avec nous la stratégie idéale pour votre secteur : nombre de tentatives, délais entre chaque relance, contenu des messages, règles de priorisation. Arthur exécute ensuite cette stratégie à la perfection.',
+  },
+  {
+    question: 'Quel ROI puis-je espérer avec Arthur ?',
+    answer: 'Nos clients génèrent en moyenne 40 000€ de CA supplémentaire par mois en réactivant leur base dormante avec Arthur. Pour un investissement moyen de 900-1500€/mois, Arthur se rentabilise généralement dès la première campagne.',
+  },
+];
 
 // FAQs spécifiques à Alexandra (à remplir dans Phase 5)
 export const alexandraFAQs: FAQItem[] = [];

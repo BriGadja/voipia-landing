@@ -13,14 +13,14 @@ export const testimonials: Record<string, TestimonialData> = {
     ],
   },
   arthur: {
-    quote: "On avait 12 000 leads dormants dans notre CRM. Arthur a généré 40k€ de CA additionnel en 2 mois en les réactivant progressivement. Un ROI de 800%.",
-    author: 'Thomas Dubois',
-    role: 'Directeur Commercial',
+    quote: "Grâce à VoIPIA et à l'agent Arthur, nous avons réussi à relancer une grande partie de nos leads que nous n'aurions jamais recontactés sans lui. Les séquences de relance ont été personnalisées selon notre activité, et nous avons généré un volume important d'opportunités qualifiées sans effort supplémentaire pour nos équipes. Arthur a réactivé notre base et nous a fait gagner plusieurs semaines de prospection.",
+    author: 'Yassine',
+    role: 'Fondateur',
     company: 'Norloc',
     metrics: [
-      { label: 'CA généré', value: '+40k€' },
-      { label: 'Leads réactivés', value: '780' },
-      { label: 'ROI', value: '800%' },
+      { label: 'De la base dormante réactivée', value: '+65%' },
+      { label: 'Leads traités par commercial par semaine', value: 'x3' },
+      { label: 'Économisées par semaine sur les relances manuelles', value: '40H' },
     ],
   },
   alexandra: {

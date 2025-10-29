@@ -1,5 +1,6 @@
 import Navigation from '@/components/sections/Navigation'
 import Hero from '@/components/sections/Hero'
+import { IntegrationBar } from '@/components/landing/IntegrationBar'
 import AgentsGrid from '@/components/sections/AgentsGrid'
 import HowItWorks from '@/components/sections/HowItWorks'
 import Metrics from '@/components/sections/Metrics'
@@ -11,6 +12,7 @@ export default function Home() {
     <main className="relative">
       <Navigation />
       <Hero />
+      <IntegrationBar />
       <AgentsGrid />
       <HowItWorks />
       <Metrics />

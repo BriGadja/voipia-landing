@@ -30,7 +30,7 @@ export function IntegrationBar() {
             {integrations.map((integration) => (
               <div
                 key={`first-${integration.name}`}
-                className="flex-shrink-0 flex items-center justify-center w-32 h-16 grayscale hover:grayscale-0 transition-all duration-300 opacity-50 hover:opacity-100"
+                className="flex-shrink-0 flex items-center justify-center w-32 h-16 transition-all duration-300 opacity-60 hover:opacity-100"
               >
                 {integration.logo ? (
                   <Image
@@ -39,6 +39,7 @@ export function IntegrationBar() {
                     width={120}
                     height={40}
                     className="object-contain"
+                    style={{ filter: 'brightness(0) invert(1)' }}
                   />
                 ) : (
                   <span className="text-gray-400 font-semibold text-sm">
@@ -51,7 +52,7 @@ export function IntegrationBar() {
             {integrations.map((integration) => (
               <div
                 key={`second-${integration.name}`}
-                className="flex-shrink-0 flex items-center justify-center w-32 h-16 grayscale hover:grayscale-0 transition-all duration-300 opacity-50 hover:opacity-100"
+                className="flex-shrink-0 flex items-center justify-center w-32 h-16 transition-all duration-300 opacity-60 hover:opacity-100"
               >
                 {integration.logo ? (
                   <Image
@@ -60,6 +61,7 @@ export function IntegrationBar() {
                     width={120}
                     height={40}
                     className="object-contain"
+                    style={{ filter: 'brightness(0) invert(1)' }}
                   />
                 ) : (
                   <span className="text-gray-400 font-semibold text-sm">
@@ -74,7 +76,7 @@ export function IntegrationBar() {
         {/* Stats */}
         <div className="flex flex-wrap justify-center gap-8 mt-12 text-center">
           <div>
-            <p className="text-3xl font-bold text-white">15+</p>
+            <p className="text-3xl font-bold text-white">{integrations.length}+</p>
             <p className="text-sm text-gray-400">Intégrations natives</p>
           </div>
           <div>

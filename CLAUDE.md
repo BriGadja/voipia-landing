@@ -6,8 +6,60 @@ This file provides guidance to Claude Code (claude.ai/code) when working with co
 
 - `npm run dev` - Start development server
 - `npm run build` - Build for production
-- `npm run start` - Start production server  
+- `npm run start` - Start production server
 - `npm run lint` - Run ESLint for code quality
+
+## ⚠️ CRITICAL - Process Management for npm run dev
+
+**IMPORTANT**: Before starting the development server, you MUST follow this process management protocol:
+
+### Pre-Dev Server Checklist
+
+1. **ALWAYS kill existing process on port 3000** before running `npm run dev`:
+   ```bash
+   # Windows
+   netstat -ano | findstr :3000
+   taskkill /PID <PID> /F
+
+   # Then start dev server
+   npm run dev
+   ```
+
+2. **DO NOT touch processes on other ports**:
+   - ❌ NEVER kill processes on ports other than 3000
+   - ❌ NEVER use `pkill` or `taskkill` without verifying the exact PID
+   - ❌ NEVER kill all Node processes (`pkill node` / `taskkill /IM node.exe`)
+   - ⚠️ **Risk**: You may kill your own Claude Code process, blocking all further operations
+
+3. **Safe Process Management**:
+   - ✅ ONLY target port 3000 specifically
+   - ✅ Verify the PID before killing
+   - ✅ Use targeted kill commands with explicit PID
+   - ✅ Check that port 3000 is free before running `npm run dev`
+
+### Why This Matters
+
+**Problem**: Claude Code may inadvertently kill its own process when trying to free ports, causing a complete system freeze.
+
+**Solution**: Always use precise, port-specific process management and never use broad kill commands.
+
+### Example Workflow
+
+```bash
+# 1. Check what's running on port 3000
+netstat -ano | findstr :3000
+
+# 2. If a process exists, kill it by PID
+taskkill /PID 12345 /F
+
+# 3. Verify port is free
+netstat -ano | findstr :3000
+
+# 4. Start dev server
+npm run dev
+```
+
+**Remember**: One precise kill is better than a hundred broad kills that might take you down.
 
 ## UI Verification Workflow
 
@@ -17,6 +69,12 @@ This file provides guidance to Claude Code (claude.ai/code) when working with co
 3. Check that the updates correspond to the expected behavior
 4. Test responsive design by resizing the browser window
 5. Verify animations and interactions are working correctly
+
+**⚠️ CRITICAL - Screenshot Policy**:
+- ❌ **NEVER take full-page screenshots** - They often exceed maximum size limits and block all context
+- ✅ **ALWAYS take specific/targeted screenshots** - Screenshot only the specific element or section being modified
+- ✅ **Use browser_snapshot instead** - Prefer accessibility snapshots over screenshots when possible
+- When using `browser_take_screenshot`, ALWAYS specify `element` and `ref` parameters to target a specific component
 
 This visual verification ensures that all changes are properly rendered and functioning as intended before committing.
 

@@ -15,7 +15,7 @@ export function Header() {
         <div className="flex items-center justify-between h-16">
           {/* Logo */}
           <Link
-            href="/landingv2"
+            href="/"
             className="text-2xl font-bold bg-gradient-to-r from-violet-400 to-purple-400 bg-clip-text text-transparent hover:from-violet-300 hover:to-purple-300 transition"
           >
             VoIPIA
@@ -62,10 +62,10 @@ export function Header() {
               )}
             </div>
 
-            <Link href="/landingv2#tarifs" className="text-gray-300 hover:text-white transition-colors">
+            <Link href="/#tarifs" className="text-gray-300 hover:text-white transition-colors">
               Tarifs
             </Link>
-            <Link href="/landingv2#faq" className="text-gray-300 hover:text-white transition-colors">
+            <Link href="/#faq" className="text-gray-300 hover:text-white transition-colors">
               FAQ
             </Link>
           </nav>
@@ -79,7 +79,7 @@ export function Header() {
               Connexion
             </Link>
             <Link
-              href="/landingv2#contact"
+              href="/#contact"
               className="px-4 py-2 bg-gradient-to-r from-violet-600 to-purple-600 rounded-lg text-sm font-semibold hover:from-violet-700 hover:to-purple-700 transition-all hover:shadow-lg hover:shadow-violet-500/20"
             >
               Tester gratuitement

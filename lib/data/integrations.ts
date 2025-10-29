@@ -1,27 +1,37 @@
 import { IntegrationLogo } from '@/lib/types/landing';
 
 export const integrations: IntegrationLogo[] = [
-  // CRM
-  { name: 'Pipedrive', logo: '/logos/pipedrive.svg', category: 'crm' },
-  { name: 'HubSpot', logo: '/logos/hubspot.svg', category: 'crm' },
-  { name: 'Salesforce', logo: '/logos/salesforce.svg', category: 'crm' },
+  // CRM & Sales
+  { name: 'Salesforce', logo: '/logos/salesforce-svgrepo-com.svg', category: 'crm' },
 
-  // Calendar
-  { name: 'Google Calendar', logo: '/logos/google-calendar.svg', category: 'calendar' },
-  { name: 'Outlook', logo: '/logos/outlook.svg', category: 'calendar' },
+  // Calendar & Scheduling
+  { name: 'Google Calendar', logo: '/logos/google-calendar-svgrepo-com.svg', category: 'calendar' },
+  { name: 'Outlook', logo: '/logos/outlook-logo-svgrepo-com.svg', category: 'calendar' },
   { name: 'Calendly', logo: '/logos/calendly.svg', category: 'calendar' },
 
-  // Automation
-  { name: 'Make', logo: '/logos/make.svg', category: 'automation' },
-  { name: 'Zapier', logo: '/logos/zapier.svg', category: 'automation' },
-  { name: 'n8n', logo: '/logos/n8n.svg', category: 'automation' },
+  // Google Workspace
+  { name: 'Google Drive', logo: '/logos/googledrive.svg', category: 'storage' },
+  { name: 'Google Sheets', logo: '/logos/googlesheets.svg', category: 'productivity' },
+  { name: 'Google Forms', logo: '/logos/googleforms.svg', category: 'productivity' },
 
-  // AI
-  { name: 'Eleven Labs', logo: '/logos/elevenlabs.svg', category: 'ai' },
-  { name: 'Cartesia', logo: '/logos/cartesia.svg', category: 'ai' },
-  { name: 'Mistral AI', logo: '/logos/mistral.svg', category: 'ai' },
-  { name: 'Claude', logo: '/logos/claude.svg', category: 'ai' },
+  // Communication
+  { name: 'Slack', logo: '/logos/slack.svg', category: 'communication' },
+
+  // Automation & Development
+  { name: 'Make', logo: '/logos/make.svg', category: 'automation' },
+  { name: 'n8n', logo: '/logos/n8n.svg', category: 'automation' },
+  { name: 'GitHub', logo: '/logos/github.svg', category: 'dev' },
+  { name: 'Vercel', logo: '/logos/vercel.svg', category: 'dev' },
+
+  // AI & LLMs
   { name: 'OpenAI', logo: '/logos/openai.svg', category: 'ai' },
+  { name: 'Anthropic', logo: '/logos/anthropic.svg', category: 'ai' },
+  { name: 'Google Gemini', logo: '/logos/googlegemini.svg', category: 'ai' },
+  { name: 'Perplexity', logo: '/logos/perplexity.svg', category: 'ai' },
+  { name: 'ElevenLabs', logo: '/logos/ElevenLabs_Logo_0.svg', category: 'ai' },
+
+  // Productivity
+  { name: 'Notion', logo: '/logos/notion.svg', category: 'productivity' },
 ];
 
 export const getIntegrationsByCategory = (category: string): IntegrationLogo[] => {

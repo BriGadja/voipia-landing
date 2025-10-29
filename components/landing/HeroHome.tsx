@@ -80,29 +80,6 @@ export function HeroHome() {
             </Button>
           </div>
 
-          {/* Social proof */}
-          <div className="flex flex-wrap justify-center items-center gap-8 pt-8 text-sm text-gray-400">
-            <div className="flex items-center gap-2">
-              <div className="flex -space-x-2">
-                {[1, 2, 3, 4].map((i) => (
-                  <div
-                    key={i}
-                    className="w-8 h-8 rounded-full bg-gradient-to-br from-violet-500 to-purple-500 border-2 border-gray-900"
-                  />
-                ))}
-              </div>
-              <span>+50 entreprises conquises</span>
-            </div>
-            <div className="flex items-center gap-2">
-              <span className="text-yellow-400">★★★★★</span>
-              <span>4.9/5 satisfaction client</span>
-            </div>
-            <div className="flex items-center gap-2">
-              <span className="text-green-400 font-bold">+72%</span>
-              <span>de taux de contact moyen</span>
-            </div>
-          </div>
-
         </div>
       </div>
 

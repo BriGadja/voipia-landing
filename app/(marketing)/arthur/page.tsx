@@ -1,3 +1,4 @@
+import type { Metadata } from 'next';
 import { HeroArthur } from '@/components/landing/HeroArthur';
 import { IntegrationBar } from '@/components/landing/IntegrationBar';
 import { HowItWorksArthur } from '@/components/landing/HowItWorksArthur';
@@ -13,11 +14,60 @@ import { CrossSellHintDual } from '@/components/landing/CrossSellHintDual';
 import { CTAFinalArthur } from '@/components/landing/CTAFinalArthur';
 import { faqs } from '@/lib/data/faqs';
 import { arthurBenefits } from '@/lib/data/benefits';
+import { getProductSchema, getFAQSchema, jsonLdScriptProps } from '@/lib/seo/structured-data';
+
+export const metadata: Metadata = {
+  title: 'Arthur - Agent IA de Réactivation de Bases Dormantes | VoIPIA',
+  description: 'Arthur réactive vos prospects dormants et génère +40k€ CA/mois en moyenne. +65% taux de réactivation. Relance automatique 24/7. À partir de 490€/mois.',
+  keywords: [
+    'réactivation prospects',
+    'relance base dormante',
+    'agent IA réactivation',
+    'Arthur VoIPIA',
+    'prospection automatique',
+    'réactivation leads',
+  ],
+  openGraph: {
+    title: 'Arthur - Réactivation de Bases Dormantes',
+    description: 'Redonnez vie à vos opportunités oubliées. +40k€ CA/mois en moyenne.',
+    url: 'https://voipia.com/arthur',
+    siteName: 'VoIPIA',
+    images: [
+      {
+        url: 'https://voipia.com/og-arthur.png',
+        width: 1200,
+        height: 630,
+        alt: 'Arthur - Agent IA de Réactivation',
+      },
+    ],
+    type: 'website',
+    locale: 'fr_FR',
+  },
+  twitter: {
+    card: 'summary_large_image',
+    title: 'Arthur - Réactivation de Bases Dormantes',
+    description: 'Arthur réactive vos prospects dormants et génère +40k€ CA/mois',
+    images: ['https://voipia.com/og-arthur.png'],
+  },
+};
 
 export default function ArthurPage() {
+  const productSchema = getProductSchema('arthur');
+  const faqSchema = getFAQSchema(faqs.arthur);
+
   return (
-    <main className="overflow-x-hidden">
-      <HeroArthur />
+    <>
+      <main className="overflow-x-hidden">
+        {/* JSON-LD Structured Data */}
+        <script
+          type="application/ld+json"
+          dangerouslySetInnerHTML={{ __html: JSON.stringify(productSchema) }}
+        />
+        <script
+          type="application/ld+json"
+          dangerouslySetInnerHTML={{ __html: JSON.stringify(faqSchema) }}
+        />
+        <HeroArthur />
       <IntegrationBar />
       <HowItWorksArthur />
       <UseCasesArthur />
@@ -52,7 +102,8 @@ export default function ArthurPage() {
       <PricingArthur />
       <FAQAccordion faqs={faqs.arthur} />
       <OtherAgents currentAgent="arthur" />
-      <CTAFinalArthur />
-    </main>
+        <CTAFinalArthur />
+      </main>
+    </>
   );
 }

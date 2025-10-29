@@ -1,3 +1,4 @@
+import type { Metadata } from 'next';
 import { HeroAlexandra } from '@/components/landing/HeroAlexandra';
 import { IntegrationBar } from '@/components/landing/IntegrationBar';
 import { HowItWorksAlexandra } from '@/components/landing/HowItWorksAlexandra';
@@ -11,11 +12,60 @@ import { CrossSellHintDual } from '@/components/landing/CrossSellHintDual';
 import { CTAFinalAlexandra } from '@/components/landing/CTAFinalAlexandra';
 import { faqs } from '@/lib/data/faqs';
 import { alexandraBenefits } from '@/lib/data/benefits';
+import { getProductSchema, getFAQSchema, jsonLdScriptProps } from '@/lib/seo/structured-data';
+
+export const metadata: Metadata = {
+  title: "Alexandra - Agent IA de Réception d'Appels 24/7 | VoIPIA",
+  description: "Alexandra répond à 100% de vos appels en <3 sonneries, 24/7. Filtrage intelligent, prise de RDV automatique. +45% satisfaction client. À partir de 290€/mois.",
+  keywords: [
+    'réception appels IA',
+    'standard téléphonique IA',
+    'agent IA accueil',
+    'Alexandra VoIPIA',
+    'réceptionniste virtuelle',
+    'accueil téléphonique IA',
+  ],
+  openGraph: {
+    title: "Alexandra - Réception d'Appels 24/7",
+    description: 'Ne manquez plus jamais un appel. 100% taux de réponse, disponibilité 24/7.',
+    url: 'https://voipia.com/alexandra',
+    siteName: 'VoIPIA',
+    images: [
+      {
+        url: 'https://voipia.com/og-alexandra.png',
+        width: 1200,
+        height: 630,
+        alt: "Alexandra - Agent IA de Réception 24/7",
+      },
+    ],
+    type: 'website',
+    locale: 'fr_FR',
+  },
+  twitter: {
+    card: 'summary_large_image',
+    title: "Alexandra - Réception d'Appels 24/7",
+    description: "Alexandra répond à 100% de vos appels en <3 sonneries, 24/7",
+    images: ['https://voipia.com/og-alexandra.png'],
+  },
+};
 
 export default function AlexandraPage() {
+  const productSchema = getProductSchema('alexandra');
+  const faqSchema = getFAQSchema(faqs.alexandra);
+
   return (
-    <main className="overflow-x-hidden">
-      <HeroAlexandra />
+    <>
+      <main className="overflow-x-hidden">
+        {/* JSON-LD Structured Data */}
+        <script
+          type="application/ld+json"
+          dangerouslySetInnerHTML={{ __html: JSON.stringify(productSchema) }}
+        />
+        <script
+          type="application/ld+json"
+          dangerouslySetInnerHTML={{ __html: JSON.stringify(faqSchema) }}
+        />
+        <HeroAlexandra />
       <IntegrationBar />
       <HowItWorksAlexandra />
       <UseCasesAlexandra />
@@ -48,7 +98,8 @@ export default function AlexandraPage() {
       <PricingAlexandra />
       <FAQAccordion faqs={faqs.alexandra} />
       <OtherAgents currentAgent="alexandra" />
-      <CTAFinalAlexandra />
-    </main>
+        <CTAFinalAlexandra />
+      </main>
+    </>
   );
 }

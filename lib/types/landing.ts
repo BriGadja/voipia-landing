@@ -96,5 +96,5 @@ export interface FAQItem {
 export interface IntegrationLogo {
   name: string;
   logo: string;
-  category: 'crm' | 'calendar' | 'automation' | 'communication' | 'ai';
+  category: 'crm' | 'calendar' | 'automation' | 'communication' | 'ai' | 'storage' | 'productivity' | 'dev';
 }

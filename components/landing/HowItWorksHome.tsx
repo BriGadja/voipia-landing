@@ -41,10 +41,10 @@ export function HowItWorksHome() {
         {/* Section header */}
         <div className="text-center max-w-3xl mx-auto mb-16">
           <h2 className="text-4xl md:text-5xl font-bold mb-6">
-            <span className="text-white">Découvrez comment nos agents s'occupent de vos opportunités</span>
+            <span className="text-white">Découvrez comment nos agents s&apos;occupent de vos opportunités</span>
           </h2>
           <p className="text-xl text-gray-300">
-            De la génération de leads à la prise de rendez-vous, VoIPIA s'intègre parfaitement dans votre workflow.
+            De la génération de leads à la prise de rendez-vous, VoIPIA s&apos;intègre parfaitement dans votre workflow.
           </p>
         </div>
 

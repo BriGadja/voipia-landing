@@ -75,7 +75,7 @@ export function HeroHome() {
             </Button>
             <Button size="lg" variant="secondary" asChild>
               <Link href="#demo">
-                Écouter un exemple d'appel
+                Écouter un exemple d&apos;appel
               </Link>
             </Button>
           </div>

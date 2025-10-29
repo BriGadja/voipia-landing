@@ -2,7 +2,6 @@ import type { Metadata } from 'next';
 import { HeroHome } from '@/components/landing/HeroHome';
 import { IntegrationBar } from '@/components/landing/IntegrationBar';
 import { AgentsGridHome } from '@/components/landing/AgentsGridHome';
-import { QualificationQuiz } from '@/components/landing/QualificationQuiz';
 import { HowItWorksHome } from '@/components/landing/HowItWorksHome';
 import { PricingCardsHome } from '@/components/landing/PricingCardsHome';
 import { SDRComparison } from '@/components/landing/SDRComparison';
@@ -67,9 +66,6 @@ export default function LandingV2Page() {
 
       {/* Agents Grid */}
       <AgentsGridHome />
-
-      {/* Qualification Quiz */}
-      <QualificationQuiz />
 
       {/* How It Works */}
       <HowItWorksHome />

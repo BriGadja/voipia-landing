@@ -8,6 +8,8 @@ import { ArthurStrength } from '@/components/landing/ArthurStrength';
 import { TestimonialArthur } from '@/components/landing/TestimonialArthur';
 import { PricingArthur } from '@/components/landing/PricingArthur';
 import { FAQAccordion } from '@/components/landing/FAQAccordion';
+import { OtherAgents } from '@/components/landing/OtherAgents';
+import { CrossSellHintDual } from '@/components/landing/CrossSellHintDual';
 import { CTAFinalArthur } from '@/components/landing/CTAFinalArthur';
 import { faqs } from '@/lib/data/faqs';
 import { arthurBenefits } from '@/lib/data/benefits';
@@ -26,11 +28,30 @@ export default function ArthurPage() {
         gradientFrom="from-orange-400"
         gradientTo="to-amber-400"
       />
+      <div className="container mx-auto px-4 py-8">
+        <CrossSellHintDual
+          leftAgent={{
+            text: "Vous générez aussi des nouveaux leads chaque jour ?",
+            agentName: "Louis",
+            agentLink: "/louis",
+            icon: "📞",
+            variant: "blue",
+          }}
+          rightAgent={{
+            text: "Vous manquez des appels entrants ?",
+            agentName: "Alexandra",
+            agentLink: "/alexandra",
+            icon: "☎️",
+            variant: "green",
+          }}
+        />
+      </div>
       <CTAIntermediate />
       <ArthurStrength />
       <TestimonialArthur />
       <PricingArthur />
       <FAQAccordion faqs={faqs.arthur} />
+      <OtherAgents currentAgent="arthur" />
       <CTAFinalArthur />
     </main>
   );

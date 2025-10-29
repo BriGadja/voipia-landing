@@ -52,3 +52,7 @@ export const getAgent = (agentType: string): Agent | undefined => {
 export const getAllAgents = (): Agent[] => {
   return Object.values(agents);
 };
+
+export const getOtherAgents = (currentAgentId: string): Agent[] => {
+  return Object.values(agents).filter(agent => agent.id !== currentAgentId);
+};

@@ -24,14 +24,14 @@ export const testimonials: Record<string, TestimonialData> = {
     ],
   },
   alexandra: {
-    quote: "Alexandra nous a permis de passer de 65% à 100% de taux de réponse. Plus aucun appel manqué, même le week-end. Nos clients adorent.",
-    author: 'Stefano Valentino',
-    role: 'CEO',
+    quote: "Depuis qu'Alexandra gère notre accueil téléphonique, nous avons 100% de taux de réponse même pendant nos pics d'activité. Nos clients sont ravis de ne plus tomber sur un répondeur, et mon équipe peut enfin se concentrer sur son travail sans être interrompue toutes les 10 minutes. Alexandra a transformé notre relation client : elle répond avec précision grâce à notre base de connaissances et prend des rendez-vous comme une vraie professionnelle. Nous avons économisé l'équivalent d'un poste de réceptionniste à temps plein.",
+    author: 'Valentin',
+    role: 'Dirigeant',
     company: 'Stefano Design',
     metrics: [
-      { label: 'Taux de réponse', value: '100%' },
-      { label: 'Satisfaction client', value: '+45%' },
-      { label: 'Disponibilité', value: '24/7' },
+      { label: 'De taux de réponse sans appels manqués', value: '100%' },
+      { label: 'Augmentation de la satisfaction client', value: '+45%' },
+      { label: 'Économisées par semaine sur l\'accueil téléphonique', value: '+30H' },
     ],
   },
 };

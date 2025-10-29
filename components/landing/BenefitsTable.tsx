@@ -1,12 +1,26 @@
 'use client';
 
 import { Card } from '@/components/shared/Card';
-import type { LucideIcon } from 'lucide-react';
+import { Clock, PhoneCall, TrendingUp, Zap, ShieldCheck, Users, DollarSign, Target, PhoneIncoming, PhoneOff, Heart } from 'lucide-react';
+
+const iconMap = {
+  Clock,
+  PhoneCall,
+  TrendingUp,
+  Zap,
+  ShieldCheck,
+  Users,
+  DollarSign,
+  Target,
+  PhoneIncoming,
+  PhoneOff,
+  Heart,
+};
 
 export interface BenefitItem {
   label: string;
   value: string;
-  icon: LucideIcon;
+  icon: keyof typeof iconMap;
 }
 
 interface BenefitsTableProps {
@@ -49,7 +63,10 @@ export function BenefitsTable({
                 {/* Left: Label with icon */}
                 <div className="flex items-center gap-4">
                   <div className={`w-10 h-10 rounded-lg bg-gradient-to-br ${gradientFrom.replace('from-', 'from-').replace('-400', '-500')} ${gradientTo.replace('to-', 'to-').replace('-400', '-500')} flex items-center justify-center flex-shrink-0`}>
-                    <benefit.icon className="w-5 h-5 text-white" />
+                    {(() => {
+                      const Icon = iconMap[benefit.icon];
+                      return <Icon className="w-5 h-5 text-white" />;
+                    })()}
                   </div>
                   <p className="text-gray-300 font-medium">
                     {benefit.label}

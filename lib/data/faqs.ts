@@ -112,8 +112,45 @@ export const arthurFAQs: FAQItem[] = [
   },
 ];
 
-// FAQs spécifiques à Alexandra (à remplir dans Phase 5)
-export const alexandraFAQs: FAQItem[] = [];
+// FAQs spécifiques à Alexandra
+export const alexandraFAQs: FAQItem[] = [
+  {
+    question: 'Que fait exactement Alexandra ?',
+    answer: 'Alexandra répond automatiquement à tous vos appels entrants, 24h/24 et 7j/7. Elle répond aux questions de vos clients grâce à votre base de connaissances, filtre les appels indésirables, prend des rendez-vous directement dans votre agenda et transfère les appels importants vers le bon interlocuteur.',
+  },
+  {
+    question: 'Comment Alexandra répond-elle aux questions spécifiques sur mon entreprise ?',
+    answer: 'Alexandra utilise une base de connaissances personnalisée que vous alimentez avec toutes les informations sur votre entreprise : produits, services, tarifs, FAQ, processus internes. Plus vous lui donnez d\'informations, plus elle devient experte et précise dans ses réponses.',
+  },
+  {
+    question: 'Alexandra peut-elle vraiment filtrer les appels indésirables ?',
+    answer: 'Oui, Alexandra identifie automatiquement les appels de démarchage commercial, les sollicitations non pertinentes et les spams téléphoniques. Vous configurez les règles de filtrage selon vos besoins, et Alexandra ne transfère à votre équipe que les appels à forte valeur ajoutée.',
+  },
+  {
+    question: 'En combien de temps peut-on déployer Alexandra ?',
+    answer: 'Alexandra est opérationnelle en moins de 5 jours ouvrés. Ce délai inclut : la configuration complète, la création de votre base de connaissances personnalisée, l\'intégration avec votre CRM et vos outils, les tests et la mise en production.',
+  },
+  {
+    question: 'Quels outils sont compatibles avec Alexandra ?',
+    answer: 'Alexandra s\'intègre nativement avec tous les principaux outils : Pipedrive, HubSpot, Salesforce, Google Calendar, Outlook, Calendly, Notion, Slack, Make, Zapier. Si vous utilisez un outil spécifique, contactez-nous pour confirmer la compatibilité.',
+  },
+  {
+    question: 'Alexandra parle-t-elle plusieurs langues ?',
+    answer: 'Oui, Alexandra mène des conversations fluides dans plus de 20 langues (français, anglais, espagnol, allemand, italien, portugais...). Elle adapte automatiquement son ton et son approche selon la langue et le pays de votre appelant.',
+  },
+  {
+    question: 'Peut-on écouter les appels traités par Alexandra ?',
+    answer: 'Oui, chaque appel est enregistré, transcrit et accessible depuis le dashboard VoIPIA. Vous pouvez les écouter, les analyser et les utiliser pour améliorer continuellement votre base de connaissances et votre service client.',
+  },
+  {
+    question: 'Que se passe-t-il quand Alexandra ne peut pas répondre à une question ?',
+    answer: 'Si une question dépasse sa base de connaissances, Alexandra le reconnaît immédiatement. Elle peut soit prendre les coordonnées du client pour qu\'un expert le rappelle, soit transférer l\'appel directement vers un membre disponible de votre équipe avec tout le contexte de la conversation.',
+  },
+  {
+    question: 'Alexandra est-elle conforme RGPD ?',
+    answer: 'Oui, absolument. Données hébergées en Europe, chiffrement de bout en bout, conformité RGPD totale. Toutes vos données d\'appels et conversations sont protégées avec le même niveau de sécurité que les institutions bancaires.',
+  },
+];
 
 // Export FAQs object for easy access
 export const faqs = {

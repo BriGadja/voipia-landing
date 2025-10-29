@@ -25,20 +25,20 @@ export function IntegrationBar() {
           <div className="absolute right-0 top-0 bottom-0 w-32 bg-gradient-to-l from-gray-950 to-transparent z-10" />
 
           {/* Logos container with animation */}
-          <div className="flex gap-12 animate-scroll">
+          <div className="flex gap-16 animate-scroll">
             {/* First set of logos */}
             {integrations.map((integration) => (
               <div
                 key={`first-${integration.name}`}
-                className="flex-shrink-0 flex items-center justify-center w-32 h-16 transition-all duration-300 opacity-60 hover:opacity-100"
+                className="flex-shrink-0 flex items-center justify-center w-48 h-24 p-4 transition-all duration-300 opacity-60 hover:opacity-100"
               >
                 {integration.logo ? (
                   <Image
                     src={integration.logo}
                     alt={integration.name}
-                    width={120}
-                    height={40}
-                    className="object-contain"
+                    width={160}
+                    height={80}
+                    className="object-contain max-w-full max-h-full"
                     style={{ filter: 'brightness(0) invert(1)' }}
                   />
                 ) : (
@@ -52,15 +52,15 @@ export function IntegrationBar() {
             {integrations.map((integration) => (
               <div
                 key={`second-${integration.name}`}
-                className="flex-shrink-0 flex items-center justify-center w-32 h-16 transition-all duration-300 opacity-60 hover:opacity-100"
+                className="flex-shrink-0 flex items-center justify-center w-48 h-24 p-4 transition-all duration-300 opacity-60 hover:opacity-100"
               >
                 {integration.logo ? (
                   <Image
                     src={integration.logo}
                     alt={integration.name}
-                    width={120}
-                    height={40}
-                    className="object-contain"
+                    width={160}
+                    height={80}
+                    className="object-contain max-w-full max-h-full"
                     style={{ filter: 'brightness(0) invert(1)' }}
                   />
                 ) : (

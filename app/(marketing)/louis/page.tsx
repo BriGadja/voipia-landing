@@ -90,7 +90,15 @@ export default function LouisPage() {
           }}
         />
       </div>
-      <CTAIntermediate />
+      <CTAIntermediate
+        agentName="Louis"
+        gradient={{
+          background: 'from-blue-900/20 via-cyan-900/10 to-blue-900/20',
+          button: 'from-blue-600 to-cyan-600',
+          buttonHover: 'from-blue-700 to-cyan-700',
+        }}
+        secondaryCtaText="Écouter un exemple d'appel de Louis"
+      />
       <ComparisonTable />
       <TestimonialLouis />
       <PricingLouis />

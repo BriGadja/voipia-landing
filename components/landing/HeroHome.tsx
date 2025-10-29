@@ -33,18 +33,19 @@ export function HeroHome() {
           {/* Main heading */}
           <h1 className="text-5xl md:text-6xl lg:text-7xl font-bold leading-tight">
             <span className="bg-gradient-to-r from-violet-400 via-purple-400 to-pink-400 bg-clip-text text-transparent">
-              Transformez vos appels{' '}
+              Déléguez le traitement{' '}
             </span>
             <br />
             <span className="text-white">
-              en opportunités commerciales
+              de vos prospects à nos agents IA
             </span>
           </h1>
 
           {/* Subtitle */}
           <p className="text-xl md:text-2xl text-gray-300 max-w-3xl mx-auto leading-relaxed">
-            Voipia automatise vos appels sortants et entrants avec des agents IA ultra-réalistes.
-            Qualification, prise de RDV et support client 24/7.
+            Louis rappelle chaque nouveau lead. Alexandra répond à chaque appel.
+            Arthur relance chaque prospect dormant.<br />
+            <span className="text-violet-300 font-semibold">→ Résultat : votre agenda se remplit de RDV qualifiés, tous vos prospects sont traités</span>
           </p>
 
           {/* Agents list */}
@@ -69,12 +70,12 @@ export function HeroHome() {
           {/* CTAs */}
           <div className="flex flex-col sm:flex-row gap-4 justify-center items-center pt-4">
             <Button size="lg" className="group">
-              Démarrer gratuitement
+              Tester nos agents gratuitement
               <ArrowRight className="w-5 h-5 ml-2 group-hover:translate-x-1 transition-transform" />
             </Button>
             <Button size="lg" variant="secondary" asChild>
               <Link href="#demo">
-                Voir la démo
+                Écouter un exemple d'appel
               </Link>
             </Button>
           </div>

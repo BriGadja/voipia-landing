@@ -1,30 +1,30 @@
 'use client';
 
 import { Card } from '@/components/shared/Card';
-import { Upload, Zap, BarChart3 } from 'lucide-react';
+import { Plug, Target, CalendarCheck } from 'lucide-react';
 
 const steps = [
   {
     number: 1,
-    icon: Upload,
-    title: 'Importez vos contacts',
-    description: 'Uploadez votre liste de prospects ou connectez votre CRM en 1 clic. CSV, API, Zapier, Make... tous les formats sont supportés.',
+    icon: Plug,
+    title: 'Connexion instantanée',
+    description: 'Connectez VoIPIA à votre CRM, votre agenda et vos sources de leads en quelques clics. Aucun développement nécessaire.',
     color: 'from-blue-500 to-cyan-500',
     bgGlow: 'bg-blue-500/20',
   },
   {
     number: 2,
-    icon: Zap,
-    title: 'Configurez votre agent IA',
-    description: 'Personnalisez le script, la voix, les objectifs. Notre IA s\'adapte à votre ton et vos process en quelques minutes.',
+    icon: Target,
+    title: 'Qualification automatique',
+    description: 'Nos agents traitent chaque prospect selon vos critères : budget, besoin, urgence. Seuls les leads qualifiés arrivent à votre équipe.',
     color: 'from-violet-500 to-purple-500',
     bgGlow: 'bg-violet-500/20',
   },
   {
     number: 3,
-    icon: BarChart3,
-    title: 'Analysez les résultats',
-    description: 'Dashboard temps réel avec KPIs, transcriptions, enregistrements. Optimisez en continu grâce aux insights IA.',
+    icon: CalendarCheck,
+    title: 'Agenda rempli',
+    description: 'Les RDV sont planifiés directement dans votre agenda. SMS et emails de confirmation automatiques. Vous arrivez préparé.',
     color: 'from-green-500 to-emerald-500',
     bgGlow: 'bg-green-500/20',
   },
@@ -40,16 +40,11 @@ export function HowItWorksHome() {
 
         {/* Section header */}
         <div className="text-center max-w-3xl mx-auto mb-16">
-          <div className="inline-flex items-center gap-2 px-4 py-2 rounded-full bg-violet-500/10 border border-violet-500/20 backdrop-blur-sm mb-6">
-            <span className="text-sm font-semibold text-violet-300">
-              Simple et rapide
-            </span>
-          </div>
           <h2 className="text-4xl md:text-5xl font-bold mb-6">
-            <span className="text-white">Comment ça marche ?</span>
+            <span className="text-white">Découvrez comment nos agents s'occupent de vos opportunités</span>
           </h2>
           <p className="text-xl text-gray-300">
-            Déployez votre agent IA en moins de 10 minutes. Aucune compétence technique requise.
+            De la génération de leads à la prise de rendez-vous, VoIPIA s'intègre parfaitement dans votre workflow.
           </p>
         </div>
 

@@ -96,7 +96,15 @@ export default function ArthurPage() {
           }}
         />
       </div>
-      <CTAIntermediate />
+      <CTAIntermediate
+        agentName="Arthur"
+        gradient={{
+          background: 'from-orange-900/20 via-amber-900/10 to-orange-900/20',
+          button: 'from-orange-600 to-amber-600',
+          buttonHover: 'from-orange-700 to-amber-700',
+        }}
+        secondaryCtaText="Écouter un appel de réactivation d'Arthur"
+      />
       <ArthurStrength />
       <TestimonialArthur />
       <PricingArthur />

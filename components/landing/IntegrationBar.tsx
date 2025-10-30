@@ -5,7 +5,7 @@ import Image from 'next/image';
 
 export function IntegrationBar() {
   return (
-    <section className="py-16 border-y border-white/5 bg-gradient-to-r from-transparent via-white/5 to-transparent">
+    <section className="py-12 border-y border-white/5 bg-gradient-to-r from-transparent via-white/5 to-transparent">
       <div className="container mx-auto px-4">
 
         {/* Title */}
@@ -70,22 +70,6 @@ export function IntegrationBar() {
                 )}
               </div>
             ))}
-          </div>
-        </div>
-
-        {/* Stats */}
-        <div className="flex flex-wrap justify-center gap-8 mt-12 text-center">
-          <div>
-            <p className="text-3xl font-bold text-white">{integrations.length}+</p>
-            <p className="text-sm text-gray-400">Intégrations natives</p>
-          </div>
-          <div>
-            <p className="text-3xl font-bold text-white">API REST</p>
-            <p className="text-sm text-gray-400">Webhooks disponibles</p>
-          </div>
-          <div>
-            <p className="text-3xl font-bold text-white">99.9%</p>
-            <p className="text-sm text-gray-400">Uptime garanti</p>
           </div>
         </div>
 

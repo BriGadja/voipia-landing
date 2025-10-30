@@ -7,24 +7,6 @@ import { agents } from '@/lib/data/agents';
 import { ArrowRight, TrendingUp } from 'lucide-react';
 import Link from 'next/link';
 
-const agentStats = {
-  louis: [
-    { label: '< 60 secondes', description: 'Délai de rappel' },
-    { label: '+72%', description: 'Taux de contact' },
-    { label: 'x3', description: 'Rendez-vous qualifiés' },
-  ],
-  arthur: [
-    { label: '+40k€', description: 'CA généré (Norloc)' },
-    { label: '800%', description: 'ROI moyen' },
-    { label: '15%', description: 'Taux de réactivation' },
-  ],
-  alexandra: [
-    { label: '24/7', description: 'Disponibilité' },
-    { label: '100%', description: 'Taux de réponse' },
-    { label: '+45%', description: 'Satisfaction client' },
-  ],
-};
-
 const audioSamples = {
   louis: '/audio/louis-demo.mp3',
   arthur: '/audio/arthur-demo.mp3',
@@ -35,7 +17,7 @@ export function AgentsGridHome() {
   const agentsList = Object.values(agents);
 
   return (
-    <section className="py-24 relative">
+    <section className="py-16 relative">
       {/* Background decoration */}
       <div className="absolute inset-0 bg-gradient-to-b from-transparent via-purple-900/5 to-transparent" />
 
@@ -44,10 +26,8 @@ export function AgentsGridHome() {
         {/* Section header */}
         <div className="text-center max-w-3xl mx-auto mb-16">
           <h2 className="text-4xl md:text-5xl font-bold mb-6">
-            <span className="text-white">Trois agents IA,</span>
-            <br />
             <span className="bg-gradient-to-r from-violet-400 to-purple-400 bg-clip-text text-transparent">
-              des résultats mesurables
+              Rencontrez votre nouvelle équipe commerciale
             </span>
           </h2>
           <p className="text-xl text-gray-300">
@@ -58,7 +38,6 @@ export function AgentsGridHome() {
         {/* Agents grid */}
         <div className="grid md:grid-cols-3 gap-8 max-w-7xl mx-auto">
           {agentsList.map((agent) => {
-            const stats = agentStats[agent.id as keyof typeof agentStats];
             const audioSrc = audioSamples[agent.id as keyof typeof audioSamples];
 
             return (
@@ -76,20 +55,6 @@ export function AgentsGridHome() {
                   <p className="text-gray-300 text-sm leading-relaxed">
                     {agent.description}
                   </p>
-                </div>
-
-                {/* Stats */}
-                <div className="grid grid-cols-3 gap-4 py-4 border-y border-white/10">
-                  {stats.map((stat, idx) => (
-                    <div key={idx} className="text-center">
-                      <div className={`text-lg font-bold bg-gradient-to-r ${agent.color.gradient} bg-clip-text text-transparent mb-1`}>
-                        {stat.label}
-                      </div>
-                      <div className="text-xs text-gray-400 leading-tight">
-                        {stat.description}
-                      </div>
-                    </div>
-                  ))}
                 </div>
 
                 {/* Audio player */}

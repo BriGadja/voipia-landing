@@ -54,7 +54,7 @@ export default function Home() {
   return (
     <>
       <Header />
-      <main className="overflow-x-hidden pt-16">
+      <main className="overflow-x-hidden pt-12">
         {/* JSON-LD Structured Data */}
         <script
           type="application/ld+json"

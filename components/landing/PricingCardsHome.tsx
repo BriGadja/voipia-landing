@@ -8,7 +8,7 @@ import Link from 'next/link';
 
 export function PricingCardsHome() {
   return (
-    <section className="py-24 relative">
+    <section className="py-16 relative">
       {/* Background decoration */}
       <div className="absolute inset-0 bg-gradient-to-b from-violet-900/5 via-purple-900/10 to-violet-900/5" />
 
@@ -23,14 +23,12 @@ export function PricingCardsHome() {
             </span>
           </div>
           <h2 className="text-4xl md:text-5xl font-bold mb-6">
-            <span className="text-white">Un prix juste,</span>
-            <br />
             <span className="bg-gradient-to-r from-violet-400 to-purple-400 bg-clip-text text-transparent">
-              pas de mauvaises surprises
+              Payez uniquement ce que vous consommez.
             </span>
           </h2>
           <p className="text-xl text-gray-300">
-            Choisissez l&apos;agent qui correspond à vos besoins. Changez ou combinez à tout moment.
+            Aucun coût caché, aucun engagement de durée.
           </p>
         </div>
 
@@ -47,12 +45,6 @@ export function PricingCardsHome() {
                   isPopular ? 'border-2 border-violet-500/50 shadow-2xl shadow-violet-500/20 scale-105' : ''
                 }`}
               >
-                {/* Popular badge */}
-                {isPopular && (
-                  <div className="absolute -top-4 left-1/2 -translate-x-1/2 px-4 py-1 rounded-full bg-gradient-to-r from-violet-600 to-purple-600 text-white text-xs font-bold">
-                    ⭐ {tier.badge}
-                  </div>
-                )}
 
                 {/* Header */}
                 <div className="text-center mb-8">
@@ -67,9 +59,6 @@ export function PricingCardsHome() {
                       /{tier.period === 'month' ? 'mois' : 'an'}
                     </span>
                   </div>
-                  <p className="text-gray-300 text-sm">
-                    {tier.description || `Agent ${tier.name} tout compris`}
-                  </p>
                 </div>
 
                 {/* Features */}
@@ -87,7 +76,7 @@ export function PricingCardsHome() {
                 {/* Consumption info */}
                 <div className="bg-black/20 rounded-lg p-4 mb-6 border border-white/5">
                   <p className="text-xs text-gray-400 mb-2 font-semibold">
-                    Consommation moyenne :
+                    Consommation au réel
                   </p>
                   <div className="grid grid-cols-3 gap-2 text-center">
                     <div>
@@ -140,22 +129,12 @@ export function PricingCardsHome() {
                   asChild
                 >
                   <Link href={`/${tier.agentType}`}>
-                    {tier.cta.label || tier.cta.text}
+                    TESTER NOS AGENTS
                   </Link>
                 </Button>
               </Card>
             );
           })}
-        </div>
-
-        {/* Bottom note */}
-        <div className="text-center mt-12 space-y-4">
-          <p className="text-sm text-gray-400">
-            💡 Combinez plusieurs agents pour bénéficier de tarifs dégressifs
-          </p>
-          <p className="text-sm text-gray-400">
-            Toutes les formules incluent : Support 7j/7, API illimitée, Intégrations natives
-          </p>
         </div>
 
       </div>

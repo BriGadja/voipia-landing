@@ -5,6 +5,7 @@ import ClientChatbot from '@/components/chatbot/ClientChatbot'
 import { Providers } from './providers'
 import { AuthHashHandler } from '@/components/auth/AuthHashHandler'
 import { Analytics } from '@vercel/analytics/next'
+import ClientLemlistTracker from '@/components/tracking/ClientLemlistTracker'
 
 const inter = Inter({ 
   subsets: ['latin'],
@@ -77,6 +78,7 @@ export default function RootLayout({
           <ClientChatbot />
         </Providers>
         <Analytics />
+        <ClientLemlistTracker />
       </body>
     </html>
   )

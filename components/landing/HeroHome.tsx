@@ -4,31 +4,18 @@ import { Button } from '@/components/shared/Button';
 import { agents } from '@/lib/data/agents';
 import { ArrowRight, CheckCircle2 } from 'lucide-react';
 import Link from 'next/link';
+import { WaveBackground } from '@/components/animations/WaveBackground';
 
 export function HeroHome() {
   const agentsList = Object.values(agents);
 
   return (
     <section className="relative min-h-screen flex items-center justify-center overflow-hidden">
-      {/* Background gradient */}
-      <div className="absolute inset-0 bg-gradient-to-br from-violet-900/20 via-purple-900/10 to-transparent" />
-
-      {/* Grid pattern overlay */}
-      <div className="absolute inset-0 bg-[linear-gradient(to_right,#ffffff08_1px,transparent_1px),linear-gradient(to_bottom,#ffffff08_1px,transparent_1px)] bg-[size:4rem_4rem]" />
+      {/* Animated wave background */}
+      <WaveBackground />
 
       <div className="container mx-auto px-4 py-20 relative z-10">
         <div className="max-w-5xl mx-auto text-center space-y-8">
-
-          {/* Badge */}
-          <div className="inline-flex items-center gap-2 px-4 py-2 rounded-full bg-violet-500/10 border border-violet-500/20 backdrop-blur-sm">
-            <span className="relative flex h-2 w-2">
-              <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-violet-400 opacity-75"></span>
-              <span className="relative inline-flex rounded-full h-2 w-2 bg-violet-500"></span>
-            </span>
-            <span className="text-sm font-medium text-violet-300">
-              Intelligence Artificielle Vocale 2025
-            </span>
-          </div>
 
           {/* Main heading */}
           <h1 className="text-5xl md:text-6xl lg:text-7xl font-bold leading-tight">
@@ -67,16 +54,10 @@ export function HeroHome() {
             ))}
           </div>
 
-          {/* CTAs */}
-          <div className="flex flex-col sm:flex-row gap-4 justify-center items-center pt-4">
-            <Button size="lg" className="group">
-              Tester nos agents gratuitement
-              <ArrowRight className="w-5 h-5 ml-2 group-hover:translate-x-1 transition-transform" />
-            </Button>
-            <Button size="lg" variant="secondary" asChild>
-              <Link href="#demo">
-                Écouter un exemple d&apos;appel
-              </Link>
+          {/* CTA */}
+          <div className="flex justify-center items-center pt-4">
+            <Button size="lg">
+              TESTER NOS AGENTS
             </Button>
           </div>
 

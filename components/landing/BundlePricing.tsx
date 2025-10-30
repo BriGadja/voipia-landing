@@ -27,7 +27,7 @@ export function BundlePricing() {
   ];
 
   return (
-    <section className="py-24 relative">
+    <section className="py-16 relative">
       {/* Background decoration */}
       <div className="absolute inset-0 bg-gradient-to-b from-transparent via-purple-900/10 to-transparent" />
 
@@ -100,7 +100,7 @@ export function BundlePricing() {
                 </div>
 
                 <Button variant="primary" size="lg" className="w-full">
-                  Démarrer avec le Pack Complet
+                  TESTER NOS AGENTS
                 </Button>
               </div>
 

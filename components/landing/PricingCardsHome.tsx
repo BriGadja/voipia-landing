@@ -47,7 +47,7 @@ export function PricingCardsHome() {
               >
 
                 {/* Header */}
-                <div className="text-center mb-8">
+                <div className="text-center mb-6">
                   <h3 className="text-2xl font-bold text-white mb-2">
                     {tier.name}
                   </h3>
@@ -58,6 +58,27 @@ export function PricingCardsHome() {
                     <span className="text-gray-400 text-sm">
                       /{tier.period === 'month' ? 'mois' : 'an'}
                     </span>
+                  </div>
+
+                  {/* Consumption info */}
+                  <div className="bg-black/20 rounded-lg p-4 border border-white/5">
+                    <p className="text-xs text-gray-400 mb-3 font-semibold">
+                      + Consommation au réel
+                    </p>
+                    <div className="space-y-2 text-left">
+                      <div className="flex justify-between items-center">
+                        <span className="text-sm font-bold text-white">{tier.consumption.calls}€ / minute</span>
+                        <span className="text-xs text-gray-400">Appel</span>
+                      </div>
+                      <div className="flex justify-between items-center">
+                        <span className="text-sm font-bold text-white">{tier.consumption.sms}€ / SMS</span>
+                        <span className="text-xs text-gray-400">SMS</span>
+                      </div>
+                      <div className="flex justify-between items-center">
+                        <span className="text-sm font-bold text-white">Gratuit</span>
+                        <span className="text-xs text-gray-400">Emails</span>
+                      </div>
+                    </div>
                   </div>
                 </div>
 
@@ -71,27 +92,6 @@ export function PricingCardsHome() {
                       </li>
                     ))}
                   </ul>
-                </div>
-
-                {/* Consumption info */}
-                <div className="bg-black/20 rounded-lg p-4 mb-6 border border-white/5">
-                  <p className="text-xs text-gray-400 mb-2 font-semibold">
-                    Consommation au réel
-                  </p>
-                  <div className="grid grid-cols-3 gap-2 text-center">
-                    <div>
-                      <p className="text-xs text-gray-500">Appels</p>
-                      <p className="text-sm font-bold text-white">{tier.consumption.calls}</p>
-                    </div>
-                    <div>
-                      <p className="text-xs text-gray-500">SMS</p>
-                      <p className="text-sm font-bold text-white">{tier.consumption.sms}</p>
-                    </div>
-                    <div>
-                      <p className="text-xs text-gray-500">Emails</p>
-                      <p className="text-sm font-bold text-white">{tier.consumption.emails}</p>
-                    </div>
-                  </div>
                 </div>
 
                 {/* Example (if available) */}

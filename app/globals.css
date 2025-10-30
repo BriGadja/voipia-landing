@@ -65,43 +65,4 @@
     animation-delay: 600ms;
   }
 
-  /* Wave animations */
-  @keyframes wave-slow {
-    0%, 100% {
-      transform: translateX(0) translateY(0);
-    }
-    50% {
-      transform: translateX(-25px) translateY(-10px);
-    }
-  }
-
-  @keyframes wave-medium {
-    0%, 100% {
-      transform: translateX(0) translateY(0);
-    }
-    50% {
-      transform: translateX(-15px) translateY(-5px);
-    }
-  }
-
-  @keyframes wave-fast {
-    0%, 100% {
-      transform: translateX(0) translateY(0);
-    }
-    50% {
-      transform: translateX(-10px) translateY(-3px);
-    }
-  }
-
-  .animate-wave-slow {
-    animation: wave-slow 20s ease-in-out infinite;
-  }
-
-  .animate-wave-medium {
-    animation: wave-medium 15s ease-in-out infinite;
-  }
-
-  .animate-wave-fast {
-    animation: wave-fast 10s ease-in-out infinite;
-  }
 }

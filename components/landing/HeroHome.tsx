@@ -4,15 +4,15 @@ import { Button } from '@/components/shared/Button';
 import { agents } from '@/lib/data/agents';
 import { ArrowRight, CheckCircle2 } from 'lucide-react';
 import Link from 'next/link';
-import { WaveBackground } from '@/components/animations/WaveBackground';
+import { RippleBackground } from '@/components/animations/RippleBackground';
 
 export function HeroHome() {
   const agentsList = Object.values(agents);
 
   return (
     <section className="relative min-h-screen flex items-center justify-center overflow-hidden">
-      {/* Animated wave background */}
-      <WaveBackground />
+      {/* Animated ripple background */}
+      <RippleBackground />
 
       <div className="container mx-auto px-4 py-20 relative z-10">
         <div className="max-w-5xl mx-auto text-center space-y-8">

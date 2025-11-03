@@ -28,9 +28,9 @@ export function ClientAgentFilter({
     return acc
   }, [] as typeof clientsRaw)
 
-  // Fetch accessible agents filtered by agent type
+  // Fetch accessible agents filtered by agent type and selected clients
   const { data: allAgentsRaw, isLoading: isLoadingAgents } = useAccessibleAgents(
-    undefined, // clientIds (will be filtered after)
+    selectedClientIds.length > 0 ? selectedClientIds : undefined,
     agentType // Filter by agent type
   )
 
@@ -42,10 +42,8 @@ export function ClientAgentFilter({
     return acc
   }, [] as typeof allAgentsRaw)
 
-  // Filter agents based on selected client (if any)
-  const agents = selectedClientIds.length > 0
-    ? allAgents?.filter((agent) => selectedClientIds.includes(agent.client_id))
-    : allAgents
+  // Agents are already filtered by database query via selectedClientIds
+  const agents = allAgents
 
   // Reset agents selection if clients change and selected agent is no longer valid
   useEffect(() => {

@@ -208,7 +208,7 @@ const CTAPopupForm: React.FC<CTAPopupFormProps> = ({
         <>
           {/* Backdrop */}
           <motion.div
-            className="fixed inset-0 bg-black/80 backdrop-blur-sm z-50"
+            className="fixed inset-0 bg-black/80 backdrop-blur-sm z-[100]"
             onClick={onClose}
             initial={{ opacity: 0 }}
             animate={{ opacity: 1 }}
@@ -217,7 +217,7 @@ const CTAPopupForm: React.FC<CTAPopupFormProps> = ({
           />
 
           {/* Modal Container */}
-          <div className="fixed inset-0 z-50 flex items-center justify-center p-4">
+          <div className="fixed inset-0 z-[100] flex items-center justify-center p-4">
             <motion.div
               className={cn(
                 "bg-gray-900/95 backdrop-blur-xl rounded-2xl",

@@ -1,8 +1,15 @@
+'use client';
+
+import { useState } from 'react';
 import { Card } from '@/components/shared/Card';
 import { Button } from '@/components/shared/Button';
 import { Check, TrendingDown } from 'lucide-react';
+import CTAPopupForm from '@/components/ui/CTAPopupForm';
+import SuccessToast from '@/components/ui/SuccessToast';
 
 export function BundlePricing() {
+  const [isPopupOpen, setIsPopupOpen] = useState(false);
+  const [showSuccessToast, setShowSuccessToast] = useState(false);
   const bundle = {
     name: 'Pack Complet',
     tagline: 'Les 3 agents IA pour une couverture commerciale totale',
@@ -99,7 +106,7 @@ export function BundlePricing() {
                   ))}
                 </div>
 
-                <Button variant="primary" size="lg" className="w-full">
+                <Button variant="primary" size="lg" className="w-full" onClick={() => setIsPopupOpen(true)}>
                   TESTER NOS AGENTS
                 </Button>
               </div>
@@ -127,6 +134,19 @@ export function BundlePricing() {
           💡 Le Pack Complet inclut les 3 abonnements + consommation au réel (appels, SMS)
         </p>
       </div>
+
+      {/* Popup & Toast */}
+      <CTAPopupForm
+        isOpen={isPopupOpen}
+        onClose={() => setIsPopupOpen(false)}
+        onSuccess={() => setShowSuccessToast(true)}
+      />
+
+      <SuccessToast
+        show={showSuccessToast}
+        message="Vous allez recevoir un appel dans 30 secondes ! 🎙️"
+        onClose={() => setShowSuccessToast(false)}
+      />
     </section>
   );
 }

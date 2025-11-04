@@ -1,13 +1,18 @@
 'use client';
 
+import { useState } from 'react';
 import { Button } from '@/components/shared/Button';
 import { agents } from '@/lib/data/agents';
 import { ArrowRight, CheckCircle2 } from 'lucide-react';
 import Link from 'next/link';
 import { RippleBackground } from '@/components/animations/RippleBackground';
+import CTAPopupForm from '@/components/ui/CTAPopupForm';
+import SuccessToast from '@/components/ui/SuccessToast';
 
 export function HeroHome() {
   const agentsList = Object.values(agents);
+  const [isPopupOpen, setIsPopupOpen] = useState(false);
+  const [showSuccessToast, setShowSuccessToast] = useState(false);
 
   return (
     <section className="relative min-h-screen flex items-center justify-center overflow-hidden">
@@ -56,7 +61,7 @@ export function HeroHome() {
 
           {/* CTA */}
           <div className="flex justify-center items-center pt-4">
-            <Button size="lg">
+            <Button size="lg" onClick={() => setIsPopupOpen(true)}>
               TESTER NOS AGENTS
             </Button>
           </div>
@@ -66,6 +71,19 @@ export function HeroHome() {
 
       {/* Bottom fade */}
       <div className="absolute bottom-0 inset-x-0 h-32 bg-gradient-to-t from-gray-950 to-transparent" />
+
+      {/* Popup & Toast */}
+      <CTAPopupForm
+        isOpen={isPopupOpen}
+        onClose={() => setIsPopupOpen(false)}
+        onSuccess={() => setShowSuccessToast(true)}
+      />
+
+      <SuccessToast
+        show={showSuccessToast}
+        message="Vous allez recevoir un appel dans 30 secondes ! 🎙️"
+        onClose={() => setShowSuccessToast(false)}
+      />
     </section>
   );
 }

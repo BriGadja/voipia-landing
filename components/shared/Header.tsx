@@ -4,9 +4,13 @@ import { useState } from 'react';
 import Link from 'next/link';
 import { ChevronDown } from 'lucide-react';
 import { getAllAgents } from '@/lib/data/agents';
+import CTAPopupForm from '@/components/ui/CTAPopupForm';
+import SuccessToast from '@/components/ui/SuccessToast';
 
 export function Header() {
   const [isOpen, setIsOpen] = useState(false);
+  const [isPopupOpen, setIsPopupOpen] = useState(false);
+  const [showSuccessToast, setShowSuccessToast] = useState(false);
   const agents = getAllAgents();
 
   return (
@@ -78,15 +82,29 @@ export function Header() {
             >
               Connexion
             </Link>
-            <Link
-              href="/#contact"
+            <button
+              onClick={() => setIsPopupOpen(true)}
               className="px-4 py-2 bg-gradient-to-r from-violet-600 to-purple-600 rounded-lg text-sm font-semibold hover:from-violet-700 hover:to-purple-700 transition-all hover:shadow-lg hover:shadow-violet-500/20"
             >
               TESTER NOS AGENTS
-            </Link>
+            </button>
           </div>
         </div>
       </div>
+
+      {/* Popup & Toast */}
+      <CTAPopupForm
+        isOpen={isPopupOpen}
+        onClose={() => setIsPopupOpen(false)}
+        onSuccess={() => setShowSuccessToast(true)}
+      />
+
+      <SuccessToast
+        show={showSuccessToast}
+        message="Vous allez recevoir un appel dans 30 secondes ! 🎙️"
+        onClose={() => setShowSuccessToast(false)}
+      />
     </header>
   );
 }
+

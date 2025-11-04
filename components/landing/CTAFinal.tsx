@@ -1,9 +1,14 @@
 'use client';
 
+import { useState } from 'react';
 import { Button } from '@/components/shared/Button';
 import { ArrowRight, Sparkles, Phone } from 'lucide-react';
+import CTAPopupForm from '@/components/ui/CTAPopupForm';
+import SuccessToast from '@/components/ui/SuccessToast';
 
 export function CTAFinal() {
+  const [isPopupOpen, setIsPopupOpen] = useState(false);
+  const [showSuccessToast, setShowSuccessToast] = useState(false);
   return (
     <section className="py-16 relative overflow-hidden">
       {/* Background decoration */}
@@ -42,7 +47,7 @@ export function CTAFinal() {
 
           {/* CTA */}
           <div className="flex justify-center items-center mb-12">
-            <Button size="lg" className="shadow-2xl shadow-violet-500/30 hover:shadow-violet-500/50">
+            <Button size="lg" className="shadow-2xl shadow-violet-500/30 hover:shadow-violet-500/50" onClick={() => setIsPopupOpen(true)}>
               TESTER NOS AGENTS
             </Button>
           </div>
@@ -50,6 +55,19 @@ export function CTAFinal() {
         </div>
 
       </div>
+
+      {/* Popup & Toast */}
+      <CTAPopupForm
+        isOpen={isPopupOpen}
+        onClose={() => setIsPopupOpen(false)}
+        onSuccess={() => setShowSuccessToast(true)}
+      />
+
+      <SuccessToast
+        show={showSuccessToast}
+        message="Vous allez recevoir un appel dans 30 secondes ! 🎙️"
+        onClose={() => setShowSuccessToast(false)}
+      />
     </section>
   );
 }

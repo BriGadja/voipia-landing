@@ -358,13 +358,15 @@ const CTAPopupForm: React.FC<CTAPopupFormProps> = ({
                     value={formData.industry}
                     onChange={(e) => handleChange('industry', e.target.value)}
                     required
+                    style={{ colorScheme: 'dark' }}
                     className={cn(
                       "w-full px-4 py-2 bg-black/30 border border-white/10",
                       "rounded-lg text-white",
                       "focus:border-purple-500 focus:outline-none focus:ring-2 focus:ring-purple-500/20",
                       "transition-colors appearance-none cursor-pointer",
                       "bg-[url('data:image/svg+xml;charset=UTF-8,%3csvg%20xmlns%3D%22http%3A%2F%2Fwww.w3.org%2F2000%2Fsvg%22%20width%3D%2212%22%20height%3D%2212%22%20viewBox%3D%220%200%2012%2012%22%3e%3cpath%20fill%3D%22%23ffffff66%22%20d%3D%22M10.293%203.293L6%207.586%201.707%203.293A1%201%200%200%200%20.293%204.707l5%205a1%201%200%200%200%201.414%200l5-5a1%201%200%201%200-1.414-1.414z%22%2F%3e%3c%2Fsvg%3e')]",
-                      "bg-[length:1rem] bg-[right_1rem_center] bg-no-repeat"
+                      "bg-[length:1rem] bg-[right_1rem_center] bg-no-repeat",
+                      "[&>option]:bg-gray-900 [&>option]:text-white"
                     )}
                   >
                     {INDUSTRIES.map((ind) => (
@@ -372,7 +374,6 @@ const CTAPopupForm: React.FC<CTAPopupFormProps> = ({
                         key={ind.value}
                         value={ind.value}
                         disabled={ind.disabled}
-                        className="bg-gray-900 text-white"
                       >
                         {ind.label}
                       </option>

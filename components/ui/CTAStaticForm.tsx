@@ -293,7 +293,7 @@ const CTAStaticForm: React.FC<CTAStaticFormProps> = ({ onSuccess }) => {
             helperText="Vous pouvez entrer simplement example.com (le https:// sera ajouté automatiquement)"
           >
             <input
-              type="url"
+              type="text"
               value={formData.website}
               onChange={(e) => handleChange('website', e.target.value)}
               placeholder="example.com"

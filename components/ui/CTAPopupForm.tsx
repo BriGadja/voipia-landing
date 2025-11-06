@@ -6,7 +6,6 @@ import {
   X,
   Building,
   Globe,
-  Briefcase,
   Mail,
   Phone,
   Loader2
@@ -24,7 +23,6 @@ interface FormData {
   lastName: string;
   company: string;
   website: string;
-  industry: string;
   email: string;
   phone: string;
   countryCode: string;
@@ -58,19 +56,6 @@ const FormField: React.FC<FormFieldProps> = ({
   </div>
 );
 
-const INDUSTRIES = [
-  { value: '', label: 'Sélectionnez votre secteur', disabled: true },
-  { value: 'immobilier', label: 'Immobilier' },
-  { value: 'finance', label: 'Finance/Banque' },
-  { value: 'ecommerce', label: 'E-commerce' },
-  { value: 'services-b2b', label: 'Services B2B' },
-  { value: 'sante', label: 'Santé' },
-  { value: 'technologie', label: 'Technologie' },
-  { value: 'education', label: 'Éducation' },
-  { value: 'automobile', label: 'Automobile' },
-  { value: 'autre', label: 'Autre' }
-];
-
 const COUNTRY_CODES = [
   { value: '+33', label: '🇫🇷 +33', flag: '🇫🇷' },
   { value: '+1', label: '🇺🇸 +1', flag: '🇺🇸' },
@@ -79,17 +64,68 @@ const COUNTRY_CODES = [
   { value: '+41', label: '🇨🇭 +41', flag: '🇨🇭' }
 ];
 
-const URL_PATTERN = /^https?:\/\/.+\..+$/;
 const EMAIL_PATTERN = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+
+// Normalise l'URL en ajoutant https:// si manquant
+const normalizeWebsite = (url: string): string => {
+  let normalized = url.trim();
+
+  // Si pas de protocole, ajouter https://
+  if (normalized && !normalized.match(/^https?:\/\//i)) {
+    normalized = `https://${normalized}`;
+  }
+
+  return normalized;
+};
+
+// Valide qu'une URL a un format domaine.extension minimum
+const isValidWebsite = (url: string): boolean => {
+  if (!url.trim()) return false;
+  const normalized = normalizeWebsite(url);
+  // Vérifie domaine.extension minimum (ex: example.com, www.example.fr)
+  return /^https?:\/\/([a-zA-Z0-9-]+\.)+[a-zA-Z]{2,}(\/.*)?$/.test(normalized);
+};
+
+// Normalise un numéro de téléphone français
+const normalizeFrenchPhone = (phone: string): string => {
+  // Supprimer tous les espaces, points, tirets, parenthèses
+  let cleaned = phone.replace(/[\s.\-()]/g, '');
+
+  // Cas 1: +33 6 XX XX XX XX → 06XXXXXXXX
+  if (cleaned.startsWith('+33')) {
+    cleaned = '0' + cleaned.substring(3);
+  }
+
+  // Cas 2: 0033 6 XX XX XX XX → 06XXXXXXXX
+  if (cleaned.startsWith('0033')) {
+    cleaned = '0' + cleaned.substring(4);
+  }
+
+  // Cas 3: 336XXXXXXXX → 06XXXXXXXX (11 chiffres commençant par 33)
+  if (cleaned.startsWith('33') && cleaned.length === 11) {
+    cleaned = '0' + cleaned.substring(2);
+  }
+
+  return cleaned;
+};
+
+// Valide qu'un numéro est un téléphone français valide (10 chiffres commençant par 0)
+const isValidFrenchPhone = (phone: string): boolean => {
+  if (!phone.trim()) return false;
+  const normalized = normalizeFrenchPhone(phone);
+
+  // Doit être exactement 10 chiffres commençant par 0
+  // Mobiles: 06, 07 / Fixes: 01, 02, 03, 04, 05, 09
+  return /^0[1-9]\d{8}$/.test(normalized);
+};
 
 const validateForm = (data: FormData): boolean => {
   if (!data.firstName.trim()) return false;
   if (!data.lastName.trim()) return false;
   if (!data.company.trim()) return false;
-  if (!URL_PATTERN.test(data.website)) return false;
-  if (!data.industry) return false;
+  if (!isValidWebsite(data.website)) return false;
   if (!EMAIL_PATTERN.test(data.email)) return false;
-  if (!data.phone.trim() || data.phone.length < 6) return false;
+  if (!isValidFrenchPhone(data.phone)) return false;
   return true;
 };
 
@@ -103,7 +139,6 @@ const CTAPopupForm: React.FC<CTAPopupFormProps> = ({
     lastName: '',
     company: '',
     website: '',
-    industry: '',
     email: '',
     phone: '',
     countryCode: '+33'
@@ -152,14 +187,18 @@ const CTAPopupForm: React.FC<CTAPopupFormProps> = ({
     setError(null);
 
     try {
+      const normalizedWebsite = normalizeWebsite(formData.website.trim());
+      const normalizedPhone = normalizeFrenchPhone(formData.phone);
+      // Format final: +33648057431 (sans le 0 initial)
+      const fullPhone = `${formData.countryCode}${normalizedPhone.substring(1)}`;
+
       const payload = {
         firstName: formData.firstName.trim(),
         lastName: formData.lastName.trim(),
         company: formData.company.trim(),
-        website: formData.website.trim(),
-        industry: formData.industry,
+        website: normalizedWebsite,
         email: formData.email.trim().toLowerCase(),
-        phone: `${formData.countryCode}${formData.phone.replace(/\s/g, '')}`,
+        phone: fullPhone,
         source: 'landing_cta',
         timestamp: new Date().toISOString()
       };
@@ -186,7 +225,6 @@ const CTAPopupForm: React.FC<CTAPopupFormProps> = ({
         lastName: '',
         company: '',
         website: '',
-        industry: '',
         email: '',
         phone: '',
         countryCode: '+33'
@@ -334,15 +372,14 @@ const CTAPopupForm: React.FC<CTAPopupFormProps> = ({
                   label="Site Web de l'entreprise"
                   icon={<Globe className="w-4 h-4" />}
                   required
-                  helperText="URL complète (https://...)"
+                  helperText="Vous pouvez entrer simplement example.com (le https:// sera ajouté automatiquement)"
                 >
                   <input
                     type="url"
                     value={formData.website}
                     onChange={(e) => handleChange('website', e.target.value)}
-                    placeholder="https://votresite.com"
+                    placeholder="example.com"
                     required
-                    pattern="^https?:\/\/.+\..+$"
                     className={cn(
                       "w-full px-4 py-2 bg-black/30 border border-white/10",
                       "rounded-lg text-white placeholder-white/40",
@@ -350,35 +387,6 @@ const CTAPopupForm: React.FC<CTAPopupFormProps> = ({
                       "transition-colors"
                     )}
                   />
-                </FormField>
-
-                {/* Industry Select */}
-                <FormField label="Secteur d'activité" icon={<Briefcase className="w-4 h-4" />} required>
-                  <select
-                    value={formData.industry}
-                    onChange={(e) => handleChange('industry', e.target.value)}
-                    required
-                    style={{ colorScheme: 'dark' }}
-                    className={cn(
-                      "w-full px-4 py-2 bg-black/30 border border-white/10",
-                      "rounded-lg text-white",
-                      "focus:border-purple-500 focus:outline-none focus:ring-2 focus:ring-purple-500/20",
-                      "transition-colors appearance-none cursor-pointer",
-                      "bg-[url('data:image/svg+xml;charset=UTF-8,%3csvg%20xmlns%3D%22http%3A%2F%2Fwww.w3.org%2F2000%2Fsvg%22%20width%3D%2212%22%20height%3D%2212%22%20viewBox%3D%220%200%2012%2012%22%3e%3cpath%20fill%3D%22%23ffffff66%22%20d%3D%22M10.293%203.293L6%207.586%201.707%203.293A1%201%200%200%200%20.293%204.707l5%205a1%201%200%200%200%201.414%200l5-5a1%201%200%201%200-1.414-1.414z%22%2F%3e%3c%2Fsvg%3e')]",
-                      "bg-[length:1rem] bg-[right_1rem_center] bg-no-repeat",
-                      "[&>option]:bg-gray-900 [&>option]:text-white"
-                    )}
-                  >
-                    {INDUSTRIES.map((ind) => (
-                      <option
-                        key={ind.value}
-                        value={ind.value}
-                        disabled={ind.disabled}
-                      >
-                        {ind.label}
-                      </option>
-                    ))}
-                  </select>
                 </FormField>
 
                 {/* Email */}
@@ -435,9 +443,8 @@ const CTAPopupForm: React.FC<CTAPopupFormProps> = ({
                       type="tel"
                       value={formData.phone}
                       onChange={(e) => handleChange('phone', e.target.value)}
-                      placeholder="6 66 62 82 99"
+                      placeholder="06 12 34 56 78"
                       required
-                      minLength={6}
                       className={cn(
                         "flex-1 px-4 py-2 bg-black/30 border border-white/10",
                         "rounded-lg text-white placeholder-white/40",

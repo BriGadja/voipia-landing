@@ -1,11 +1,12 @@
 'use client'
 
+import { useState, useEffect } from 'react'
 import { useDashboardFilters } from '@/lib/hooks/useDashboardFilters'
 import {
   useClientCardsData,
   useAgentTypeCardsData,
 } from '@/lib/hooks/useDashboardData'
-import { exportGlobalCallsToCSV } from '@/lib/queries/global'
+import { exportGlobalCallsToCSV, checkIsAdmin } from '@/lib/queries/global'
 import { DashboardHeader } from '@/components/dashboard/DashboardHeader'
 import { DateRangeFilter } from '@/components/dashboard/Filters/DateRangeFilter'
 import { ExportCSVButton } from '@/components/dashboard/ExportCSVButton'
@@ -25,12 +26,20 @@ interface GlobalDashboardClientProps {
  * All cards are dynamically generated from Supabase data
  */
 export function GlobalDashboardClient({ userEmail }: GlobalDashboardClientProps) {
+  // Admin status
+  const [isAdmin, setIsAdmin] = useState(false)
+
   // URL-based filters
   const { filters, setDateRange } = useDashboardFilters()
 
   // Fetch dynamic cards data
   const { data: clientCards, isLoading: isLoadingClients } = useClientCardsData(filters)
   const { data: agentTypeCards, isLoading: isLoadingAgentTypes } = useAgentTypeCardsData(filters)
+
+  // Check admin status on mount
+  useEffect(() => {
+    checkIsAdmin().then(setIsAdmin)
+  }, [])
 
   // Handle filter changes
   const handleDateChange = (start: Date, end: Date) => {
@@ -44,7 +53,7 @@ export function GlobalDashboardClient({ userEmail }: GlobalDashboardClientProps)
   return (
     <>
       {/* Header */}
-      <DashboardHeader userEmail={userEmail} title="Dashboard Global" />
+      <DashboardHeader userEmail={userEmail} title="Dashboard Global" isAdmin={isAdmin} />
 
       {/* Main Content */}
       <div className="container mx-auto px-4 py-8 space-y-8">

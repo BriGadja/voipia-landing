@@ -1,7 +1,7 @@
 'use client'
 
 import Link from 'next/link'
-import { ArrowLeft, LayoutDashboard } from 'lucide-react'
+import { ArrowLeft, LayoutDashboard, TrendingUp } from 'lucide-react'
 import { LogoutButton } from '@/components/auth/LogoutButton'
 
 interface DashboardHeaderProps {
@@ -9,6 +9,7 @@ interface DashboardHeaderProps {
   title?: string
   backLink?: string
   backLabel?: string
+  isAdmin?: boolean
 }
 
 /**
@@ -19,7 +20,8 @@ export function DashboardHeader({
   userEmail,
   title = 'Dashboard Analytics',
   backLink,
-  backLabel = 'Dashboard Global'
+  backLabel = 'Dashboard Global',
+  isAdmin = false
 }: DashboardHeaderProps) {
   return (
     <header className="sticky top-0 z-40 w-full border-b border-white/10 bg-black/50 backdrop-blur-lg">
@@ -47,8 +49,17 @@ export function DashboardHeader({
             </div>
           </div>
 
-          {/* Right: Logout Button */}
-          <div className="flex items-center gap-4">
+          {/* Right: Finances Button (Admin only) + Logout Button */}
+          <div className="flex items-center gap-3">
+            {isAdmin && (
+              <Link
+                href="/dashboard/financial"
+                className="flex items-center gap-2 px-4 py-2 rounded-lg bg-emerald-600/20 hover:bg-emerald-600/30 border border-emerald-500/30 hover:border-emerald-500/50 transition-colors text-sm text-emerald-400 hover:text-emerald-300 font-medium"
+              >
+                <TrendingUp className="w-4 h-4" />
+                <span>Finances</span>
+              </Link>
+            )}
             <LogoutButton />
           </div>
         </div>

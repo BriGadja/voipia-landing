@@ -13,6 +13,27 @@ import type {
 } from '@/lib/types/dashboard'
 
 /**
+ * Check if the current user has admin permissions
+ * Returns true if user has at least one client with 'admin' permission level
+ */
+export async function checkIsAdmin(): Promise<boolean> {
+  const supabase = createClient()
+
+  const { data, error } = await supabase
+    .from('user_client_permissions')
+    .select('permission_level')
+    .eq('permission_level', 'admin')
+    .limit(1)
+
+  if (error) {
+    console.error('Error checking admin status:', error)
+    return false
+  }
+
+  return data && data.length > 0
+}
+
+/**
  * Fetch all clients accessible by the authenticated user
  * Uses v_user_accessible_clients view with RLS
  */

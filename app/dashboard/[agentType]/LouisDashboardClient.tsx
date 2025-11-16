@@ -1,11 +1,13 @@
 'use client'
 
+import { useState, useEffect } from 'react'
 import { useDashboardFilters } from '@/lib/hooks/useDashboardFilters'
 import {
   useLouisKPIs,
   useLouisChartData,
 } from '@/lib/hooks/useDashboardData'
 import { exportLouisCallsToCSV } from '@/lib/queries/louis'
+import { checkIsAdmin } from '@/lib/queries/global'
 import { DashboardHeader } from '@/components/dashboard/DashboardHeader'
 import { DateRangeFilter } from '@/components/dashboard/Filters/DateRangeFilter'
 import { ClientAgentFilter } from '@/components/dashboard/Filters/ClientAgentFilter'
@@ -26,6 +28,9 @@ interface LouisDashboardClientProps {
  * Displays Louis-specific KPIs and metrics
  */
 export function LouisDashboardClient({ userEmail }: LouisDashboardClientProps) {
+  // Admin status
+  const [isAdmin, setIsAdmin] = useState(false)
+
   // URL-based filters
   const { filters, setClientIds, setDeploymentId, setDateRange } =
     useDashboardFilters()
@@ -34,6 +39,11 @@ export function LouisDashboardClient({ userEmail }: LouisDashboardClientProps) {
   const { data: kpiData, isLoading: isLoadingKPIs } = useLouisKPIs(filters)
   const { data: chartData, isLoading: isLoadingCharts } =
     useLouisChartData(filters)
+
+  // Check admin status on mount
+  useEffect(() => {
+    checkIsAdmin().then(setIsAdmin)
+  }, [])
 
   // Handle filter changes
   const handleDateChange = (start: Date, end: Date) => {
@@ -53,6 +63,7 @@ export function LouisDashboardClient({ userEmail }: LouisDashboardClientProps) {
         title="Dashboard Louis"
         backLink="/dashboard"
         backLabel="Dashboard Global"
+        isAdmin={isAdmin}
       />
 
       {/* Main Content */}

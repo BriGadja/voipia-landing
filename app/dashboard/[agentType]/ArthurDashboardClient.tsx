@@ -1,10 +1,11 @@
 'use client'
 
-import { useState } from 'react'
+import { useState, useEffect } from 'react'
 import { useQuery } from '@tanstack/react-query'
 import { subDays } from 'date-fns'
 import { Download, Loader2 } from 'lucide-react'
 import { fetchArthurKPIMetrics, fetchArthurChartData, exportArthurCallsToCSV } from '@/lib/queries/arthur'
+import { checkIsAdmin } from '@/lib/queries/global'
 import { DashboardHeader } from '@/components/dashboard/DashboardHeader'
 import { DateRangeFilter } from '@/components/dashboard/Filters/DateRangeFilter'
 import { ClientAgentFilter } from '@/components/dashboard/Filters/ClientAgentFilter'
@@ -20,11 +21,17 @@ interface ArthurDashboardClientProps {
  * Displays Arthur-specific KPIs and metrics
  */
 export function ArthurDashboardClient({ userEmail }: ArthurDashboardClientProps) {
+  const [isAdmin, setIsAdmin] = useState(false)
   const [startDate, setStartDate] = useState(subDays(new Date(), 30))
   const [endDate, setEndDate] = useState(new Date())
   const [selectedClientIds, setSelectedClientIds] = useState<string[]>([])
   const [selectedAgentIds, setSelectedAgentIds] = useState<string[]>([])
   const [isExporting, setIsExporting] = useState(false)
+
+  // Check admin status on mount
+  useEffect(() => {
+    checkIsAdmin().then(setIsAdmin)
+  }, [])
 
   // Fetch Arthur KPI metrics
   const { data: kpiData, isLoading: isLoadingKPIs } = useQuery({
@@ -100,6 +107,7 @@ export function ArthurDashboardClient({ userEmail }: ArthurDashboardClientProps)
         title="Dashboard Arthur"
         backLink="/dashboard"
         backLabel="Dashboard Global"
+        isAdmin={isAdmin}
       />
 
       {/* Main Content */}

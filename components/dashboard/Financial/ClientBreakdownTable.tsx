@@ -68,6 +68,12 @@ export function ClientBreakdownTable({ data, isLoading }: ClientBreakdownTablePr
                   Appels
                 </th>
                 <th className="text-right py-3 px-4 text-sm font-semibold text-gray-400">
+                  SMS
+                </th>
+                <th className="text-right py-3 px-4 text-sm font-semibold text-gray-400">
+                  Emails
+                </th>
+                <th className="text-right py-3 px-4 text-sm font-semibold text-gray-400">
                   RDV
                 </th>
               </tr>
@@ -109,6 +115,12 @@ export function ClientBreakdownTable({ data, isLoading }: ClientBreakdownTablePr
                   <td className="py-3 px-4 text-sm text-right text-gray-300">
                     {client.call_count.toLocaleString('fr-FR')}
                   </td>
+                  <td className="py-3 px-4 text-sm text-right text-blue-400">
+                    {client.sms_count.toLocaleString('fr-FR')}
+                  </td>
+                  <td className="py-3 px-4 text-sm text-right text-cyan-400">
+                    {client.email_count.toLocaleString('fr-FR')}
+                  </td>
                   <td className="py-3 px-4 text-sm text-right text-violet-400 font-medium">
                     {client.appointments_scheduled}
                   </td>
@@ -120,7 +132,7 @@ export function ClientBreakdownTable({ data, isLoading }: ClientBreakdownTablePr
 
         {/* Summary row */}
         <div className="mt-4 pt-4 border-t border-gray-800/50">
-          <div className="grid grid-cols-2 md:grid-cols-4 gap-4 text-sm">
+          <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-6 gap-4 text-sm">
             <div>
               <p className="text-gray-400 mb-1">Total Revenue</p>
               <p className="text-white font-bold">
@@ -141,6 +153,18 @@ export function ClientBreakdownTable({ data, isLoading }: ClientBreakdownTablePr
               <p className="text-gray-400 mb-1">Total Appels</p>
               <p className="text-white font-bold">
                 {data.reduce((sum, c) => sum + c.call_count, 0).toLocaleString('fr-FR')}
+              </p>
+            </div>
+            <div>
+              <p className="text-gray-400 mb-1">Total SMS</p>
+              <p className="text-blue-400 font-bold">
+                {data.reduce((sum, c) => sum + c.sms_count, 0).toLocaleString('fr-FR')}
+              </p>
+            </div>
+            <div>
+              <p className="text-gray-400 mb-1">Total Emails</p>
+              <p className="text-cyan-400 font-bold">
+                {data.reduce((sum, c) => sum + c.email_count, 0).toLocaleString('fr-FR')}
               </p>
             </div>
             <div>

@@ -137,7 +137,7 @@ export function ClientBreakdownTable({ data, isLoading }: ClientBreakdownTablePr
               <p className="text-gray-400 mb-1">Total Revenue</p>
               <p className="text-white font-bold">
                 {formatCurrency(
-                  data.reduce((sum, c) => sum + c.total_revenue, 0)
+                  data.filter(c => c.client_name.toLowerCase() !== 'voipia').reduce((sum, c) => sum + c.total_revenue, 0)
                 )}
               </p>
             </div>
@@ -145,35 +145,38 @@ export function ClientBreakdownTable({ data, isLoading }: ClientBreakdownTablePr
               <p className="text-gray-400 mb-1">Total Marge</p>
               <p className="text-emerald-400 font-bold">
                 {formatCurrency(
-                  data.reduce((sum, c) => sum + c.total_margin, 0)
+                  data.filter(c => c.client_name.toLowerCase() !== 'voipia').reduce((sum, c) => sum + c.total_margin, 0)
                 )}
               </p>
             </div>
             <div>
               <p className="text-gray-400 mb-1">Total Appels</p>
               <p className="text-white font-bold">
-                {data.reduce((sum, c) => sum + c.call_count, 0).toLocaleString('fr-FR')}
+                {data.filter(c => c.client_name.toLowerCase() !== 'voipia').reduce((sum, c) => sum + c.call_count, 0).toLocaleString('fr-FR')}
               </p>
             </div>
             <div>
               <p className="text-gray-400 mb-1">Total SMS</p>
               <p className="text-blue-400 font-bold">
-                {data.reduce((sum, c) => sum + c.sms_count, 0).toLocaleString('fr-FR')}
+                {data.filter(c => c.client_name.toLowerCase() !== 'voipia').reduce((sum, c) => sum + c.sms_count, 0).toLocaleString('fr-FR')}
               </p>
             </div>
             <div>
               <p className="text-gray-400 mb-1">Total Emails</p>
               <p className="text-cyan-400 font-bold">
-                {data.reduce((sum, c) => sum + c.email_count, 0).toLocaleString('fr-FR')}
+                {data.filter(c => c.client_name.toLowerCase() !== 'voipia').reduce((sum, c) => sum + c.email_count, 0).toLocaleString('fr-FR')}
               </p>
             </div>
             <div>
               <p className="text-gray-400 mb-1">Total RDV</p>
               <p className="text-violet-400 font-bold">
-                {data.reduce((sum, c) => sum + c.appointments_scheduled, 0)}
+                {data.filter(c => c.client_name.toLowerCase() !== 'voipia').reduce((sum, c) => sum + c.appointments_scheduled, 0)}
               </p>
             </div>
           </div>
+          <p className="text-xs text-gray-500 mt-3 italic">
+            * Les totaux excluent Voipia (agent interne)
+          </p>
         </div>
       </div>
     </motion.div>

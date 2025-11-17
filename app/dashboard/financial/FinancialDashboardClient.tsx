@@ -1,11 +1,14 @@
 'use client'
 
 import { useState } from 'react'
-import { useFinancialKPIs, useClientBreakdown } from '@/lib/hooks/useFinancialData'
+import { useFinancialKPIs, useClientBreakdown, useFinancialTimeSeries, useCostBreakdown } from '@/lib/hooks/useFinancialData'
 import { getDefaultDateRange } from '@/lib/queries/financial'
 import { FinancialKPIGrid } from '@/components/dashboard/Financial/FinancialKPIGrid'
-import { ClientBreakdownTable } from '@/components/dashboard/Financial/ClientBreakdownTable'
-import type { FinancialFilters } from '@/lib/types/financial'
+import { ClientBreakdownTableV2 } from '@/components/dashboard/Financial/ClientBreakdownTableV2'
+import { FinancialTimeSeriesChart } from '@/components/dashboard/Financial/FinancialTimeSeriesChart'
+import { CostBreakdownChart } from '@/components/dashboard/Financial/CostBreakdownChart'
+import { ClientDrilldownModal } from '@/components/dashboard/Financial/ClientDrilldownModal'
+import type { FinancialFilters, ClientFinancialData } from '@/lib/types/financial'
 
 export function FinancialDashboardClient() {
   // Default to last 30 days
@@ -18,9 +21,18 @@ export function FinancialDashboardClient() {
     deploymentId: null,
   })
 
+  // Modal state for drill down
+  const [selectedClient, setSelectedClient] = useState<ClientFinancialData | null>(null)
+  const [isModalOpen, setIsModalOpen] = useState(false)
+
   // Fetch data
   const { data: kpiData, isLoading: kpiLoading, error: kpiError } = useFinancialKPIs(filters)
   const { data: clientData, isLoading: clientLoading } = useClientBreakdown(filters)
+  const { data: timeSeriesData, isLoading: timeSeriesLoading } = useFinancialTimeSeries({
+    ...filters,
+    granularity: 'day'
+  })
+  const { data: costBreakdownData, isLoading: costBreakdownLoading } = useCostBreakdown(filters)
 
   return (
     <div className="min-h-screen bg-gradient-to-br from-gray-950 via-gray-900 to-black">
@@ -78,6 +90,24 @@ export function FinancialDashboardClient() {
         {/* KPI Grid */}
         <FinancialKPIGrid data={kpiData} isLoading={kpiLoading} />
 
+        {/* Time Series Chart */}
+        <div className="mb-6">
+          <FinancialTimeSeriesChart
+            data={timeSeriesData || []}
+            isLoading={timeSeriesLoading}
+            height={350}
+          />
+        </div>
+
+        {/* Cost Breakdown Chart */}
+        <div className="mb-6">
+          <CostBreakdownChart
+            data={costBreakdownData}
+            isLoading={costBreakdownLoading}
+            height={450}
+          />
+        </div>
+
         {/* Period Info */}
         {kpiData && !kpiLoading && (
           <div className="mb-6 p-4 bg-gray-800/30 border border-gray-700/30 rounded-lg">
@@ -123,7 +153,26 @@ export function FinancialDashboardClient() {
         )}
 
         {/* Client Breakdown Table */}
-        <ClientBreakdownTable data={clientData} isLoading={clientLoading} />
+        <ClientBreakdownTableV2
+          data={clientData}
+          isLoading={clientLoading}
+          onDetailClick={(client) => {
+            setSelectedClient(client)
+            setIsModalOpen(true)
+          }}
+        />
+
+        {/* Client Drill Down Modal */}
+        <ClientDrilldownModal
+          client={selectedClient}
+          isOpen={isModalOpen}
+          onClose={() => {
+            setIsModalOpen(false)
+            setSelectedClient(null)
+          }}
+          startDate={filters.startDate}
+          endDate={filters.endDate}
+        />
 
         {/* Footer Note */}
         <div className="mt-8 p-4 bg-gray-800/20 border border-gray-700/20 rounded-lg">

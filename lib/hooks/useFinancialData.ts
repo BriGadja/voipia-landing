@@ -9,7 +9,12 @@ import type {
   ClientFinancialData,
   AgentTypeFinancialData,
   DeploymentFinancialData,
+  ClientDeploymentData,
+  DeploymentChannelData,
   ChannelDrilldownResponse,
+  TimeSeriesDataPoint,
+  TimeSeriesFilters,
+  CostBreakdownResponse,
 } from "@/lib/types/financial";
 import {
   fetchFinancialKPIMetrics,
@@ -17,6 +22,10 @@ import {
   fetchAgentTypeBreakdown,
   fetchDeploymentBreakdown,
   fetchChannelBreakdown,
+  fetchFinancialTimeSeries,
+  fetchClientDeployments,
+  fetchDeploymentChannels,
+  fetchCostBreakdown,
 } from "@/lib/queries/financial";
 
 // ============================================================================
@@ -33,6 +42,14 @@ const FINANCIAL_QUERY_KEYS = {
     ["financial", "deployment-breakdown", filters] as const,
   channelBreakdown: (filters: FinancialFilters) =>
     ["financial", "channel-breakdown", filters] as const,
+  timeSeries: (filters: TimeSeriesFilters) =>
+    ["financial", "time-series", filters] as const,
+  clientDeployments: (clientId: string, startDate: string, endDate: string) =>
+    ["financial", "client-deployments", clientId, startDate, endDate] as const,
+  deploymentChannels: (deploymentId: string, startDate: string, endDate: string) =>
+    ["financial", "deployment-channels", deploymentId, startDate, endDate] as const,
+  costBreakdown: (filters: FinancialFilters) =>
+    ["financial", "cost-breakdown", filters] as const,
 } as const;
 
 // ============================================================================
@@ -108,6 +125,78 @@ export function useChannelBreakdown(
   return useQuery({
     queryKey: FINANCIAL_QUERY_KEYS.channelBreakdown(filters),
     queryFn: () => fetchChannelBreakdown(filters),
+    staleTime: 1000 * 60 * 5, // 5 minutes
+    refetchOnWindowFocus: false,
+  });
+}
+
+// ============================================================================
+// Time Series Hooks
+// ============================================================================
+
+/**
+ * Fetch financial time series data for charts
+ */
+export function useFinancialTimeSeries(
+  filters: TimeSeriesFilters
+): UseQueryResult<TimeSeriesDataPoint[], Error> {
+  return useQuery({
+    queryKey: FINANCIAL_QUERY_KEYS.timeSeries(filters),
+    queryFn: () => fetchFinancialTimeSeries(filters),
+    staleTime: 1000 * 60 * 5, // 5 minutes
+    refetchOnWindowFocus: false,
+  });
+}
+
+/**
+ * Fetch deployment breakdown for a specific client (drill down)
+ */
+export function useClientDeployments(
+  clientId: string,
+  startDate: string,
+  endDate: string,
+  enabled: boolean = true
+): UseQueryResult<ClientDeploymentData[], Error> {
+  return useQuery({
+    queryKey: FINANCIAL_QUERY_KEYS.clientDeployments(clientId, startDate, endDate),
+    queryFn: () => fetchClientDeployments(clientId, startDate, endDate),
+    enabled: enabled && !!clientId && !!startDate && !!endDate,
+    staleTime: 1000 * 60 * 5, // 5 minutes
+    refetchOnWindowFocus: false,
+  });
+}
+
+/**
+ * Fetch channel breakdown for a specific deployment (drill down)
+ */
+export function useDeploymentChannels(
+  deploymentId: string,
+  startDate: string,
+  endDate: string,
+  enabled: boolean = true
+): UseQueryResult<DeploymentChannelData[], Error> {
+  return useQuery({
+    queryKey: FINANCIAL_QUERY_KEYS.deploymentChannels(deploymentId, startDate, endDate),
+    queryFn: () => fetchDeploymentChannels(deploymentId, startDate, endDate),
+    enabled: enabled && !!deploymentId && !!startDate && !!endDate,
+    staleTime: 1000 * 60 * 5, // 5 minutes
+    refetchOnWindowFocus: false,
+  });
+}
+
+// ============================================================================
+// Combined Hook for All Financial Data
+// ============================================================================
+
+/**
+ * Fetch detailed cost breakdown by technology
+ */
+export function useCostBreakdown(
+  filters: FinancialFilters
+): UseQueryResult<CostBreakdownResponse, Error> {
+  return useQuery({
+    queryKey: FINANCIAL_QUERY_KEYS.costBreakdown(filters),
+    queryFn: () => fetchCostBreakdown(filters),
     staleTime: 1000 * 60 * 5, // 5 minutes
     refetchOnWindowFocus: false,
   });

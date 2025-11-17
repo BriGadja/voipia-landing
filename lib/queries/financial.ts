@@ -10,7 +10,13 @@ import type {
   ClientFinancialData,
   AgentTypeFinancialData,
   DeploymentFinancialData,
+  ClientDeploymentData,
+  DeploymentChannelData,
   ChannelDrilldownResponse,
+  TimeSeriesDataPoint,
+  TimeSeriesFilters,
+  TimeSeriesGranularity,
+  CostBreakdownResponse,
 } from "@/lib/types/financial";
 
 // ============================================================================
@@ -100,6 +106,39 @@ export async function fetchChannelBreakdown(
 ): Promise<ChannelDrilldownResponse> {
   const data = await fetchFinancialDrilldown(filters, "channel");
   return data as ChannelDrilldownResponse;
+}
+
+// ============================================================================
+// Fetch Financial Time Series Data
+// ============================================================================
+
+/**
+ * Fetch financial time series data for charts
+ * Returns daily/weekly/monthly metrics aggregated by period
+ */
+export async function fetchFinancialTimeSeries(
+  filters: TimeSeriesFilters
+): Promise<TimeSeriesDataPoint[]> {
+  const supabase = createClient();
+
+  const granularity: TimeSeriesGranularity = filters.granularity || 'day';
+
+  const { data, error } = await supabase.rpc("get_financial_timeseries", {
+    p_start_date: filters.startDate,
+    p_end_date: filters.endDate,
+    p_client_id: filters.clientId || null,
+    p_agent_type_name: filters.agentTypeName || null,
+    p_deployment_id: filters.deploymentId || null,
+    p_granularity: granularity,
+  });
+
+  if (error) {
+    console.error("Error fetching financial time series:", error);
+    throw new Error(`Failed to fetch financial time series: ${error.message}`);
+  }
+
+  // data is returned as JSONB array, parse it
+  return (data || []) as TimeSeriesDataPoint[];
 }
 
 // ============================================================================
@@ -211,4 +250,84 @@ export function exportToCSV(
   document.body.appendChild(link);
   link.click();
   document.body.removeChild(link);
+}
+
+// ============================================================================
+// Drill Down Queries
+// ============================================================================
+
+/**
+ * Fetch deployment breakdown for a specific client
+ */
+export async function fetchClientDeployments(
+  clientId: string,
+  startDate: string,
+  endDate: string
+): Promise<ClientDeploymentData[]> {
+  const supabase = createClient();
+
+  const { data, error } = await supabase.rpc("get_client_deployments_breakdown", {
+    p_client_id: clientId,
+    p_start_date: startDate,
+    p_end_date: endDate,
+  });
+
+  if (error) {
+    console.error("Error fetching client deployments:", error);
+    throw new Error(`Failed to fetch client deployments: ${error.message}`);
+  }
+
+  return (data || []) as ClientDeploymentData[];
+}
+
+/**
+ * Fetch channel breakdown for a specific deployment
+ */
+export async function fetchDeploymentChannels(
+  deploymentId: string,
+  startDate: string,
+  endDate: string
+): Promise<DeploymentChannelData[]> {
+  const supabase = createClient();
+
+  const { data, error } = await supabase.rpc("get_deployment_channels_breakdown", {
+    p_deployment_id: deploymentId,
+    p_start_date: startDate,
+    p_end_date: endDate,
+  });
+
+  if (error) {
+    console.error("Error fetching deployment channels:", error);
+    throw new Error(`Failed to fetch deployment channels: ${error.message}`);
+  }
+
+  return (data || []) as DeploymentChannelData[];
+}
+
+// ============================================================================
+// Cost Breakdown Query
+// ============================================================================
+
+/**
+ * Fetch detailed cost breakdown by technology (STT, TTS, LLM, Telecom, Dipler Commission)
+ */
+export async function fetchCostBreakdown(
+  filters: FinancialFilters
+): Promise<CostBreakdownResponse> {
+  const supabase = createClient();
+
+  const { data, error } = await supabase.rpc("get_cost_breakdown", {
+    p_start_date: filters.startDate,
+    p_end_date: filters.endDate,
+    p_client_id: filters.clientId || null,
+    p_agent_type_name: filters.agentTypeName || null,
+    p_deployment_id: filters.deploymentId || null,
+  });
+
+  if (error) {
+    console.error("Error fetching cost breakdown:", error);
+    throw new Error(`Failed to fetch cost breakdown: ${error.message}`);
+  }
+
+  return data as CostBreakdownResponse;
 }

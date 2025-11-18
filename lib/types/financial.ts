@@ -370,4 +370,5 @@ export interface CostBreakdownChartDataPoint {
   value: number;
   percentage: number;
   color: string;
+  [key: string]: string | number; // Index signature for Recharts compatibility
 }

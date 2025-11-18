@@ -17,6 +17,9 @@ import type {
   TimeSeriesFilters,
   TimeSeriesGranularity,
   CostBreakdownResponse,
+  LeasingMetrics,
+  ConsumptionMetrics,
+  AgentUnitPricing,
 } from "@/lib/types/financial";
 
 // ============================================================================
@@ -330,4 +333,76 @@ export async function fetchCostBreakdown(
   }
 
   return data as CostBreakdownResponse;
+}
+
+// ============================================================================
+// Leasing vs Consumption Queries (v2)
+// Added: 2025-01-18
+// ============================================================================
+
+/**
+ * Fetch leasing-specific KPI metrics
+ * Returns subscription revenue metrics with 100% margin
+ */
+export async function fetchLeasingMetrics(
+  filters: FinancialFilters
+): Promise<LeasingMetrics> {
+  const supabase = createClient();
+
+  const { data, error } = await supabase.rpc("get_leasing_kpi_metrics", {
+    p_start_date: filters.startDate,
+    p_end_date: filters.endDate,
+  });
+
+  if (error) {
+    console.error("Error fetching leasing metrics:", error);
+    throw new Error(`Failed to fetch leasing metrics: ${error.message}`);
+  }
+
+  return data as LeasingMetrics;
+}
+
+/**
+ * Fetch consumption-specific KPI metrics
+ * Returns usage revenue metrics (calls, SMS, emails) with variable margin
+ */
+export async function fetchConsumptionMetrics(
+  filters: FinancialFilters
+): Promise<ConsumptionMetrics> {
+  const supabase = createClient();
+
+  const { data, error } = await supabase.rpc("get_consumption_kpi_metrics", {
+    p_start_date: filters.startDate,
+    p_end_date: filters.endDate,
+  });
+
+  if (error) {
+    console.error("Error fetching consumption metrics:", error);
+    throw new Error(`Failed to fetch consumption metrics: ${error.message}`);
+  }
+
+  return data as ConsumptionMetrics;
+}
+
+/**
+ * Fetch unit pricing by agent (deployment level)
+ * Returns cost, price, and margin per unit (minute, SMS, email) for each agent
+ */
+export async function fetchAgentUnitPricing(
+  filters: FinancialFilters
+): Promise<AgentUnitPricing[]> {
+  const supabase = createClient();
+
+  const { data, error } = await supabase.rpc("get_consumption_pricing_by_agent", {
+    p_start_date: filters.startDate,
+    p_end_date: filters.endDate,
+    p_client_id: filters.clientId || null,
+  });
+
+  if (error) {
+    console.error("Error fetching agent unit pricing:", error);
+    throw new Error(`Failed to fetch agent unit pricing: ${error.message}`);
+  }
+
+  return (data || []) as AgentUnitPricing[];
 }

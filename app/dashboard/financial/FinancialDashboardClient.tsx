@@ -1,14 +1,17 @@
 'use client'
 
 import { useState } from 'react'
-import { useFinancialKPIs, useClientBreakdown, useFinancialTimeSeries, useCostBreakdown } from '@/lib/hooks/useFinancialData'
+import { useFinancialKPIs, useClientBreakdown, useFinancialTimeSeries, useCostBreakdown, useLeasingMetrics, useConsumptionMetrics } from '@/lib/hooks/useFinancialData'
 import { getDefaultDateRange } from '@/lib/queries/financial'
 import { FinancialKPIGrid } from '@/components/dashboard/Financial/FinancialKPIGrid'
 import { ClientBreakdownTableV2 } from '@/components/dashboard/Financial/ClientBreakdownTableV2'
 import { FinancialTimeSeriesChart } from '@/components/dashboard/Financial/FinancialTimeSeriesChart'
 import { CostBreakdownChart } from '@/components/dashboard/Financial/CostBreakdownChart'
 import { ClientDrilldownModal } from '@/components/dashboard/Financial/ClientDrilldownModal'
-import type { FinancialFilters, ClientFinancialData } from '@/lib/types/financial'
+import FinancialViewToggle from '@/components/dashboard/Financial/FinancialViewToggle'
+import { LeasingKPIGrid } from '@/components/dashboard/Financial/LeasingKPIGrid'
+import { ConsumptionKPIGrid } from '@/components/dashboard/Financial/ConsumptionKPIGrid'
+import type { FinancialFilters, ClientFinancialData, FinancialViewMode } from '@/lib/types/financial'
 
 export function FinancialDashboardClient() {
   // Default to last 30 days
@@ -21,12 +24,17 @@ export function FinancialDashboardClient() {
     deploymentId: null,
   })
 
+  // View mode state (leasing vs consumption)
+  const [viewMode, setViewMode] = useState<FinancialViewMode>('leasing')
+
   // Modal state for drill down
   const [selectedClient, setSelectedClient] = useState<ClientFinancialData | null>(null)
   const [isModalOpen, setIsModalOpen] = useState(false)
 
   // Fetch data
   const { data: kpiData, isLoading: kpiLoading, error: kpiError } = useFinancialKPIs(filters)
+  const { data: leasingData, isLoading: leasingLoading } = useLeasingMetrics(filters)
+  const { data: consumptionData, isLoading: consumptionLoading } = useConsumptionMetrics(filters)
   const { data: clientData, isLoading: clientLoading } = useClientBreakdown(filters)
   const { data: timeSeriesData, isLoading: timeSeriesLoading } = useFinancialTimeSeries({
     ...filters,
@@ -87,8 +95,25 @@ export function FinancialDashboardClient() {
           </div>
         )}
 
-        {/* KPI Grid */}
-        <FinancialKPIGrid data={kpiData} isLoading={kpiLoading} />
+        {/* View Toggle: Leasing vs Consumption */}
+        <div className="mb-6 flex justify-center">
+          <FinancialViewToggle
+            mode={viewMode}
+            onModeChange={setViewMode}
+          />
+        </div>
+
+        {/* KPI Grid - Conditional based on view mode */}
+        {viewMode === 'leasing' ? (
+          <LeasingKPIGrid data={leasingData} isLoading={leasingLoading} />
+        ) : (
+          <ConsumptionKPIGrid data={consumptionData} isLoading={consumptionLoading} />
+        )}
+
+        {/* Legacy KPI Grid (hidden, kept for backward compatibility) */}
+        <div className="hidden">
+          <FinancialKPIGrid data={kpiData} isLoading={kpiLoading} />
+        </div>
 
         {/* Time Series Chart */}
         <div className="mb-6">
@@ -177,8 +202,9 @@ export function FinancialDashboardClient() {
         {/* Footer Note */}
         <div className="mt-8 p-4 bg-gray-800/20 border border-gray-700/20 rounded-lg">
           <p className="text-xs text-gray-500 text-center">
-            💡 <span className="font-semibold">Note:</span> Ce dashboard affiche la marge Voipia en temps réel.
-            Les coûts provider incluent les appels (VAPI), SMS et emails. Le leasing est pro-raté par jour.
+            💡 <span className="font-semibold">Note:</span> Ce dashboard sépare désormais le leasing (abonnement fixe, 100% marge)
+            de la consommation (usage variable, marge calculée). Utilisez le toggle pour basculer entre les deux vues.
+            Les coûts provider incluent uniquement les coûts d'utilisation (STT, TTS, LLM, SMS, emails).
           </p>
         </div>
       </div>

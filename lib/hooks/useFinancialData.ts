@@ -15,6 +15,9 @@ import type {
   TimeSeriesDataPoint,
   TimeSeriesFilters,
   CostBreakdownResponse,
+  LeasingMetrics,
+  ConsumptionMetrics,
+  AgentUnitPricing,
 } from "@/lib/types/financial";
 import {
   fetchFinancialKPIMetrics,
@@ -26,6 +29,9 @@ import {
   fetchClientDeployments,
   fetchDeploymentChannels,
   fetchCostBreakdown,
+  fetchLeasingMetrics,
+  fetchConsumptionMetrics,
+  fetchAgentUnitPricing,
 } from "@/lib/queries/financial";
 
 // ============================================================================
@@ -50,6 +56,12 @@ const FINANCIAL_QUERY_KEYS = {
     ["financial", "deployment-channels", deploymentId, startDate, endDate] as const,
   costBreakdown: (filters: FinancialFilters) =>
     ["financial", "cost-breakdown", filters] as const,
+  leasingMetrics: (filters: FinancialFilters) =>
+    ["financial", "leasing-metrics", filters] as const,
+  consumptionMetrics: (filters: FinancialFilters) =>
+    ["financial", "consumption-metrics", filters] as const,
+  agentUnitPricing: (filters: FinancialFilters) =>
+    ["financial", "agent-unit-pricing", filters] as const,
 } as const;
 
 // ============================================================================
@@ -197,6 +209,56 @@ export function useCostBreakdown(
   return useQuery({
     queryKey: FINANCIAL_QUERY_KEYS.costBreakdown(filters),
     queryFn: () => fetchCostBreakdown(filters),
+    staleTime: 1000 * 60 * 5, // 5 minutes
+    refetchOnWindowFocus: false,
+  });
+}
+
+// ============================================================================
+// Leasing vs Consumption Hooks
+// Added: 2025-01-18
+// ============================================================================
+
+/**
+ * Fetch leasing-specific KPI metrics
+ * Returns subscription revenue metrics with 100% margin
+ */
+export function useLeasingMetrics(
+  filters: FinancialFilters
+): UseQueryResult<LeasingMetrics, Error> {
+  return useQuery({
+    queryKey: FINANCIAL_QUERY_KEYS.leasingMetrics(filters),
+    queryFn: () => fetchLeasingMetrics(filters),
+    staleTime: 1000 * 60 * 5, // 5 minutes
+    refetchOnWindowFocus: false,
+  });
+}
+
+/**
+ * Fetch consumption-specific KPI metrics
+ * Returns usage revenue metrics (calls, SMS, emails) with variable margin
+ */
+export function useConsumptionMetrics(
+  filters: FinancialFilters
+): UseQueryResult<ConsumptionMetrics, Error> {
+  return useQuery({
+    queryKey: FINANCIAL_QUERY_KEYS.consumptionMetrics(filters),
+    queryFn: () => fetchConsumptionMetrics(filters),
+    staleTime: 1000 * 60 * 5, // 5 minutes
+    refetchOnWindowFocus: false,
+  });
+}
+
+/**
+ * Fetch unit pricing by agent (deployment level)
+ * Returns cost, price, and margin per unit (minute, SMS, email) for each agent
+ */
+export function useAgentUnitPricing(
+  filters: FinancialFilters
+): UseQueryResult<AgentUnitPricing[], Error> {
+  return useQuery({
+    queryKey: FINANCIAL_QUERY_KEYS.agentUnitPricing(filters),
+    queryFn: () => fetchAgentUnitPricing(filters),
     staleTime: 1000 * 60 * 5, // 5 minutes
     refetchOnWindowFocus: false,
   });

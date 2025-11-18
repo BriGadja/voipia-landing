@@ -372,3 +372,173 @@ export interface CostBreakdownChartDataPoint {
   color: string;
   [key: string]: string | number; // Index signature for Recharts compatibility
 }
+
+// ============================================================================
+// Leasing vs Consumption Separation Types (v2)
+// Added: 2025-01-18
+// ============================================================================
+
+// Leasing-specific KPI metrics
+export interface LeasingMetrics {
+  total_leasing_revenue: number;
+  active_leasing_count: number;
+  avg_leasing_per_client: number;
+  mrr: number; // Monthly Recurring Revenue
+  avg_monthly_leasing: number;
+  leasing_client_count: number;
+  leasing_adoption_rate: number;
+  total_leasing_margin: number;
+  leasing_margin_pct: number; // Always 100% for leasing
+}
+
+// Consumption-specific KPI metrics
+export interface ConsumptionMetrics {
+  // Revenue & Margin
+  total_consumption_revenue: number;
+  total_provider_cost: number;
+  total_consumption_margin: number;
+  consumption_margin_pct: number;
+
+  // Volume metrics
+  total_calls: number;
+  total_sms: number;
+  total_emails: number;
+  total_answered_calls: number;
+  total_appointments: number;
+
+  // Breakdown by channel
+  call_revenue: number;
+  call_provider_cost: number;
+  call_margin: number;
+  call_margin_pct: number;
+
+  sms_revenue: number;
+  sms_provider_cost: number;
+  sms_margin: number;
+  sms_margin_pct: number;
+
+  email_revenue: number;
+  email_provider_cost: number;
+  email_margin: number;
+  email_margin_pct: number;
+
+  // Unit pricing (average across all agents)
+  avg_cost_per_minute: number;
+  avg_cost_per_sms: number;
+  avg_cost_per_email: number;
+  avg_revenue_per_minute: number;
+  avg_revenue_per_sms: number;
+  avg_revenue_per_email: number;
+
+  // Business metrics
+  avg_consumption_per_client: number;
+  consumption_client_count: number;
+  active_deployment_count: number;
+}
+
+// Unit pricing metrics for a specific agent deployment
+export interface AgentChannelMetrics {
+  // Volumes
+  total_calls?: number;
+  answered_calls?: number;
+  total_minutes?: number;
+  total_sms_sent?: number;
+  sms_delivered?: number;
+  total_emails_sent?: number;
+  emails_delivered?: number;
+
+  // Unit costs (provider)
+  cost_per_minute_provider?: number;
+  cost_per_sms_provider?: number;
+  cost_per_email_provider?: number;
+
+  // Unit prices (charged to client)
+  price_per_minute_charged?: number;
+  price_per_sms_charged?: number;
+  price_per_email_charged?: number;
+
+  // Unit margins
+  margin_per_minute?: number;
+  margin_per_sms?: number;
+  margin_per_email?: number;
+
+  // Margin percentages
+  margin_pct_calls?: number;
+  margin_pct_sms?: number;
+  margin_pct_emails?: number;
+
+  // Totals
+  total_call_revenue?: number;
+  total_call_cost?: number;
+  total_call_margin?: number;
+
+  total_sms_revenue?: number;
+  total_sms_cost?: number;
+  total_sms_margin?: number;
+
+  total_email_revenue?: number;
+  total_email_cost?: number;
+  total_email_margin?: number;
+}
+
+export interface AgentTotalConsumption {
+  total_consumption_revenue: number;
+  total_consumption_cost: number;
+  total_consumption_margin: number;
+  consumption_margin_pct: number;
+}
+
+export interface AgentUnitPricing {
+  // Identification
+  deployment_id: string;
+  deployment_name: string;
+  client_name: string;
+  agent_type_name: string;
+  agent_type_label: string;
+  status: string;
+
+  // Channel-specific metrics
+  call_metrics: AgentChannelMetrics;
+  sms_metrics: AgentChannelMetrics;
+  email_metrics: AgentChannelMetrics;
+
+  // Total consumption (excluding leasing)
+  total_consumption: AgentTotalConsumption;
+}
+
+// Response type from get_consumption_pricing_by_agent
+export interface ConsumptionPricingResponse {
+  agents: AgentUnitPricing[];
+}
+
+// View mode for dashboard toggle
+export type FinancialViewMode = 'leasing' | 'consumption';
+
+// Props for FinancialViewToggle component
+export interface FinancialViewToggleProps {
+  mode: FinancialViewMode;
+  onModeChange: (mode: FinancialViewMode) => void;
+}
+
+// Extended ClientDeploymentData with unit pricing
+export interface ClientDeploymentDataV2 extends ClientDeploymentData {
+  // Unit pricing for calls
+  cost_per_minute_provider?: number;
+  price_per_minute_charged?: number;
+  margin_per_minute?: number;
+
+  // Unit pricing for SMS
+  cost_per_sms_provider?: number;
+  price_per_sms_charged?: number;
+  margin_per_sms?: number;
+
+  // Unit pricing for emails
+  cost_per_email_provider?: number;
+  price_per_email_charged?: number;
+  margin_per_email?: number;
+
+  // Separated revenues
+  consumption_revenue?: number;
+  consumption_margin?: number;
+  consumption_margin_pct?: number;
+}

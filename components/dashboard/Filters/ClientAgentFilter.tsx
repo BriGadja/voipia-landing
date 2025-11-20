@@ -111,7 +111,7 @@ export function ClientAgentFilter({
             <option value="all">Tous les agents</option>
             {agents?.map((agent) => (
               <option key={agent.deployment_id} value={agent.deployment_id}>
-                {agent.deployment_name} - {agent.client_name}
+                {agent.deployment_name}
               </option>
             ))}
           </select>

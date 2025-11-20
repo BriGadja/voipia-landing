@@ -9,7 +9,18 @@
         "--project-ref=tcpecjoeelbnnvdkvgvg"
       ],
       "env": {
-        "SUPABASE_ACCESS_TOKEN": "sbp_384510571e34a850b47ec80cd9ca5940ab854bc9"
+        "SUPABASE_ACCESS_TOKEN": "sbp_6081c5258b19f624ae23dbb446781695a2aa2318"
+      }
+    },
+    "supabase-staging": {
+      "command": "C:\\Program Files\\nodejs\\npx.cmd",
+      "args": [
+        "-y",
+        "@supabase/mcp-server-supabase@latest",
+        "--project-ref=vmmohjvwtbrotygzjias"
+      ],
+      "env": {
+        "SUPABASE_ACCESS_TOKEN": "sbp_f5410bfb53bc83280b10b378ba13c6308c29b0b1"
       }
     }
   }

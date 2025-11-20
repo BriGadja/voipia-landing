@@ -30,7 +30,10 @@ const emotionColors: Record<string, string> = {
 }
 
 export function EmotionDistribution({ data }: EmotionDistributionProps) {
-  const chartData = data.map((item) => ({
+  // Filter out "unknown" emotions by default
+  const filteredData = data.filter((item) => item.emotion !== 'unknown' && item.emotion !== 'Inconnu')
+
+  const chartData = filteredData.map((item) => ({
     name: emotionLabels[item.emotion] || emotionLabels.unknown,
     value: item.count,
     color: emotionColors[item.emotion] || emotionColors.unknown,

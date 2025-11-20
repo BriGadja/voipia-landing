@@ -7,6 +7,7 @@ interface KPIGridProps {
   data: KPIMetrics | undefined
   isLoading: boolean
   agentType?: 'global' | 'louis' | 'arthur' | 'alexandra'
+  avgLatency?: number // Average total latency in milliseconds (for Louis dashboard)
 }
 
 /**
@@ -14,7 +15,7 @@ interface KPIGridProps {
  * Displays a responsive grid of KPI cards with period comparison
  * Adapts KPI display based on agent type (global, louis, arthur)
  */
-export function KPIGrid({ data, isLoading, agentType = 'global' }: KPIGridProps) {
+export function KPIGrid({ data, isLoading, agentType = 'global', avgLatency = 0 }: KPIGridProps) {
   if (isLoading) {
     return (
       <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
@@ -38,7 +39,7 @@ export function KPIGrid({ data, isLoading, agentType = 'global' }: KPIGridProps)
 
   const { current_period, previous_period } = data
 
-  // Louis Original Dashboard - 5 KPIs specifiques
+  // Louis Original Dashboard - 6 KPIs specifiques
   const louisOriginalKPIs = [
     {
       label: 'Total Appels',
@@ -69,11 +70,18 @@ export function KPIGrid({ data, isLoading, agentType = 'global' }: KPIGridProps)
       decorationColor: 'violet' as const, // violet #8b5cf6
     },
     {
-      label: 'Taux de Conversion',
+      label: 'Conversion',
       value: current_period.conversion_rate,
       previousValue: previous_period.conversion_rate,
       format: 'percentage' as const,
       decorationColor: 'blue' as const, // cyan #06b6d4
+    },
+    {
+      label: 'Latence totale moyenne',
+      value: avgLatency,
+      previousValue: 0, // No comparison for latency
+      format: 'latency' as const,
+      decorationColor: 'emerald' as const, // emerald for performance metric
     },
   ]
 
@@ -235,9 +243,9 @@ export function KPIGrid({ data, isLoading, agentType = 'global' }: KPIGridProps)
         ...(agentType === 'global' ? globalKPIs : []),
       ]
 
-  // Grid columns: 5 for Louis (5 KPIs), 4 for others
+  // Grid columns: 6 for Louis (6 KPIs), 4 for others
   const gridCols = agentType === 'louis'
-    ? 'grid-cols-1 md:grid-cols-3 lg:grid-cols-5'
+    ? 'grid-cols-1 md:grid-cols-3 lg:grid-cols-6'
     : 'grid-cols-1 md:grid-cols-2 lg:grid-cols-4'
 
   return (

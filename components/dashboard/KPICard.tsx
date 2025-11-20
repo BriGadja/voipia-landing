@@ -7,7 +7,7 @@ interface KPICardProps {
   label: string
   value: string | number | undefined
   previousValue?: number
-  format?: 'number' | 'currency' | 'percentage' | 'duration'
+  format?: 'number' | 'currency' | 'percentage' | 'duration' | 'latency'
   decorationColor?: 'blue' | 'emerald' | 'amber' | 'red' | 'violet' | 'teal'
   delay?: number
 }
@@ -51,6 +51,8 @@ export function KPICard({
         const minutes = Math.floor(val / 60)
         const seconds = val % 60
         return `${minutes}:${seconds.toString().padStart(2, '0')}`
+      case 'latency':
+        return `${Math.round(val)} ms`
       default:
         return val.toLocaleString('fr-FR')
     }

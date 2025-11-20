@@ -6,6 +6,7 @@ import {
   useLouisKPIs,
   useLouisChartData,
 } from '@/lib/hooks/useDashboardData'
+import { useLatencyMetrics } from '@/lib/hooks/useLatencyData'
 import { exportLouisCallsToCSV } from '@/lib/queries/louis'
 import { checkIsAdmin } from '@/lib/queries/global'
 import { DashboardHeader } from '@/components/dashboard/DashboardHeader'
@@ -16,7 +17,8 @@ import { ExportCSVButton } from '@/components/dashboard/ExportCSVButton'
 import { CallVolumeChart } from '@/components/dashboard/Charts/CallVolumeChart'
 import { OutcomeBreakdown } from '@/components/dashboard/Charts/OutcomeBreakdown'
 import { EmotionDistribution } from '@/components/dashboard/Charts/EmotionDistribution'
-import { VoicemailByAgent } from '@/components/dashboard/Charts/VoicemailByAgent'
+import { LatencyTimeSeriesChart } from '@/components/dashboard/Charts/LatencyTimeSeriesChart'
+import { LatencyChart } from '@/components/dashboard/charts/LatencyChart'
 
 interface LouisDashboardClientProps {
   userEmail: string
@@ -39,6 +41,23 @@ export function LouisDashboardClient({ userEmail }: LouisDashboardClientProps) {
   const { data: kpiData, isLoading: isLoadingKPIs } = useLouisKPIs(filters)
   const { data: chartData, isLoading: isLoadingCharts } =
     useLouisChartData(filters)
+
+  // Fetch latency metrics
+  const { data: latencyData, isLoading: isLoadingLatencies } = useLatencyMetrics({
+    startDate: filters.startDate,
+    endDate: filters.endDate,
+    deploymentId: filters.deploymentId,
+    clientId: filters.clientIds.length === 1 ? filters.clientIds[0] : null,
+    agentTypeName: 'louis',
+  })
+
+  // Calculate average total latency for KPI
+  const avgTotalLatency = latencyData && latencyData.length > 0
+    ? Math.round(
+        latencyData.reduce((sum, m) => sum + m.avg_total_latency_ms * m.call_count, 0) /
+        latencyData.reduce((sum, m) => sum + m.call_count, 0)
+      )
+    : 0
 
   // Check admin status on mount
   useEffect(() => {
@@ -92,7 +111,12 @@ export function LouisDashboardClient({ userEmail }: LouisDashboardClientProps) {
         </div>
 
         {/* KPIs Grid */}
-        <KPIGrid data={kpiData} isLoading={isLoadingKPIs} agentType="louis" />
+        <KPIGrid
+          data={kpiData}
+          isLoading={isLoadingKPIs}
+          agentType="louis"
+          avgLatency={avgTotalLatency}
+        />
 
         {/* Charts Grid - 2x2 */}
         <div className="grid grid-cols-1 lg:grid-cols-2 gap-4">
@@ -112,8 +136,9 @@ export function LouisDashboardClient({ userEmail }: LouisDashboardClientProps) {
             />
           </div>
           <div className="h-[300px]">
-            <VoicemailByAgent
-              data={chartData?.voicemail_by_agent || []}
+            <LatencyTimeSeriesChart
+              data={latencyData || []}
+              isLoading={isLoadingLatencies}
             />
           </div>
         </div>

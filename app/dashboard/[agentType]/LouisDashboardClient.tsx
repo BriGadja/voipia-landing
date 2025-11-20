@@ -18,7 +18,7 @@ import { CallVolumeChart } from '@/components/dashboard/Charts/CallVolumeChart'
 import { OutcomeBreakdown } from '@/components/dashboard/Charts/OutcomeBreakdown'
 import { EmotionDistribution } from '@/components/dashboard/Charts/EmotionDistribution'
 import { LatencyTimeSeriesChart } from '@/components/dashboard/Charts/LatencyTimeSeriesChart'
-import { LatencyChart } from '@/components/dashboard/charts/LatencyChart'
+import { LatencyChart } from '@/components/dashboard/Charts/LatencyChart'
 
 interface LouisDashboardClientProps {
   userEmail: string

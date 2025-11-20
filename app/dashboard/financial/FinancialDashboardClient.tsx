@@ -204,7 +204,7 @@ export function FinancialDashboardClient() {
           <p className="text-xs text-gray-500 text-center">
             💡 <span className="font-semibold">Note:</span> Ce dashboard sépare désormais le leasing (abonnement fixe, 100% marge)
             de la consommation (usage variable, marge calculée). Utilisez le toggle pour basculer entre les deux vues.
-            Les coûts provider incluent uniquement les coûts d'utilisation (STT, TTS, LLM, SMS, emails).
+            Les coûts provider incluent uniquement les coûts d&#39;utilisation (STT, TTS, LLM, SMS, emails).
           </p>
         </div>
       </div>

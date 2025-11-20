@@ -96,7 +96,7 @@ export function LeasingKPIGrid({ data, isLoading }: LeasingKPIGridProps) {
       {/* Additional Info */}
       <div className="grid grid-cols-1 md:grid-cols-3 gap-4 mt-4">
         <div className="p-4 bg-slate-900/50 border border-slate-700/50 rounded-lg">
-          <p className="text-xs text-white/50 mb-1">Taux d'adoption</p>
+          <p className="text-xs text-white/50 mb-1">Taux d&#39;adoption</p>
           <p className="text-lg font-semibold text-white">
             {data.leasing_adoption_rate.toFixed(1)}%
           </p>

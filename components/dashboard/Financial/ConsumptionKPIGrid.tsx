@@ -94,7 +94,7 @@ export function ConsumptionKPIGrid({ data, isLoading }: ConsumptionKPIGridProps)
       <div className="flex items-center gap-2">
         <div className="px-3 py-1 bg-cyan-500/20 border border-cyan-500/30 rounded-full">
           <span className="text-sm font-medium text-cyan-300">
-            📈 Marge variable - Paiement à l'usage
+            📈 Marge variable - Paiement à l&#39;usage
           </span>
         </div>
       </div>

@@ -1,5 +1,6 @@
 'use client'
 
+import { memo, useMemo } from 'react'
 import {
   AreaChart,
   Area,
@@ -18,7 +19,30 @@ interface LatencyTimeSeriesChartProps {
   isLoading?: boolean
 }
 
-export function LatencyTimeSeriesChart({ data, isLoading }: LatencyTimeSeriesChartProps) {
+function LatencyTimeSeriesChartInner({ data, isLoading }: LatencyTimeSeriesChartProps) {
+  // Group metrics by date with useMemo
+  const timeSeriesData = useMemo(() => groupMetricsByDate(data), [data])
+
+  // Calculate STT latency: Total - LLM (TTS data not available) with useMemo
+  const chartData = useMemo(
+    () =>
+      timeSeriesData.map((item) => {
+        const llm = Math.round(item.avgLlmLatency)
+        const total = Math.round(item.avgTotalLatency)
+        const stt = Math.max(0, total - llm) // Ensure non-negative
+
+        return {
+          date: new Date(item.date).toLocaleDateString('fr-FR', {
+            day: '2-digit',
+            month: 'short',
+          }),
+          'STT': stt,
+          'LLM': llm,
+        }
+      }),
+    [timeSeriesData]
+  )
+
   if (isLoading) {
     return (
       <div className="bg-black/20 border border-white/20 rounded-xl p-3 h-[300px] flex items-center justify-center">
@@ -27,31 +51,13 @@ export function LatencyTimeSeriesChart({ data, isLoading }: LatencyTimeSeriesCha
     )
   }
 
-  const timeSeriesData = groupMetricsByDate(data)
-
-  if (timeSeriesData.length === 0) {
+  if (chartData.length === 0) {
     return (
       <div className="bg-black/20 border border-white/20 rounded-xl p-3 h-[300px] flex items-center justify-center">
         <p className="text-white/60 text-sm">Aucune donnée de latence disponible</p>
       </div>
     )
   }
-
-  // Calculate STT latency: Total - LLM (TTS data not available)
-  const chartData = timeSeriesData.map((item) => {
-    const llm = Math.round(item.avgLlmLatency)
-    const total = Math.round(item.avgTotalLatency)
-    const stt = Math.max(0, total - llm) // Ensure non-negative
-
-    return {
-      date: new Date(item.date).toLocaleDateString('fr-FR', {
-        day: '2-digit',
-        month: 'short',
-      }),
-      'STT': stt,
-      'LLM': llm,
-    }
-  })
 
   return (
     <div className="bg-black/20 border border-white/20 rounded-xl p-3 flex flex-col h-[300px]">
@@ -139,3 +145,9 @@ export function LatencyTimeSeriesChart({ data, isLoading }: LatencyTimeSeriesCha
     </div>
   )
 }
+
+/**
+ * Memoized LatencyTimeSeriesChart to prevent unnecessary re-renders
+ * Only re-renders when data or isLoading props change
+ */
+export const LatencyTimeSeriesChart = memo(LatencyTimeSeriesChartInner)

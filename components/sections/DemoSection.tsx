@@ -4,7 +4,7 @@ import { useState } from 'react'
 import { motion, AnimatePresence } from 'framer-motion'
 import FadeIn from '@/components/animations/FadeIn'
 import GlassCard from '@/components/ui/GlassCard'
-import Button from '@/components/ui/Button'
+import Button from '@/components/ui/AnimatedButton'
 import { agents } from '@/lib/constants'
 import { Play, Pause, Phone, MessageCircle, Volume2 } from 'lucide-react'
 

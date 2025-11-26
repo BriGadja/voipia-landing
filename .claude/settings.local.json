@@ -98,7 +98,16 @@
       "mcp__supabase-staging__get_advisors",
       "mcp__supabase-staging__get_logs",
       "Bash(move:*)",
-      "Bash(git rm:*)"
+      "Bash(git rm:*)",
+      "Bash(supabase --version:*)",
+      "Bash(supabase projects list:*)",
+      "mcp__supabase-voipia__get_advisors",
+      "Bash(supabase db pull:*)",
+      "Bash(supabase migration repair:*)",
+      "Bash(if not exist \"features\\_archive\" mkdir \"features\\_archive\")",
+      "Bash(mv:*)",
+      "mcp__MCP_DOCKER__resolve-library-id",
+      "mcp__MCP_DOCKER__get-library-docs"
     ],
     "deny": []
   },

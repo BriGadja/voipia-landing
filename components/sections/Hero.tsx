@@ -1,7 +1,7 @@
 'use client'
 
 import { useState } from 'react'
-import Button from '@/components/ui/Button'
+import Button from '@/components/ui/AnimatedButton'
 import ContactModal from '@/components/ui/ContactModal'
 import FadeIn from '@/components/animations/FadeIn'
 import { motion } from 'framer-motion'

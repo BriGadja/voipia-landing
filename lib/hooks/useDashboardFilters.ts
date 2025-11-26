@@ -1,89 +1,117 @@
+'use client'
+
 import { useCallback, useMemo } from 'react'
-import { useRouter, useSearchParams, usePathname } from 'next/navigation'
-import { subDays, format } from 'date-fns'
+import { useQueryStates } from 'nuqs'
+import { subDays, format, parseISO, isAfter, isValid } from 'date-fns'
+import { toast } from 'sonner'
+import { dashboardParsers, type AgentTypeName } from './dashboardSearchParams'
 import type { DashboardFilters } from '@/lib/types/dashboard'
 
 /**
- * Hook to manage dashboard filters via URL query parameters
- * Provides a clean interface for reading and updating filters
+ * Hook to manage dashboard filters via URL query parameters using nuqs
+ * Provides a clean, type-safe interface for reading and updating filters
  * All filter changes are persisted in the URL
  */
 export function useDashboardFilters() {
-  const router = useRouter()
-  const pathname = usePathname()
-  const searchParams = useSearchParams()
+  // Use nuqs for type-safe URL state management
+  const [searchParams, setSearchParams] = useQueryStates(dashboardParsers, {
+    history: 'push',
+    shallow: true, // Don't trigger server-side re-render
+  })
 
   /**
    * Parse current filters from URL query params
+   * Note: The 'tenant' param from TenantSwitcher overrides clientIds for admin filtering
    */
   const filters: DashboardFilters = useMemo(() => {
-    const clientIdsParam = searchParams.get('clientIds')
-    const deploymentIdParam = searchParams.get('deploymentId')
-    const agentTypeNameParam = searchParams.get('agentTypeName')
-    const startDateParam = searchParams.get('startDate')
-    const endDateParam = searchParams.get('endDate')
+    const {
+      tenant,
+      clientIds: clientIdsParam,
+      deploymentId,
+      agentTypeName,
+      startDate,
+      endDate,
+    } = searchParams
 
     // Default date range: last 30 days
     const defaultEndDate = format(new Date(), 'yyyy-MM-dd')
     const defaultStartDate = format(subDays(new Date(), 30), 'yyyy-MM-dd')
 
+    // If tenant is set (admin viewing as client), use it as the only clientId
+    // Otherwise, use the clientIds filter if provided
+    let clientIds: string[] = []
+    if (tenant) {
+      clientIds = [tenant]
+    } else if (clientIdsParam && clientIdsParam.length > 0) {
+      clientIds = clientIdsParam
+    }
+
     return {
-      clientIds: clientIdsParam ? clientIdsParam.split(',') : [],
-      deploymentId: deploymentIdParam || null,
-      agentTypeName: (agentTypeNameParam as 'louis' | 'arthur' | 'alexandra') || null,
-      startDate: startDateParam || defaultStartDate,
-      endDate: endDateParam || defaultEndDate,
+      clientIds,
+      deploymentId: deploymentId || null,
+      agentTypeName: agentTypeName || null,
+      startDate: startDate || defaultStartDate,
+      endDate: endDate || defaultEndDate,
     }
   }, [searchParams])
 
   /**
    * Update URL query params with new filter values
+   * Includes validation for date ranges
    */
   const updateFilters = useCallback(
     (updates: Partial<DashboardFilters>) => {
-      const params = new URLSearchParams(searchParams.toString())
+      const newParams: Partial<typeof searchParams> = {}
 
       // Update clientIds
       if (updates.clientIds !== undefined) {
-        if (updates.clientIds.length > 0) {
-          params.set('clientIds', updates.clientIds.join(','))
-        } else {
-          params.delete('clientIds')
-        }
+        newParams.clientIds =
+          updates.clientIds.length > 0 ? updates.clientIds : null
       }
 
       // Update deploymentId
       if (updates.deploymentId !== undefined) {
-        if (updates.deploymentId) {
-          params.set('deploymentId', updates.deploymentId)
-        } else {
-          params.delete('deploymentId')
-        }
+        newParams.deploymentId = updates.deploymentId || null
       }
 
       // Update agentTypeName
       if (updates.agentTypeName !== undefined) {
-        if (updates.agentTypeName) {
-          params.set('agentTypeName', updates.agentTypeName)
-        } else {
-          params.delete('agentTypeName')
+        newParams.agentTypeName = updates.agentTypeName || null
+      }
+
+      // Handle date updates with validation
+      const newStartDate = updates.startDate ?? filters.startDate
+      const newEndDate = updates.endDate ?? filters.endDate
+
+      if (updates.startDate !== undefined || updates.endDate !== undefined) {
+        const parsedStart = parseISO(newStartDate)
+        const parsedEnd = parseISO(newEndDate)
+
+        if (!isValid(parsedStart) || !isValid(parsedEnd)) {
+          toast.error('Format de date invalide', {
+            description: 'Les dates doivent etre au format YYYY-MM-DD.',
+          })
+          return
+        }
+
+        if (isAfter(parsedStart, parsedEnd)) {
+          toast.error('Plage de dates invalide', {
+            description: 'La date de debut ne peut pas etre posterieure a la date de fin.',
+          })
+          return
+        }
+
+        if (updates.startDate !== undefined) {
+          newParams.startDate = updates.startDate
+        }
+        if (updates.endDate !== undefined) {
+          newParams.endDate = updates.endDate
         }
       }
 
-      // Update startDate
-      if (updates.startDate !== undefined) {
-        params.set('startDate', updates.startDate)
-      }
-
-      // Update endDate
-      if (updates.endDate !== undefined) {
-        params.set('endDate', updates.endDate)
-      }
-
-      // Update URL without full page reload
-      router.push(`${pathname}?${params.toString()}`, { scroll: false })
+      setSearchParams(newParams)
     },
-    [router, pathname, searchParams]
+    [setSearchParams, filters.startDate, filters.endDate]
   )
 
   /**
@@ -91,9 +119,11 @@ export function useDashboardFilters() {
    */
   const setClientIds = useCallback(
     (clientIds: string[]) => {
-      updateFilters({ clientIds })
+      setSearchParams({
+        clientIds: clientIds.length > 0 ? clientIds : null,
+      })
     },
-    [updateFilters]
+    [setSearchParams]
   )
 
   /**
@@ -101,29 +131,49 @@ export function useDashboardFilters() {
    */
   const setDeploymentId = useCallback(
     (deploymentId: string | null) => {
-      updateFilters({ deploymentId })
+      setSearchParams({ deploymentId })
     },
-    [updateFilters]
+    [setSearchParams]
   )
 
   /**
    * Set agent type name filter
    */
   const setAgentTypeName = useCallback(
-    (agentTypeName: 'louis' | 'arthur' | 'alexandra' | null) => {
-      updateFilters({ agentTypeName })
+    (agentTypeName: AgentTypeName | null) => {
+      setSearchParams({ agentTypeName })
     },
-    [updateFilters]
+    [setSearchParams]
   )
 
   /**
-   * Set date range filter
+   * Set date range filter with validation
+   * Ensures startDate is not after endDate
    */
   const setDateRange = useCallback(
     (startDate: string, endDate: string) => {
-      updateFilters({ startDate, endDate })
+      // Validate date formats
+      const parsedStart = parseISO(startDate)
+      const parsedEnd = parseISO(endDate)
+
+      if (!isValid(parsedStart) || !isValid(parsedEnd)) {
+        toast.error('Format de date invalide', {
+          description: 'Les dates doivent etre au format YYYY-MM-DD.',
+        })
+        return
+      }
+
+      // Validate date range
+      if (isAfter(parsedStart, parsedEnd)) {
+        toast.error('Plage de dates invalide', {
+          description: 'La date de debut ne peut pas etre posterieure a la date de fin.',
+        })
+        return
+      }
+
+      setSearchParams({ startDate, endDate })
     },
-    [updateFilters]
+    [setSearchParams]
   )
 
   /**
@@ -133,12 +183,15 @@ export function useDashboardFilters() {
     const defaultEndDate = format(new Date(), 'yyyy-MM-dd')
     const defaultStartDate = format(subDays(new Date(), 30), 'yyyy-MM-dd')
 
-    const params = new URLSearchParams()
-    params.set('startDate', defaultStartDate)
-    params.set('endDate', defaultEndDate)
-
-    router.push(`${pathname}?${params.toString()}`, { scroll: false })
-  }, [router, pathname])
+    setSearchParams({
+      tenant: null,
+      clientIds: null,
+      deploymentId: null,
+      agentTypeName: null,
+      startDate: defaultStartDate,
+      endDate: defaultEndDate,
+    })
+  }, [setSearchParams])
 
   return {
     filters,

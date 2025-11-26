@@ -3,7 +3,7 @@
 import { useState } from 'react'
 import { motion, AnimatePresence } from 'framer-motion'
 import { X, Phone, Mail, Calendar, Send, Loader2 } from 'lucide-react'
-import Button from './Button'
+import Button from './AnimatedButton'
 
 interface ContactModalProps {
   isOpen: boolean

@@ -2,6 +2,7 @@
 
 import { useState } from 'react'
 import { Download, Loader2 } from 'lucide-react'
+import { toast } from 'sonner'
 import type { DashboardFilters } from '@/lib/types/dashboard'
 
 interface ExportCSVButtonProps {
@@ -48,9 +49,15 @@ export function ExportCSVButton({
       document.body.removeChild(link)
 
       URL.revokeObjectURL(url)
+
+      toast.success('Export reussi', {
+        description: `Le fichier ${finalFilename} a ete telecharge.`,
+      })
     } catch (error) {
       console.error('Error exporting CSV:', error)
-      alert('Erreur lors de l\'export des données. Veuillez réessayer.')
+      toast.error('Erreur lors de l\'export', {
+        description: 'Impossible d\'exporter les donnees. Veuillez reessayer.',
+      })
     } finally {
       setIsExporting(false)
     }

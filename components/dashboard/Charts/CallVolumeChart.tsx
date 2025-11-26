@@ -1,5 +1,6 @@
 'use client'
 
+import { memo, useMemo } from 'react'
 import {
   AreaChart,
   Area,
@@ -20,16 +21,20 @@ interface CallVolumeChartProps {
   }>
 }
 
-export function CallVolumeChart({ data }: CallVolumeChartProps) {
-  const chartData = data.map((item) => ({
-    date: new Date(item.date).toLocaleDateString('fr-FR', {
-      day: '2-digit',
-      month: 'short',
-    }),
-    'Total appels': item.total_calls,
-    'Appels répondus': item.answered_calls,
-    'RDV pris': item.appointments,
-  }))
+function CallVolumeChartInner({ data }: CallVolumeChartProps) {
+  const chartData = useMemo(
+    () =>
+      data.map((item) => ({
+        date: new Date(item.date).toLocaleDateString('fr-FR', {
+          day: '2-digit',
+          month: 'short',
+        }),
+        'Total appels': item.total_calls,
+        'Appels répondus': item.answered_calls,
+        'RDV pris': item.appointments,
+      })),
+    [data]
+  )
 
   return (
     <div className="bg-black/20 border border-white/20 rounded-xl p-3 flex flex-col h-full">
@@ -98,3 +103,9 @@ export function CallVolumeChart({ data }: CallVolumeChartProps) {
     </div>
   )
 }
+
+/**
+ * Memoized CallVolumeChart to prevent unnecessary re-renders
+ * Only re-renders when data prop changes
+ */
+export const CallVolumeChart = memo(CallVolumeChartInner)

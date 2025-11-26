@@ -3,7 +3,7 @@
 import { motion } from 'framer-motion'
 import { ArrowLeft, Phone, Clock, Calendar, Users, CheckCircle, Target, RefreshCw } from 'lucide-react'
 import Link from 'next/link'
-import Button from '@/components/ui/Button'
+import Button from '@/components/ui/AnimatedButton'
 import GlassCard from '@/components/ui/GlassCard'
 import FadeIn from '@/components/animations/FadeIn'
 import ContactModal from '@/components/ui/ContactModal'

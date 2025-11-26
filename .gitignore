@@ -42,4 +42,5 @@ next-env.d.ts
 *.swo
 
 # OS
-Thumbs.db
+Thumbs.dbfeatures/_archive/dbDump/
+supabase/.temp/

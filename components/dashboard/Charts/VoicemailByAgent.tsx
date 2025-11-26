@@ -1,5 +1,6 @@
 'use client'
 
+import { memo, useMemo } from 'react'
 import {
   BarChart,
   Bar,
@@ -33,13 +34,17 @@ const colors = [
   '#a855f7', // purple
 ]
 
-export function VoicemailByAgent({ data }: VoicemailByAgentProps) {
-  const chartData = data
-    .map((item) => ({
-      agent: item.agent,
-      'Taux de messagerie': item.rate,
-    }))
-    .sort((a, b) => b['Taux de messagerie'] - a['Taux de messagerie'])
+function VoicemailByAgentInner({ data }: VoicemailByAgentProps) {
+  const chartData = useMemo(
+    () =>
+      data
+        .map((item) => ({
+          agent: item.agent,
+          'Taux de messagerie': item.rate,
+        }))
+        .sort((a, b) => b['Taux de messagerie'] - a['Taux de messagerie']),
+    [data]
+  )
 
   return (
     <div className="bg-black/20 border border-white/20 rounded-xl p-3 flex flex-col h-full">
@@ -89,3 +94,9 @@ export function VoicemailByAgent({ data }: VoicemailByAgentProps) {
     </div>
   )
 }
+
+/**
+ * Memoized VoicemailByAgent to prevent unnecessary re-renders
+ * Only re-renders when data prop changes
+ */
+export const VoicemailByAgent = memo(VoicemailByAgentInner)

@@ -1,5 +1,6 @@
 'use client'
 
+import { memo, useMemo } from 'react'
 import {
   Area,
   AreaChart,
@@ -35,13 +36,13 @@ interface LatencyChartProps {
  *
  * Uses data from get_latency_metrics() RPC function
  */
-export function LatencyChart({ data, isLoading = false, height = 350 }: LatencyChartProps) {
-  // Calculate KPIs
-  const kpis = calculateLatencyKPIs(data)
+function LatencyChartInner({ data, isLoading = false, height = 350 }: LatencyChartProps) {
+  // Calculate KPIs with useMemo
+  const kpis = useMemo(() => calculateLatencyKPIs(data), [data])
 
-  // Prepare chart data
-  const timeSeriesData = groupMetricsByDate(data)
-  const deploymentData = groupMetricsByDeployment(data)
+  // Prepare chart data with useMemo
+  const timeSeriesData = useMemo(() => groupMetricsByDate(data), [data])
+  const deploymentData = useMemo(() => groupMetricsByDeployment(data), [data])
 
   if (isLoading) {
     return (
@@ -276,3 +277,9 @@ export function LatencyChart({ data, isLoading = false, height = 350 }: LatencyC
     </div>
   )
 }
+
+/**
+ * Memoized LatencyChart to prevent unnecessary re-renders
+ * Only re-renders when data, isLoading, or height props change
+ */
+export const LatencyChart = memo(LatencyChartInner)

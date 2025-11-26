@@ -2,6 +2,10 @@ import { Suspense } from 'react'
 import { redirect } from 'next/navigation'
 import { createClient } from '@/lib/supabase/server'
 import { Loader2 } from 'lucide-react'
+import { SidebarProvider, SidebarInset, SidebarTrigger } from '@/components/ui/sidebar'
+import { AppSidebar } from '@/components/dashboard/Sidebar'
+import { Separator } from '@/components/ui/separator'
+import { DynamicBreadcrumb } from '@/components/dashboard/DynamicBreadcrumb'
 
 export const metadata = {
   title: 'Dashboard | Voipia',
@@ -13,13 +17,35 @@ export const metadata = {
 }
 
 /**
+ * Check if user has admin permissions
+ */
+async function checkIsAdminServer(supabase: Awaited<ReturnType<typeof createClient>>, userId: string): Promise<boolean> {
+  const { data, error } = await supabase
+    .from('user_client_permissions')
+    .select('permission_level')
+    .eq('user_id', userId)
+    .eq('permission_level', 'admin')
+    .limit(1)
+
+  if (error) {
+    console.error('Error checking admin status:', error)
+    return false
+  }
+
+  return data && data.length > 0
+}
+
+/**
  * Dashboard Layout - Shared layout for all dashboard pages
- * Handles authentication and provides common dashboard structure
+ * Handles authentication and provides common dashboard structure with sidebar
+ * Uses parallel routes for modal rendering (@modal slot)
  */
 export default async function DashboardLayout({
   children,
+  modal,
 }: {
   children: React.ReactNode
+  modal: React.ReactNode
 }) {
   // Server-side authentication check
   const supabase = await createClient()
@@ -32,17 +58,32 @@ export default async function DashboardLayout({
     redirect('/login')
   }
 
+  // Check admin status
+  const isAdmin = await checkIsAdminServer(supabase, user.id)
+
   return (
-    <div className="min-h-screen bg-gradient-to-br from-black via-purple-950/20 to-black">
-      <Suspense
-        fallback={
-          <div className="flex h-screen items-center justify-center">
-            <Loader2 className="h-8 w-8 animate-spin text-purple-500" />
-          </div>
-        }
-      >
-        {children}
-      </Suspense>
-    </div>
+    <SidebarProvider>
+      <AppSidebar userEmail={user.email || ''} isAdmin={isAdmin} />
+      <SidebarInset className="bg-gradient-to-br from-black via-purple-950/20 to-black">
+        <header className="flex h-14 shrink-0 items-center gap-2 border-b border-white/10 px-4">
+          <SidebarTrigger className="-ml-1 text-white/70 hover:text-white hover:bg-white/10" />
+          <Separator orientation="vertical" className="mr-2 h-4 bg-white/20" />
+          <DynamicBreadcrumb />
+        </header>
+        <main className="flex-1 overflow-auto">
+          <Suspense
+            fallback={
+              <div className="flex h-[calc(100vh-3.5rem)] items-center justify-center">
+                <Loader2 className="h-8 w-8 animate-spin text-purple-500" />
+              </div>
+            }
+          >
+            {children}
+          </Suspense>
+        </main>
+        {/* Modal slot for intercepting routes */}
+        {modal}
+      </SidebarInset>
+    </SidebarProvider>
   )
 }

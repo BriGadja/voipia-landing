@@ -1,6 +1,6 @@
 'use client'
 
-import { useState } from 'react'
+import { memo, useMemo, useState, useCallback } from 'react'
 import { motion } from 'framer-motion'
 import {
   LineChart,
@@ -55,7 +55,7 @@ function CustomTooltip({ active, payload, label }: any) {
   )
 }
 
-export function FinancialTimeSeriesChart({
+function FinancialTimeSeriesChartInner({
   data,
   isLoading,
   height = 400,
@@ -65,13 +65,17 @@ export function FinancialTimeSeriesChart({
 }: FinancialTimeSeriesChartProps) {
   const [hiddenLines, setHiddenLines] = useState<Set<string>>(new Set())
 
-  // Transform data for Recharts
-  const chartData = data.map((point) => ({
-    date: point.date,
-    revenue: point.revenue.total,
-    cost: point.cost.total,
-    margin: point.margin.total,
-  }))
+  // Transform data for Recharts with useMemo
+  const chartData = useMemo(
+    () =>
+      data.map((point) => ({
+        date: point.date,
+        revenue: point.revenue.total,
+        cost: point.cost.total,
+        margin: point.margin.total,
+      })),
+    [data]
+  )
 
   // Loading state
   if (isLoading) {
@@ -100,8 +104,8 @@ export function FinancialTimeSeriesChart({
     )
   }
 
-  // Toggle line visibility
-  const handleLegendClick = (dataKey: string) => {
+  // Toggle line visibility with useCallback
+  const handleLegendClick = useCallback((dataKey: string) => {
     setHiddenLines((prev) => {
       const newSet = new Set(prev)
       if (newSet.has(dataKey)) {
@@ -111,7 +115,10 @@ export function FinancialTimeSeriesChart({
       }
       return newSet
     })
-  }
+  }, [])
+
+  // Determine if compact mode based on height
+  const isCompact = height < 350
 
   return (
     <motion.div
@@ -119,73 +126,78 @@ export function FinancialTimeSeriesChart({
       animate={{ opacity: 1, y: 0 }}
       transition={{ duration: 0.4 }}
       className="rounded-xl border border-gray-800/50 bg-black/20 backdrop-blur-sm overflow-hidden"
+      style={{ height }}
     >
-      <div className="p-6">
-        <div className="flex items-center justify-between mb-6">
-          <h3 className="text-xl font-bold text-white">Évolution Financière</h3>
-          <div className="flex items-center gap-4 text-xs">
+      <div className={isCompact ? 'p-3' : 'p-6'}>
+        <div className={`flex items-center justify-between ${isCompact ? 'mb-2' : 'mb-6'}`}>
+          <h3 className={`font-bold text-white ${isCompact ? 'text-sm' : 'text-xl'}`}>
+            Evolution Financiere
+          </h3>
+          <div className={`flex items-center ${isCompact ? 'gap-2' : 'gap-4'} text-xs`}>
             {showRevenue && (
               <button
                 onClick={() => handleLegendClick('revenue')}
-                className="flex items-center gap-2 transition-opacity hover:opacity-100"
+                className="flex items-center gap-1 transition-opacity hover:opacity-100"
                 style={{
                   opacity: hiddenLines.has('revenue') ? 0.4 : 1,
                 }}
               >
-                <div className="w-3 h-3 rounded-full bg-amber-500" />
-                <span className="text-gray-300">Revenue</span>
+                <div className={`rounded-full bg-amber-500 ${isCompact ? 'w-2 h-2' : 'w-3 h-3'}`} />
+                <span className="text-gray-300 text-[10px]">Rev</span>
               </button>
             )}
             {showCost && (
               <button
                 onClick={() => handleLegendClick('cost')}
-                className="flex items-center gap-2 transition-opacity hover:opacity-100"
+                className="flex items-center gap-1 transition-opacity hover:opacity-100"
                 style={{
                   opacity: hiddenLines.has('cost') ? 0.4 : 1,
                 }}
               >
-                <div className="w-3 h-3 rounded-full bg-red-500" />
-                <span className="text-gray-300">Coûts</span>
+                <div className={`rounded-full bg-red-500 ${isCompact ? 'w-2 h-2' : 'w-3 h-3'}`} />
+                <span className="text-gray-300 text-[10px]">Couts</span>
               </button>
             )}
             {showMargin && (
               <button
                 onClick={() => handleLegendClick('margin')}
-                className="flex items-center gap-2 transition-opacity hover:opacity-100"
+                className="flex items-center gap-1 transition-opacity hover:opacity-100"
                 style={{
                   opacity: hiddenLines.has('margin') ? 0.4 : 1,
                 }}
               >
-                <div className="w-3 h-3 rounded-full bg-emerald-500" />
-                <span className="text-gray-300">Marge</span>
+                <div className={`rounded-full bg-emerald-500 ${isCompact ? 'w-2 h-2' : 'w-3 h-3'}`} />
+                <span className="text-gray-300 text-[10px]">Marge</span>
               </button>
             )}
           </div>
         </div>
 
-        <ResponsiveContainer width="100%" height={height}>
+        <ResponsiveContainer width="100%" height={isCompact ? height - 50 : height}>
           <LineChart
             data={chartData}
-            margin={{ top: 5, right: 30, left: 20, bottom: 5 }}
+            margin={isCompact ? { top: 5, right: 10, left: 0, bottom: 5 } : { top: 5, right: 30, left: 20, bottom: 5 }}
           >
             <CartesianGrid strokeDasharray="3 3" stroke="#374151" opacity={0.3} />
             <XAxis
               dataKey="date"
               stroke="#9CA3AF"
-              tick={{ fill: '#9CA3AF', fontSize: 12 }}
+              tick={{ fill: '#9CA3AF', fontSize: isCompact ? 9 : 12 }}
               tickFormatter={(value) =>
                 new Date(value).toLocaleDateString('fr-FR', {
                   day: '2-digit',
                   month: 'short',
                 })
               }
+              interval={isCompact ? 'preserveStartEnd' : 0}
             />
             <YAxis
               stroke="#9CA3AF"
-              tick={{ fill: '#9CA3AF', fontSize: 12 }}
+              tick={{ fill: '#9CA3AF', fontSize: isCompact ? 9 : 12 }}
               tickFormatter={(value) =>
-                `${(value / 1000).toFixed(0)}k€`
+                value >= 1000 ? `${(value / 1000).toFixed(0)}k` : `${value.toFixed(0)}`
               }
+              width={isCompact ? 35 : 60}
             />
             <Tooltip content={<CustomTooltip />} />
 
@@ -196,9 +208,9 @@ export function FinancialTimeSeriesChart({
                 dataKey="revenue"
                 name="Revenue"
                 stroke="#F59E0B"
-                strokeWidth={3}
-                dot={{ fill: '#F59E0B', r: 4 }}
-                activeDot={{ r: 6 }}
+                strokeWidth={isCompact ? 2 : 3}
+                dot={isCompact ? false : { fill: '#F59E0B', r: 4 }}
+                activeDot={{ r: isCompact ? 4 : 6 }}
                 animationDuration={800}
               />
             )}
@@ -208,11 +220,11 @@ export function FinancialTimeSeriesChart({
               <Line
                 type="monotone"
                 dataKey="cost"
-                name="Coûts"
+                name="Couts"
                 stroke="#EF4444"
-                strokeWidth={2}
-                dot={{ fill: '#EF4444', r: 3 }}
-                activeDot={{ r: 5 }}
+                strokeWidth={isCompact ? 1.5 : 2}
+                dot={isCompact ? false : { fill: '#EF4444', r: 3 }}
+                activeDot={{ r: isCompact ? 3 : 5 }}
                 animationDuration={800}
                 strokeDasharray="5 5"
               />
@@ -225,51 +237,59 @@ export function FinancialTimeSeriesChart({
                 dataKey="margin"
                 name="Marge"
                 stroke="#10B981"
-                strokeWidth={3}
-                dot={{ fill: '#10B981', r: 4 }}
-                activeDot={{ r: 6 }}
+                strokeWidth={isCompact ? 2 : 3}
+                dot={isCompact ? false : { fill: '#10B981', r: 4 }}
+                activeDot={{ r: isCompact ? 4 : 6 }}
                 animationDuration={800}
               />
             )}
           </LineChart>
         </ResponsiveContainer>
 
-        {/* Summary Stats */}
-        <div className="mt-6 pt-4 border-t border-gray-800/50">
-          <div className="grid grid-cols-3 gap-4 text-sm">
-            {showRevenue && (
-              <div>
-                <p className="text-gray-400 mb-1">Revenue Moyen</p>
-                <p className="text-amber-400 font-bold">
-                  {formatCurrency(
-                    chartData.reduce((sum, d) => sum + d.revenue, 0) / chartData.length
-                  )}
-                </p>
-              </div>
-            )}
-            {showCost && (
-              <div>
-                <p className="text-gray-400 mb-1">Coût Moyen</p>
-                <p className="text-red-400 font-bold">
-                  {formatCurrency(
-                    chartData.reduce((sum, d) => sum + d.cost, 0) / chartData.length
-                  )}
-                </p>
-              </div>
-            )}
-            {showMargin && (
-              <div>
-                <p className="text-gray-400 mb-1">Marge Moyenne</p>
-                <p className="text-emerald-400 font-bold">
-                  {formatCurrency(
-                    chartData.reduce((sum, d) => sum + d.margin, 0) / chartData.length
-                  )}
-                </p>
-              </div>
-            )}
+        {/* Summary Stats - Hidden in compact mode */}
+        {!isCompact && (
+          <div className="mt-6 pt-4 border-t border-gray-800/50">
+            <div className="grid grid-cols-3 gap-4 text-sm">
+              {showRevenue && (
+                <div>
+                  <p className="text-gray-400 mb-1">Revenue Moyen</p>
+                  <p className="text-amber-400 font-bold">
+                    {formatCurrency(
+                      chartData.reduce((sum, d) => sum + d.revenue, 0) / chartData.length
+                    )}
+                  </p>
+                </div>
+              )}
+              {showCost && (
+                <div>
+                  <p className="text-gray-400 mb-1">Cout Moyen</p>
+                  <p className="text-red-400 font-bold">
+                    {formatCurrency(
+                      chartData.reduce((sum, d) => sum + d.cost, 0) / chartData.length
+                    )}
+                  </p>
+                </div>
+              )}
+              {showMargin && (
+                <div>
+                  <p className="text-gray-400 mb-1">Marge Moyenne</p>
+                  <p className="text-emerald-400 font-bold">
+                    {formatCurrency(
+                      chartData.reduce((sum, d) => sum + d.margin, 0) / chartData.length
+                    )}
+                  </p>
+                </div>
+              )}
+            </div>
           </div>
-        </div>
+        )}
       </div>
     </motion.div>
   )
 }
+
+/**
+ * Memoized FinancialTimeSeriesChart to prevent unnecessary re-renders
+ * Only re-renders when props change
+ */
+export const FinancialTimeSeriesChart = memo(FinancialTimeSeriesChartInner)

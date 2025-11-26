@@ -1,8 +1,9 @@
 'use client'
 
-import { useEffect } from 'react'
+import { useEffect, useState } from 'react'
 import { ChevronDown } from 'lucide-react'
 import { useAccessibleClients, useAccessibleAgents } from '@/lib/hooks/useDashboardData'
+import { deduplicateBy } from '@/lib/utils'
 
 interface ClientAgentFilterProps {
   selectedClientIds: string[]
@@ -17,16 +18,18 @@ export function ClientAgentFilter({
   onChange,
   agentType,
 }: ClientAgentFilterProps) {
+  // Track mounted state to avoid hydration mismatch
+  const [isMounted, setIsMounted] = useState(false)
+
+  useEffect(() => {
+    setIsMounted(true)
+  }, [])
+
   // Fetch all accessible clients
   const { data: clientsRaw, isLoading: isLoadingClients } = useAccessibleClients()
 
   // Deduplicate clients by client_id (in case the view returns duplicates)
-  const clients = clientsRaw?.reduce((acc, client) => {
-    if (!acc.find((c) => c.client_id === client.client_id)) {
-      acc.push(client)
-    }
-    return acc
-  }, [] as typeof clientsRaw)
+  const clients = deduplicateBy(clientsRaw, (c) => c.client_id)
 
   // Fetch accessible agents filtered by agent type and selected clients
   const { data: allAgentsRaw, isLoading: isLoadingAgents } = useAccessibleAgents(
@@ -35,12 +38,7 @@ export function ClientAgentFilter({
   )
 
   // Deduplicate agents by deployment_id (in case the view returns duplicates)
-  const allAgents = allAgentsRaw?.reduce((acc, agent) => {
-    if (!acc.find((a) => a.deployment_id === agent.deployment_id)) {
-      acc.push(agent)
-    }
-    return acc
-  }, [] as typeof allAgentsRaw)
+  const allAgents = deduplicateBy(allAgentsRaw, (a) => a.deployment_id)
 
   // Agents are already filtered by database query via selectedClientIds
   const agents = allAgents
@@ -73,6 +71,10 @@ export function ClientAgentFilter({
     }
   }
 
+  // Only show loading state until mounted to avoid hydration mismatch
+  const showClientsLoading = !isMounted || isLoadingClients
+  const showAgentsLoading = !isMounted || isLoadingAgents || !agents || agents.length === 0
+
   return (
     <div className="flex flex-col sm:flex-row gap-3">
       <div className="w-full sm:w-56">
@@ -83,11 +85,11 @@ export function ClientAgentFilter({
           <select
             value={selectedClientIds[0] || 'all'}
             onChange={(e) => handleClientChange(e.target.value)}
-            disabled={isLoadingClients}
+            disabled={showClientsLoading}
             className="w-full px-2 py-1.5 text-sm border border-white/20 rounded-lg bg-black/20 text-white focus:outline-none focus:ring-2 focus:ring-purple-500 appearance-none cursor-pointer disabled:opacity-50 [&>option]:bg-black [&>option]:text-white"
           >
             <option value="all">Toutes les entreprises</option>
-            {clients?.map((client) => (
+            {isMounted && clients?.map((client) => (
               <option key={client.client_id} value={client.client_id}>
                 {client.client_name}
               </option>
@@ -105,11 +107,11 @@ export function ClientAgentFilter({
           <select
             value={selectedAgentIds[0] || 'all'}
             onChange={(e) => handleAgentChange(e.target.value)}
-            disabled={isLoadingAgents || !agents || agents.length === 0}
+            disabled={showAgentsLoading}
             className="w-full px-2 py-1.5 text-sm border border-white/20 rounded-lg bg-black/20 text-white focus:outline-none focus:ring-2 focus:ring-purple-500 appearance-none cursor-pointer disabled:opacity-50 [&>option]:bg-black [&>option]:text-white"
           >
             <option value="all">Tous les agents</option>
-            {agents?.map((agent) => (
+            {isMounted && agents?.map((agent) => (
               <option key={agent.deployment_id} value={agent.deployment_id}>
                 {agent.deployment_name}
               </option>

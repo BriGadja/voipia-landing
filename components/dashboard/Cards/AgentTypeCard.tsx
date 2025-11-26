@@ -3,33 +3,10 @@
 import Link from 'next/link'
 import { Users, Target, Sparkles, Phone, TrendingUp, Calendar, Clock, Activity, Layers, ArrowRight } from 'lucide-react'
 import { AgentTypeCardData } from '@/lib/types/dashboard'
-import { cn } from '@/lib/utils'
+import { cn, formatRelativeTime } from '@/lib/utils'
 
 interface AgentTypeCardProps {
   agentType: AgentTypeCardData
-}
-
-/**
- * Formats a date to relative time (e.g., "Il y a 2 jours")
- */
-function formatRelativeTime(date: string | null): string {
-  if (!date) return 'Jamais'
-
-  const now = new Date()
-  const past = new Date(date)
-  const diffMs = now.getTime() - past.getTime()
-  const diffSec = Math.floor(diffMs / 1000)
-  const diffMin = Math.floor(diffSec / 60)
-  const diffHour = Math.floor(diffMin / 60)
-  const diffDay = Math.floor(diffHour / 24)
-
-  if (diffSec < 60) return 'À l\'instant'
-  if (diffMin < 60) return `Il y a ${diffMin}min`
-  if (diffHour < 24) return `Il y a ${diffHour}h`
-  if (diffDay === 1) return 'Hier'
-  if (diffDay < 7) return `Il y a ${diffDay}j`
-  if (diffDay < 30) return `Il y a ${Math.floor(diffDay / 7)}sem`
-  return `Il y a ${Math.floor(diffDay / 30)}mois`
 }
 
 /**

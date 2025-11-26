@@ -6,6 +6,8 @@ import { Providers } from './providers'
 import { AuthHashHandler } from '@/components/auth/AuthHashHandler'
 import { Analytics } from '@vercel/analytics/next'
 import ClientLemlistTracker from '@/components/tracking/ClientLemlistTracker'
+import { NuqsAdapter } from 'nuqs/adapters/next/app'
+import { Toaster } from 'sonner'
 
 const inter = Inter({ 
   subsets: ['latin'],
@@ -72,11 +74,26 @@ export default function RootLayout({
   return (
     <html lang="fr" className="dark">
       <body className={`${inter.variable} font-inter antialiased bg-black text-white min-h-screen`}>
-        <Providers>
-          <AuthHashHandler />
-          {children}
-          <ClientChatbot />
-        </Providers>
+        <NuqsAdapter>
+          <Providers>
+            <AuthHashHandler />
+            {children}
+            <ClientChatbot />
+            <Toaster
+              position="top-right"
+              theme="dark"
+              richColors
+              closeButton
+              toastOptions={{
+                style: {
+                  background: 'rgba(0, 0, 0, 0.9)',
+                  border: '1px solid rgba(255, 255, 255, 0.1)',
+                  color: 'white',
+                },
+              }}
+            />
+          </Providers>
+        </NuqsAdapter>
         <Analytics />
         <ClientLemlistTracker />
       </body>

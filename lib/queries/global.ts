@@ -1,4 +1,11 @@
 import { createClient } from '@/lib/supabase/client'
+import {
+  buildCSV,
+  formatDateForCSV,
+  formatBooleanForCSV,
+  formatCurrencyForCSV,
+  type CSVColumn,
+} from '@/lib/utils'
 import type {
   DashboardFilters,
   KPIMetrics,
@@ -10,6 +17,7 @@ import type {
   ClientCardData,
   AgentCardData,
   AgentTypeCardData,
+  CallExportRow,
 } from '@/lib/types/dashboard'
 
 /**
@@ -143,7 +151,7 @@ export async function fetchGlobalChartData(
 
 /**
  * Fetch top clients by performance
- * Uses v_global_top_clients view
+ * Uses get_top_clients RPC function with date filtering
  * @param filters - Dashboard filters
  * @param limit - Maximum number of clients to return (default: 10)
  */
@@ -153,35 +161,25 @@ export async function fetchTopClients(
 ): Promise<TopClientData[]> {
   const supabase = createClient()
 
-  let query = supabase
-    .from('v_global_top_clients')
-    .select('*')
-    .gte('started_at', filters.startDate)
-    .lte('started_at', filters.endDate)
-    .order('total_calls', { ascending: false })
-    .limit(limit)
-
-  if (filters.clientIds.length > 0) {
-    query = query.in('client_id', filters.clientIds)
-  }
-
-  if (filters.agentTypeName) {
-    query = query.eq('agent_type_name', filters.agentTypeName)
-  }
-
-  const { data, error } = await query
+  const { data, error } = await supabase.rpc('get_top_clients', {
+    p_start_date: filters.startDate,
+    p_end_date: filters.endDate,
+    p_client_ids: filters.clientIds.length > 0 ? filters.clientIds : null,
+    p_agent_type_name: filters.agentTypeName || null,
+    p_limit: limit,
+  })
 
   if (error) {
     console.error('Error fetching top clients:', error)
     throw error
   }
 
-  return data as TopClientData[]
+  return (data || []) as TopClientData[]
 }
 
 /**
  * Fetch agent type performance comparison
- * Uses v_global_agent_type_performance view
+ * Uses get_agent_type_performance RPC function with date filtering
  * @param filters - Dashboard filters
  */
 export async function fetchAgentTypePerformance(
@@ -189,23 +187,18 @@ export async function fetchAgentTypePerformance(
 ): Promise<AgentTypePerformance[]> {
   const supabase = createClient()
 
-  let query = supabase
-    .from('v_global_agent_type_performance')
-    .select('*')
-    .order('total_calls', { ascending: false })
-
-  if (filters.clientIds.length > 0) {
-    query = query.in('client_id', filters.clientIds)
-  }
-
-  const { data, error } = await query
+  const { data, error } = await supabase.rpc('get_agent_type_performance', {
+    p_start_date: filters.startDate,
+    p_end_date: filters.endDate,
+    p_client_ids: filters.clientIds.length > 0 ? filters.clientIds : null,
+  })
 
   if (error) {
     console.error('Error fetching agent type performance:', error)
     throw error
   }
 
-  return data as AgentTypePerformance[]
+  return (data || []) as AgentTypePerformance[]
 }
 
 /**
@@ -326,6 +319,7 @@ export async function getDashboardDestination(): Promise<{
 
 /**
  * Export global dashboard data to CSV
+ * Uses the generic buildCSV utility for consistent CSV generation
  * @param filters - Dashboard filters
  */
 export async function exportGlobalCallsToCSV(
@@ -368,50 +362,24 @@ export async function exportGlobalCallsToCSV(
     throw error
   }
 
-  // Convert to CSV
-  const headers = [
-    'Date',
-    'Client',
-    'Industry',
-    'Agent Type',
-    'Agent Name',
-    'First Name',
-    'Last Name',
-    'Phone',
-    'Email',
-    'Duration (s)',
-    'Cost (€)',
-    'Outcome',
-    'Emotion',
-    'Answered',
-    'RDV Scheduled',
+  // Define columns using the generic CSV builder
+  const columns: CSVColumn<CallExportRow>[] = [
+    { header: 'Date', accessor: (row) => row.started_at, format: (v) => formatDateForCSV(v as string) },
+    { header: 'Client', accessor: (row) => row.agent_deployments?.clients?.name || '' },
+    { header: 'Industry', accessor: (row) => row.agent_deployments?.clients?.industry || '' },
+    { header: 'Agent Type', accessor: (row) => row.agent_deployments?.agent_types?.display_name || '' },
+    { header: 'Agent Name', accessor: (row) => row.agent_deployments?.name || '' },
+    { header: 'First Name', accessor: (row) => row.first_name || '' },
+    { header: 'Last Name', accessor: (row) => row.last_name || '' },
+    { header: 'Phone', accessor: (row) => row.phone_number || '' },
+    { header: 'Email', accessor: (row) => row.email || '' },
+    { header: 'Duration (s)', accessor: (row) => row.duration_seconds || '' },
+    { header: 'Cost (€)', accessor: (row) => row.cost, format: (v) => formatCurrencyForCSV(v as number) },
+    { header: 'Outcome', accessor: (row) => row.outcome || '' },
+    { header: 'Emotion', accessor: (row) => row.emotion || '' },
+    { header: 'Answered', accessor: (row) => row.answered, format: (v) => formatBooleanForCSV(v as boolean) },
+    { header: 'RDV Scheduled', accessor: (row) => row.metadata?.appointment_scheduled_at, format: (v) => formatDateForCSV(v as string) },
   ]
 
-  const rows = data.map((call: any) => [
-    new Date(call.started_at).toLocaleString('fr-FR'),
-    call.agent_deployments?.clients?.name || '',
-    call.agent_deployments?.clients?.industry || '',
-    call.agent_deployments?.agent_types?.display_name || '',
-    call.agent_deployments?.name || '',
-    call.first_name || '',
-    call.last_name || '',
-    call.phone_number || '',
-    call.email || '',
-    call.duration_seconds || '',
-    call.cost ? call.cost.toFixed(2) : '',
-    call.outcome || '',
-    call.emotion || '',
-    call.answered ? 'Oui' : 'Non',
-    call.metadata?.appointment_scheduled_at
-      ? new Date(call.metadata.appointment_scheduled_at).toLocaleString('fr-FR')
-      : '',
-  ])
-
-  const csv = [
-    headers.join(','),
-    ...rows.map((row) => row.map((cell) => `"${cell}"`).join(',')),
-  ].join('\n')
-
-  // Add BOM for Excel compatibility
-  return '\ufeff' + csv
+  return buildCSV(data as CallExportRow[], columns)
 }

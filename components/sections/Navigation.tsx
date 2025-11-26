@@ -2,7 +2,7 @@
 
 import { useState, useEffect } from 'react'
 import { motion, AnimatePresence } from 'framer-motion'
-import Button from '@/components/ui/Button'
+import Button from '@/components/ui/AnimatedButton'
 import { Menu, X, ChevronDown } from 'lucide-react'
 import Link from 'next/link'
 

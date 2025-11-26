@@ -1,19 +1,92 @@
 'use client'
 
-import { useState } from 'react'
+import { useState, Suspense } from 'react'
+import { useSearchParams } from 'next/navigation'
+import dynamic from 'next/dynamic'
 import { useFinancialKPIs, useClientBreakdown, useFinancialTimeSeries, useCostBreakdown, useLeasingMetrics, useConsumptionMetrics } from '@/lib/hooks/useFinancialData'
 import { getDefaultDateRange } from '@/lib/queries/financial'
 import { FinancialKPIGrid } from '@/components/dashboard/Financial/FinancialKPIGrid'
 import { ClientBreakdownTableV2 } from '@/components/dashboard/Financial/ClientBreakdownTableV2'
-import { FinancialTimeSeriesChart } from '@/components/dashboard/Financial/FinancialTimeSeriesChart'
-import { CostBreakdownChart } from '@/components/dashboard/Financial/CostBreakdownChart'
-import { ClientDrilldownModal } from '@/components/dashboard/Financial/ClientDrilldownModal'
 import FinancialViewToggle from '@/components/dashboard/Financial/FinancialViewToggle'
 import { LeasingKPIGrid } from '@/components/dashboard/Financial/LeasingKPIGrid'
 import { ConsumptionKPIGrid } from '@/components/dashboard/Financial/ConsumptionKPIGrid'
 import type { FinancialFilters, ClientFinancialData, FinancialViewMode } from '@/lib/types/financial'
 
+// Lazy load heavy chart components
+const FinancialTimeSeriesChart = dynamic(
+  () => import('@/components/dashboard/Financial/FinancialTimeSeriesChart').then(mod => ({ default: mod.FinancialTimeSeriesChart })),
+  {
+    loading: () => <ChartSkeleton height={280} />,
+    ssr: false
+  }
+)
+
+const CostBreakdownChart = dynamic(
+  () => import('@/components/dashboard/Financial/CostBreakdownChart').then(mod => ({ default: mod.CostBreakdownChart })),
+  {
+    loading: () => <ChartSkeleton height={280} />,
+    ssr: false
+  }
+)
+
+const ClientDrilldownModal = dynamic(
+  () => import('@/components/dashboard/Financial/ClientDrilldownModal').then(mod => ({ default: mod.ClientDrilldownModal })),
+  { ssr: false }
+)
+
+const ClientUsageDashboard = dynamic(
+  () => import('@/components/dashboard/Financial/ClientUsageDashboard').then(mod => ({ default: mod.ClientUsageDashboard })),
+  {
+    loading: () => <DashboardSkeleton />,
+    ssr: false
+  }
+)
+
+// Skeleton components for loading states
+function ChartSkeleton({ height }: { height: number }) {
+  return (
+    <div
+      className="bg-gray-800/50 border border-gray-700/50 rounded-xl animate-pulse"
+      style={{ height }}
+    >
+      <div className="p-4 space-y-3">
+        <div className="h-4 bg-gray-700/50 rounded w-1/3" />
+        <div className="h-full bg-gray-700/30 rounded" style={{ height: height - 80 }} />
+      </div>
+    </div>
+  )
+}
+
+function DashboardSkeleton() {
+  return (
+    <div className="p-4 space-y-4 animate-pulse">
+      <div className="h-8 bg-gray-700/50 rounded w-1/4" />
+      <div className="grid grid-cols-4 gap-4">
+        {[...Array(4)].map((_, i) => (
+          <div key={i} className="h-24 bg-gray-700/30 rounded-xl" />
+        ))}
+      </div>
+      <div className="h-64 bg-gray-700/30 rounded-xl" />
+    </div>
+  )
+}
+
 export function FinancialDashboardClient() {
+  // Check if viewing as a specific client
+  const searchParams = useSearchParams()
+  const tenantId = searchParams.get('tenant')
+  const isClientView = !!tenantId
+
+  // If in client view, show simplified usage dashboard
+  if (isClientView) {
+    return <ClientUsageDashboard />
+  }
+
+  // Otherwise, show full financial dashboard for admins
+  return <AdminFinancialDashboard />
+}
+
+function AdminFinancialDashboard() {
   // Default to last 30 days
   const defaultRange = getDefaultDateRange()
   const [filters, setFilters] = useState<FinancialFilters>({
@@ -43,171 +116,93 @@ export function FinancialDashboardClient() {
   const { data: costBreakdownData, isLoading: costBreakdownLoading } = useCostBreakdown(filters)
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-gray-950 via-gray-900 to-black">
-      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
-        {/* Header */}
-        <div className="mb-8">
-          <h1 className="text-3xl font-bold text-white mb-2">
-            Dashboard Financier
-          </h1>
-          <p className="text-gray-400">
-            Suivi de la marge Voipia et consommation par client
-          </p>
-        </div>
-
-        {/* Date Range Filter */}
-        <div className="mb-6 flex flex-wrap gap-4">
-          <div className="flex items-center gap-2">
-            <label className="text-sm font-medium text-gray-400">Date début:</label>
-            <input
-              type="date"
-              value={filters.startDate}
-              onChange={(e) => setFilters({ ...filters, startDate: e.target.value })}
-              className="px-3 py-2 bg-gray-800 border border-gray-700 rounded-lg text-white text-sm focus:ring-2 focus:ring-violet-500 focus:border-transparent"
-            />
-          </div>
-          <div className="flex items-center gap-2">
-            <label className="text-sm font-medium text-gray-400">Date fin:</label>
-            <input
-              type="date"
-              value={filters.endDate}
-              onChange={(e) => setFilters({ ...filters, endDate: e.target.value })}
-              className="px-3 py-2 bg-gray-800 border border-gray-700 rounded-lg text-white text-sm focus:ring-2 focus:ring-violet-500 focus:border-transparent"
-            />
-          </div>
+    <div className="p-4 space-y-3">
+      {/* Compact Header with Filters and Toggle */}
+      <div className="flex flex-wrap items-center justify-between gap-3">
+        <div className="flex flex-wrap items-center gap-2">
+          <input
+            type="date"
+            value={filters.startDate}
+            onChange={(e) => setFilters({ ...filters, startDate: e.target.value })}
+            className="px-2 py-1.5 bg-gray-800 border border-gray-700 rounded-lg text-white text-sm focus:ring-2 focus:ring-violet-500 focus:border-transparent"
+          />
+          <span className="text-gray-500">-</span>
+          <input
+            type="date"
+            value={filters.endDate}
+            onChange={(e) => setFilters({ ...filters, endDate: e.target.value })}
+            className="px-2 py-1.5 bg-gray-800 border border-gray-700 rounded-lg text-white text-sm focus:ring-2 focus:ring-violet-500 focus:border-transparent"
+          />
           <button
             onClick={() => {
               const range = getDefaultDateRange()
               setFilters({ ...filters, ...range })
             }}
-            className="px-4 py-2 bg-violet-600 hover:bg-violet-700 text-white text-sm font-medium rounded-lg transition-colors"
+            className="px-3 py-1.5 bg-violet-600 hover:bg-violet-700 text-white text-xs font-medium rounded-lg transition-colors"
           >
-            30 derniers jours
+            30j
           </button>
         </div>
-
-        {/* Error State */}
-        {kpiError && (
-          <div className="mb-6 p-4 bg-red-500/10 border border-red-500/30 rounded-lg">
-            <p className="text-red-400 text-sm">
-              Erreur de chargement des données: {kpiError.message}
-            </p>
-          </div>
-        )}
-
-        {/* View Toggle: Leasing vs Consumption */}
-        <div className="mb-6 flex justify-center">
-          <FinancialViewToggle
-            mode={viewMode}
-            onModeChange={setViewMode}
-          />
-        </div>
-
-        {/* KPI Grid - Conditional based on view mode */}
-        {viewMode === 'leasing' ? (
-          <LeasingKPIGrid data={leasingData} isLoading={leasingLoading} />
-        ) : (
-          <ConsumptionKPIGrid data={consumptionData} isLoading={consumptionLoading} />
-        )}
-
-        {/* Legacy KPI Grid (hidden, kept for backward compatibility) */}
-        <div className="hidden">
-          <FinancialKPIGrid data={kpiData} isLoading={kpiLoading} />
-        </div>
-
-        {/* Time Series Chart */}
-        <div className="mb-6">
-          <FinancialTimeSeriesChart
-            data={timeSeriesData || []}
-            isLoading={timeSeriesLoading}
-            height={350}
-          />
-        </div>
-
-        {/* Cost Breakdown Chart */}
-        <div className="mb-6">
-          <CostBreakdownChart
-            data={costBreakdownData}
-            isLoading={costBreakdownLoading}
-            height={450}
-          />
-        </div>
-
-        {/* Period Info */}
-        {kpiData && !kpiLoading && (
-          <div className="mb-6 p-4 bg-gray-800/30 border border-gray-700/30 rounded-lg">
-            <div className="grid grid-cols-1 md:grid-cols-3 gap-4 text-sm">
-              <div>
-                <p className="text-gray-400 mb-1">Période actuelle</p>
-                <p className="text-white font-medium">
-                  {new Date(kpiData.period_info.start_date).toLocaleDateString('fr-FR')} -{' '}
-                  {new Date(kpiData.period_info.end_date).toLocaleDateString('fr-FR')}
-                </p>
-                <p className="text-gray-500 text-xs mt-1">
-                  {kpiData.period_info.duration_days} jours
-                </p>
-              </div>
-              <div>
-                <p className="text-gray-400 mb-1">Période précédente</p>
-                <p className="text-white font-medium">
-                  {new Date(kpiData.period_info.previous_start_date).toLocaleDateString('fr-FR')} -{' '}
-                  {new Date(kpiData.period_info.previous_end_date).toLocaleDateString('fr-FR')}
-                </p>
-              </div>
-              <div>
-                <p className="text-gray-400 mb-1">Comparaison</p>
-                <p className={`font-medium ${
-                  kpiData.comparison.revenue_change_percentage >= 0
-                    ? 'text-emerald-400'
-                    : 'text-red-400'
-                }`}>
-                  {kpiData.comparison.revenue_change_percentage >= 0 ? '+' : ''}
-                  {kpiData.comparison.revenue_change_percentage.toFixed(1)}% revenue
-                </p>
-                <p className={`text-xs mt-1 ${
-                  kpiData.comparison.margin_change_percentage >= 0
-                    ? 'text-emerald-400'
-                    : 'text-red-400'
-                }`}>
-                  {kpiData.comparison.margin_change_percentage >= 0 ? '+' : ''}
-                  {kpiData.comparison.margin_change_percentage.toFixed(1)}% marge
-                </p>
-              </div>
-            </div>
-          </div>
-        )}
-
-        {/* Client Breakdown Table */}
-        <ClientBreakdownTableV2
-          data={clientData}
-          isLoading={clientLoading}
-          onDetailClick={(client) => {
-            setSelectedClient(client)
-            setIsModalOpen(true)
-          }}
+        <FinancialViewToggle
+          mode={viewMode}
+          onModeChange={setViewMode}
         />
-
-        {/* Client Drill Down Modal */}
-        <ClientDrilldownModal
-          client={selectedClient}
-          isOpen={isModalOpen}
-          onClose={() => {
-            setIsModalOpen(false)
-            setSelectedClient(null)
-          }}
-          startDate={filters.startDate}
-          endDate={filters.endDate}
-        />
-
-        {/* Footer Note */}
-        <div className="mt-8 p-4 bg-gray-800/20 border border-gray-700/20 rounded-lg">
-          <p className="text-xs text-gray-500 text-center">
-            💡 <span className="font-semibold">Note:</span> Ce dashboard sépare désormais le leasing (abonnement fixe, 100% marge)
-            de la consommation (usage variable, marge calculée). Utilisez le toggle pour basculer entre les deux vues.
-            Les coûts provider incluent uniquement les coûts d&#39;utilisation (STT, TTS, LLM, SMS, emails).
-          </p>
-        </div>
       </div>
+
+      {/* Error State */}
+      {kpiError && (
+        <div className="p-2 bg-red-500/10 border border-red-500/30 rounded-lg">
+          <p className="text-red-400 text-xs">Erreur: {kpiError.message}</p>
+        </div>
+      )}
+
+      {/* KPI Grid - Conditional based on view mode */}
+      {viewMode === 'leasing' ? (
+        <LeasingKPIGrid data={leasingData} isLoading={leasingLoading} />
+      ) : (
+        <ConsumptionKPIGrid data={consumptionData} isLoading={consumptionLoading} />
+      )}
+
+      {/* Legacy KPI Grid (hidden, kept for backward compatibility) */}
+      <div className="hidden">
+        <FinancialKPIGrid data={kpiData} isLoading={kpiLoading} />
+      </div>
+
+      {/* Charts Grid - Side by Side */}
+      <div className="grid grid-cols-1 lg:grid-cols-2 gap-3">
+        <FinancialTimeSeriesChart
+          data={timeSeriesData || []}
+          isLoading={timeSeriesLoading}
+          height={280}
+        />
+        <CostBreakdownChart
+          data={costBreakdownData}
+          isLoading={costBreakdownLoading}
+          height={280}
+        />
+      </div>
+
+      {/* Client Breakdown Table */}
+      <ClientBreakdownTableV2
+        data={clientData}
+        isLoading={clientLoading}
+        onDetailClick={(client) => {
+          setSelectedClient(client)
+          setIsModalOpen(true)
+        }}
+      />
+
+      {/* Client Drill Down Modal */}
+      <ClientDrilldownModal
+        client={selectedClient}
+        isOpen={isModalOpen}
+        onClose={() => {
+          setIsModalOpen(false)
+          setSelectedClient(null)
+        }}
+        startDate={filters.startDate}
+        endDate={filters.endDate}
+      />
     </div>
   )
 }

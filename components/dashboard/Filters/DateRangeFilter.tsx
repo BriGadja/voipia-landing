@@ -1,9 +1,9 @@
 'use client'
 
-import { useState } from 'react'
 import DatePicker, { registerLocale } from 'react-datepicker'
 import { fr } from 'date-fns/locale'
-import { subDays, startOfMonth, endOfMonth, startOfYear, endOfYear } from 'date-fns'
+import { subDays, startOfMonth, endOfMonth, startOfYear, endOfYear, isAfter, isBefore, startOfDay } from 'date-fns'
+import { toast } from 'sonner'
 import 'react-datepicker/dist/react-datepicker.css'
 import './datepicker.css'
 
@@ -43,12 +43,54 @@ export function DateRangeFilter({
     onChange(start, end)
   }
 
+  /**
+   * Handle start date change with validation
+   * Auto-adjusts end date if start date is after current end date
+   */
+  const handleStartDateChange = (date: Date | null) => {
+    if (!date) return
+
+    const normalizedStart = startOfDay(date)
+    const normalizedEnd = startOfDay(endDate)
+
+    if (isAfter(normalizedStart, normalizedEnd)) {
+      // Auto-adjust end date to match start date
+      toast.info('Plage de dates ajustee', {
+        description: 'La date de fin a ete ajustee pour correspondre a la date de debut.',
+      })
+      onChange(date, date)
+    } else {
+      onChange(date, endDate)
+    }
+  }
+
+  /**
+   * Handle end date change with validation
+   * Prevents selecting end date before start date (already enforced by minDate)
+   */
+  const handleEndDateChange = (date: Date | null) => {
+    if (!date) return
+
+    const normalizedStart = startOfDay(startDate)
+    const normalizedEnd = startOfDay(date)
+
+    if (isBefore(normalizedEnd, normalizedStart)) {
+      // This shouldn't happen due to minDate, but add safety check
+      toast.error('Date invalide', {
+        description: 'La date de fin ne peut pas etre anterieure a la date de debut.',
+      })
+      return
+    }
+
+    onChange(startDate, date)
+  }
+
   return (
     <div className="flex flex-col gap-2">
       <div className="flex flex-wrap items-center gap-2">
         <DatePicker
           selected={startDate}
-          onChange={(date) => date && onChange(date, endDate)}
+          onChange={handleStartDateChange}
           selectsStart
           startDate={startDate}
           endDate={endDate}
@@ -56,15 +98,17 @@ export function DateRangeFilter({
           locale="fr"
           className="px-2 py-1.5 text-sm border border-white/20 rounded-lg bg-black/20 text-white focus:outline-none focus:ring-2 focus:ring-purple-500"
           placeholderText="Date début"
+          maxDate={new Date()}
         />
         <span className="text-white/60">→</span>
         <DatePicker
           selected={endDate}
-          onChange={(date) => date && onChange(startDate, date)}
+          onChange={handleEndDateChange}
           selectsEnd
           startDate={startDate}
           endDate={endDate}
           minDate={startDate}
+          maxDate={new Date()}
           dateFormat="dd/MM/yyyy"
           locale="fr"
           className="px-2 py-1.5 text-sm border border-white/20 rounded-lg bg-black/20 text-white focus:outline-none focus:ring-2 focus:ring-purple-500"

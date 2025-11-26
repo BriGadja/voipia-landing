@@ -6,7 +6,7 @@ import FadeIn from '@/components/animations/FadeIn'
 import { agents } from '@/lib/constants'
 import { CheckCircle, ArrowRight } from 'lucide-react'
 import Link from 'next/link'
-import Button from '@/components/ui/Button'
+import Button from '@/components/ui/AnimatedButton'
 
 export default function AgentsGrid() {
   return (

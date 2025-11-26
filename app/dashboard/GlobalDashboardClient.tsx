@@ -1,20 +1,19 @@
 'use client'
 
-import { useState, useEffect } from 'react'
 import { useDashboardFilters } from '@/lib/hooks/useDashboardFilters'
 import {
   useClientCardsData,
   useAgentTypeCardsData,
 } from '@/lib/hooks/useDashboardData'
-import { exportGlobalCallsToCSV, checkIsAdmin } from '@/lib/queries/global'
-import { DashboardHeader } from '@/components/dashboard/DashboardHeader'
+import { exportGlobalCallsToCSV } from '@/lib/queries/global'
+import { PageHeader } from '@/components/dashboard/PageHeader'
 import { DateRangeFilter } from '@/components/dashboard/Filters/DateRangeFilter'
 import { ExportCSVButton } from '@/components/dashboard/ExportCSVButton'
 import { ClientCard } from '@/components/dashboard/Cards/ClientCard'
 import { AgentTypeCard } from '@/components/dashboard/Cards/AgentTypeCard'
 
 interface GlobalDashboardClientProps {
-  userEmail: string
+  userEmail?: string
 }
 
 /**
@@ -26,20 +25,12 @@ interface GlobalDashboardClientProps {
  * All cards are dynamically generated from Supabase data
  */
 export function GlobalDashboardClient({ userEmail }: GlobalDashboardClientProps) {
-  // Admin status
-  const [isAdmin, setIsAdmin] = useState(false)
-
   // URL-based filters
   const { filters, setDateRange } = useDashboardFilters()
 
   // Fetch dynamic cards data
   const { data: clientCards, isLoading: isLoadingClients } = useClientCardsData(filters)
   const { data: agentTypeCards, isLoading: isLoadingAgentTypes } = useAgentTypeCardsData(filters)
-
-  // Check admin status on mount
-  useEffect(() => {
-    checkIsAdmin().then(setIsAdmin)
-  }, [])
 
   // Handle filter changes
   const handleDateChange = (start: Date, end: Date) => {
@@ -51,26 +42,25 @@ export function GlobalDashboardClient({ userEmail }: GlobalDashboardClientProps)
   const isLoading = isLoadingClients || isLoadingAgentTypes
 
   return (
-    <>
-      {/* Header */}
-      <DashboardHeader userEmail={userEmail} title="Dashboard Global" isAdmin={isAdmin} />
+    <div className="p-6 space-y-6">
+      {/* Header with Export */}
+      <PageHeader
+        title="Vue d'ensemble"
+        description="Performance globale de tous vos agents"
+      >
+        <ExportCSVButton
+          filters={filters}
+          exportFn={exportGlobalCallsToCSV}
+          filename="global-dashboard-export.csv"
+        />
+      </PageHeader>
 
-      {/* Main Content */}
-      <div className="container mx-auto px-4 py-8 space-y-8">
-        {/* Filters Row */}
-        <div className="flex flex-col lg:flex-row gap-4 items-start lg:items-center justify-between">
-          <DateRangeFilter
-            startDate={new Date(filters.startDate)}
-            endDate={new Date(filters.endDate)}
-            onChange={handleDateChange}
-          />
-
-          <ExportCSVButton
-            filters={filters}
-            exportFn={exportGlobalCallsToCSV}
-            filename="global-dashboard-export.csv"
-          />
-        </div>
+      {/* Filters Row */}
+      <DateRangeFilter
+        startDate={new Date(filters.startDate)}
+        endDate={new Date(filters.endDate)}
+        onChange={handleDateChange}
+      />
 
         {/* Two Column Layout */}
         <div className="grid grid-cols-1 lg:grid-cols-2 gap-8">
@@ -169,7 +159,6 @@ export function GlobalDashboardClient({ userEmail }: GlobalDashboardClientProps)
             </div>
           </div>
         )}
-      </div>
-    </>
+    </div>
   )
 }

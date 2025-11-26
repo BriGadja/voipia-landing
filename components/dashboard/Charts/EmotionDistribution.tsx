@@ -1,5 +1,6 @@
 'use client'
 
+import { memo, useMemo, useCallback } from 'react'
 import { PieChart, Pie, Cell, ResponsiveContainer, Legend, Tooltip } from 'recharts'
 
 interface EmotionDistributionProps {
@@ -29,65 +30,77 @@ const emotionColors: Record<string, string> = {
   unknown: '#94a3b8',
 }
 
-export function EmotionDistribution({ data }: EmotionDistributionProps) {
-  // Filter out "unknown" emotions by default
-  const filteredData = data.filter((item) => item.emotion !== 'unknown' && item.emotion !== 'Inconnu')
-
-  const chartData = filteredData.map((item) => ({
-    name: emotionLabels[item.emotion] || emotionLabels.unknown,
-    value: item.count,
-    color: emotionColors[item.emotion] || emotionColors.unknown,
-  }))
+function EmotionDistributionInner({ data }: EmotionDistributionProps) {
+  // Filter and transform data with useMemo
+  const chartData = useMemo(() => {
+    const filteredData = data.filter((item) => item.emotion !== 'unknown' && item.emotion !== 'Inconnu')
+    return filteredData.map((item) => ({
+      name: emotionLabels[item.emotion] || emotionLabels.unknown,
+      value: item.count,
+      color: emotionColors[item.emotion] || emotionColors.unknown,
+    }))
+  }, [data])
 
   // Calculate total for percentages
-  const total = chartData.reduce((sum, item) => sum + item.value, 0)
+  const total = useMemo(
+    () => chartData.reduce((sum, item) => sum + item.value, 0),
+    [chartData]
+  )
 
   // Custom label renderer with external labels and connecting lines
-  const renderCustomLabel = (props: any) => {
-    const { cx, cy, midAngle, outerRadius, name, value } = props
-    const RADIAN = Math.PI / 180
-    const radius = outerRadius + 30 // Distance from pie to label
-    const x = cx + radius * Math.cos(-midAngle * RADIAN)
-    const y = cy + radius * Math.sin(-midAngle * RADIAN)
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
+  const renderCustomLabel = useCallback(
+    (props: any) => {
+      const { cx, cy, midAngle, outerRadius, name, value } = props
+      const RADIAN = Math.PI / 180
+      const radius = outerRadius + 30 // Distance from pie to label
+      const x = cx + radius * Math.cos(-midAngle * RADIAN)
+      const y = cy + radius * Math.sin(-midAngle * RADIAN)
 
-    const percentage = total > 0 ? ((value / total) * 100).toFixed(1) : 0
+      const percentage = total > 0 ? ((value / total) * 100).toFixed(1) : 0
 
-    return (
-      <text
-        x={x}
-        y={y}
-        fill="#fff"
-        textAnchor={x > cx ? 'start' : 'end'}
-        dominantBaseline="central"
-        className="text-xs font-medium"
-      >
-        {`${name} : ${value} (${percentage}%)`}
-      </text>
-    )
-  }
+      return (
+        <text
+          x={x}
+          y={y}
+          fill="#fff"
+          textAnchor={x > cx ? 'start' : 'end'}
+          dominantBaseline="central"
+          className="text-xs font-medium"
+        >
+          {`${name} : ${value} (${percentage}%)`}
+        </text>
+      )
+    },
+    [total]
+  )
 
   // Custom legend formatter with percentages
-  const renderLegend = (props: any) => {
-    const { payload } = props
-    return (
-      <ul className="flex flex-col gap-2 text-sm text-white">
-        {payload.map((entry: any, index: number) => {
-          const percentage = total > 0 ? ((entry.payload.value / total) * 100).toFixed(1) : 0
-          return (
-            <li key={`legend-${index}`} className="flex items-center gap-2">
-              <span
-                className="w-3 h-3 rounded-full flex-shrink-0"
-                style={{ backgroundColor: entry.color }}
-              />
-              <span className="whitespace-nowrap">
-                {entry.value} : {percentage}%
-              </span>
-            </li>
-          )
-        })}
-      </ul>
-    )
-  }
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
+  const renderLegend = useCallback(
+    (props: any) => {
+      const { payload } = props
+      return (
+        <ul className="flex flex-col gap-2 text-sm text-white">
+          {payload?.map((entry: any, index: number) => {
+            const percentage = total > 0 ? ((entry.payload.value / total) * 100).toFixed(1) : 0
+            return (
+              <li key={`legend-${index}`} className="flex items-center gap-2">
+                <span
+                  className="w-3 h-3 rounded-full flex-shrink-0"
+                  style={{ backgroundColor: entry.color }}
+                />
+                <span className="whitespace-nowrap">
+                  {entry.value} : {percentage}%
+                </span>
+              </li>
+            )
+          })}
+        </ul>
+      )
+    },
+    [total]
+  )
 
   return (
     <div className="bg-black/20 border border-white/20 rounded-xl p-3 flex flex-col h-full">
@@ -147,3 +160,9 @@ export function EmotionDistribution({ data }: EmotionDistributionProps) {
     </div>
   )
 }
+
+/**
+ * Memoized EmotionDistribution to prevent unnecessary re-renders
+ * Only re-renders when data prop changes
+ */
+export const EmotionDistribution = memo(EmotionDistributionInner)

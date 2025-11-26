@@ -4,6 +4,7 @@ import type {
   KPIMetrics,
   ChartData,
   AgentPerformanceData,
+  CallExportRow,
 } from '@/lib/types/dashboard'
 
 /**
@@ -155,7 +156,7 @@ export async function exportLouisCallsToCSV(
     'Callback Requested',
   ]
 
-  const rows = data.map((call: any) => [
+  const rows = (data as CallExportRow[]).map((call) => [
     new Date(call.started_at).toLocaleString('fr-FR'),
     call.agent_deployments?.clients?.name || '',
     call.agent_deployments?.clients?.industry || '',

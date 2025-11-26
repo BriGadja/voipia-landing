@@ -242,6 +242,51 @@ export interface ArthurNextCallData {
 }
 
 /**
+ * Call data structure for CSV export
+ * Used to type the raw Supabase response in export functions
+ */
+export interface CallExportRow {
+  id: string
+  started_at: string
+  ended_at: string | null
+  duration_seconds: number | null
+  outcome: string | null
+  answered: boolean
+  appointment_scheduled: boolean
+  emotion: string | null
+  emotion_score: number | null
+  transcript: string | null
+  summary: string | null
+  recording_url: string | null
+  call_quality_score: number | null
+  cost: number | null
+  phone_number: string | null
+  first_name: string | null
+  last_name: string | null
+  email: string | null
+  metadata: {
+    appointment_scheduled_at?: string
+    appointment_accepted?: boolean
+    appointment_refused?: boolean
+    callback_requested?: boolean
+    [key: string]: unknown
+  } | null
+  agent_deployments: {
+    name: string
+    slug: string
+    client_id: string
+    clients: {
+      name: string
+      industry: string | null
+    } | null
+    agent_types: {
+      name: string
+      display_name: string
+    } | null
+  } | null
+}
+
+/**
  * KPI Card props helper type
  */
 export interface KPICardData {

@@ -2,7 +2,7 @@
 
 import { motion } from 'framer-motion'
 import FadeIn from '@/components/animations/FadeIn'
-import Button from '@/components/ui/Button'
+import Button from '@/components/ui/AnimatedButton'
 import { Phone, Calendar, ArrowRight } from 'lucide-react'
 import { useState } from 'react'
 import ContactModal from '@/components/ui/ContactModal'

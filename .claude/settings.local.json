@@ -107,7 +107,10 @@
       "Bash(if not exist \"features\\_archive\" mkdir \"features\\_archive\")",
       "Bash(mv:*)",
       "mcp__MCP_DOCKER__resolve-library-id",
-      "mcp__MCP_DOCKER__get-library-docs"
+      "mcp__MCP_DOCKER__get-library-docs",
+      "Bash(git reset:*)",
+      "Bash(.gitignore)",
+      "Bash(git mv:*)"
     ],
     "deny": []
   },

@@ -54,14 +54,15 @@ const colors = [
   '#a855f7', // purple
 ]
 
+// Filter to show only 4 specific outcomes for Louis dashboard
+const SPECIFIC_OUTCOMES = ['voicemail', 'appointment_refused', 'too_short', 'appointment_scheduled']
+
 function OutcomeBreakdownInner({ data }: OutcomeBreakdownProps) {
-  // Filter to show only 4 specific outcomes for Louis dashboard
-  const specificOutcomes = ['voicemail', 'appointment_refused', 'too_short', 'appointment_scheduled']
 
   const chartData = useMemo(
     () =>
       data
-        .filter((item) => specificOutcomes.includes(item.outcome))
+        .filter((item) => SPECIFIC_OUTCOMES.includes(item.outcome))
         .map((item) => ({
           name: outcomeLabels[item.outcome] || item.outcome,
           value: item.count,
@@ -78,7 +79,6 @@ function OutcomeBreakdownInner({ data }: OutcomeBreakdownProps) {
   )
 
   // Custom label renderer with external labels and connecting lines
-  // eslint-disable-next-line @typescript-eslint/no-explicit-any
   const renderCustomLabel = useCallback(
     (props: any) => {
       const { cx, cy, midAngle, outerRadius, name, value } = props
@@ -106,7 +106,6 @@ function OutcomeBreakdownInner({ data }: OutcomeBreakdownProps) {
   )
 
   // Custom legend formatter with percentages
-  // eslint-disable-next-line @typescript-eslint/no-explicit-any
   const renderLegend = useCallback(
     (props: any) => {
       const { payload } = props

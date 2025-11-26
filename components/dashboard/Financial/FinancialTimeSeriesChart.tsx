@@ -77,6 +77,19 @@ function FinancialTimeSeriesChartInner({
     [data]
   )
 
+  // Toggle line visibility with useCallback - must be before any early returns
+  const handleLegendClick = useCallback((dataKey: string) => {
+    setHiddenLines((prev) => {
+      const newSet = new Set(prev)
+      if (newSet.has(dataKey)) {
+        newSet.delete(dataKey)
+      } else {
+        newSet.add(dataKey)
+      }
+      return newSet
+    })
+  }, [])
+
   // Loading state
   if (isLoading) {
     return (
@@ -103,19 +116,6 @@ function FinancialTimeSeriesChartInner({
       </div>
     )
   }
-
-  // Toggle line visibility with useCallback
-  const handleLegendClick = useCallback((dataKey: string) => {
-    setHiddenLines((prev) => {
-      const newSet = new Set(prev)
-      if (newSet.has(dataKey)) {
-        newSet.delete(dataKey)
-      } else {
-        newSet.add(dataKey)
-      }
-      return newSet
-    })
-  }, [])
 
   // Determine if compact mode based on height
   const isCompact = height < 350

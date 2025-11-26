@@ -48,7 +48,6 @@ function EmotionDistributionInner({ data }: EmotionDistributionProps) {
   )
 
   // Custom label renderer with external labels and connecting lines
-  // eslint-disable-next-line @typescript-eslint/no-explicit-any
   const renderCustomLabel = useCallback(
     (props: any) => {
       const { cx, cy, midAngle, outerRadius, name, value } = props
@@ -76,7 +75,6 @@ function EmotionDistributionInner({ data }: EmotionDistributionProps) {
   )
 
   // Custom legend formatter with percentages
-  // eslint-disable-next-line @typescript-eslint/no-explicit-any
   const renderLegend = useCallback(
     (props: any) => {
       const { payload } = props

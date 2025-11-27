@@ -21,11 +21,10 @@ export function useDashboardFilters() {
 
   /**
    * Parse current filters from URL query params
-   * Note: The 'tenant' param from TenantSwitcher overrides clientIds for admin filtering
+   * Note: The 'viewAsUser' param is handled separately via useViewAsUser hook
    */
   const filters: DashboardFilters = useMemo(() => {
     const {
-      tenant,
       clientIds: clientIdsParam,
       deploymentId,
       agentTypeName,
@@ -37,14 +36,8 @@ export function useDashboardFilters() {
     const defaultEndDate = format(new Date(), 'yyyy-MM-dd')
     const defaultStartDate = format(subDays(new Date(), 30), 'yyyy-MM-dd')
 
-    // If tenant is set (admin viewing as client), use it as the only clientId
-    // Otherwise, use the clientIds filter if provided
-    let clientIds: string[] = []
-    if (tenant) {
-      clientIds = [tenant]
-    } else if (clientIdsParam && clientIdsParam.length > 0) {
-      clientIds = clientIdsParam
-    }
+    // Use the clientIds filter if provided
+    const clientIds = clientIdsParam && clientIdsParam.length > 0 ? clientIdsParam : []
 
     return {
       clientIds,
@@ -178,13 +171,13 @@ export function useDashboardFilters() {
 
   /**
    * Reset all filters to default values
+   * Note: viewAsUser is NOT reset here - use clearViewAsUser from useViewAsUser hook
    */
   const resetFilters = useCallback(() => {
     const defaultEndDate = format(new Date(), 'yyyy-MM-dd')
     const defaultStartDate = format(subDays(new Date(), 30), 'yyyy-MM-dd')
 
     setSearchParams({
-      tenant: null,
       clientIds: null,
       deploymentId: null,
       agentTypeName: null,

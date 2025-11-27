@@ -23,7 +23,7 @@ const getDefaultEndDate = () => format(new Date(), 'yyyy-MM-dd')
 
 /**
  * Dashboard filter parsers
- * - tenant: Client ID for admin tenant switching (takes precedence over clientIds)
+ * - viewAsUser: User ID for admin "view as user" feature (takes precedence over clientIds)
  * - clientIds: Comma-separated client IDs
  * - deploymentId: Single agent deployment UUID
  * - agentTypeName: Agent type filter (louis, arthur, alexandra)
@@ -31,7 +31,7 @@ const getDefaultEndDate = () => format(new Date(), 'yyyy-MM-dd')
  * - endDate: End date in YYYY-MM-DD format
  */
 export const dashboardParsers = {
-  tenant: parseAsString,
+  viewAsUser: parseAsString,
   clientIds: parseAsArrayOf(parseAsString, ','),
   deploymentId: parseAsString,
   agentTypeName: parseAsStringLiteral(agentTypes),
@@ -43,7 +43,7 @@ export const dashboardParsers = {
  * URL key mappings (optional, for shorter URLs)
  */
 export const dashboardUrlKeys: UrlKeys<typeof dashboardParsers> = {
-  tenant: 'tenant',
+  viewAsUser: 'viewAsUser',
   clientIds: 'clientIds',
   deploymentId: 'deploymentId',
   agentTypeName: 'agentTypeName',

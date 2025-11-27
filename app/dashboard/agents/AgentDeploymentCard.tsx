@@ -1,7 +1,7 @@
 'use client'
 
 import Link from 'next/link'
-import { Users, Target, Sparkles, ArrowRight, Phone, TrendingUp, Calendar, Clock, Euro, Activity } from 'lucide-react'
+import { Users, Target, Sparkles, ArrowRight, Phone, TrendingUp, Calendar, Clock, Activity } from 'lucide-react'
 import { AgentCardData } from '@/lib/types/dashboard'
 import { cn, formatRelativeTime } from '@/lib/utils'
 
@@ -16,9 +16,6 @@ interface AgentDeploymentCardProps {
  */
 export function AgentDeploymentCard({ agent }: AgentDeploymentCardProps) {
   const hasData = agent.total_calls > 0
-  const costPerCall = agent.total_calls > 0
-    ? agent.total_cost / agent.total_calls
-    : 0
 
   // Agent type configuration
   const agentConfig = {
@@ -140,17 +137,6 @@ export function AgentDeploymentCard({ agent }: AgentDeploymentCardProps) {
                   {Math.floor(agent.avg_duration / 60)}m{Math.round(agent.avg_duration % 60)}s
                 </p>
               </div>
-            </div>
-
-            {/* Cost - Compact row */}
-            <div className="flex items-center justify-between mt-3 pt-3 border-t border-white/10">
-              <div className="flex items-center gap-1 text-white/50">
-                <Euro className="w-3 h-3" />
-                <span className="text-xs">Cout total</span>
-              </div>
-              <span className="text-sm font-semibold text-white">
-                {agent.total_cost.toFixed(2)} EUR
-              </span>
             </div>
           </div>
         ) : (

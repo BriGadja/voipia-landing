@@ -25,7 +25,7 @@ import {
 } from '@/components/ui/dropdown-menu'
 import { Avatar, AvatarFallback } from '@/components/ui/avatar'
 import { sidebarConfig, settingsNavItem, type NavGroup } from './SidebarConfig'
-import { TenantSwitcher } from './TenantSwitcher'
+import { UserSwitcher } from './UserSwitcher'
 import { LogOut, ChevronsUpDown, User } from 'lucide-react'
 import { createClient } from '@/lib/supabase/client'
 import { useRouter } from 'next/navigation'
@@ -41,9 +41,9 @@ export function AppSidebar({ userEmail, isAdmin }: AppSidebarProps) {
   const searchParams = useSearchParams()
   const { state } = useSidebar()
 
-  // Check if viewing as a specific client (tenant mode)
-  const currentTenantId = searchParams.get('tenant')
-  const isInClientView = !!currentTenantId
+  // Check if viewing as a specific user (view-as-user mode)
+  const viewAsUserId = searchParams.get('viewAsUser')
+  const isInUserView = !!viewAsUserId
 
   const handleLogout = async () => {
     const supabase = createClient()
@@ -52,8 +52,8 @@ export function AppSidebar({ userEmail, isAdmin }: AppSidebarProps) {
   }
 
   // Filter navigation based on admin status
-  // Hide admin-only sections when viewing as a specific client
-  const showAdminSections = isAdmin && !isInClientView
+  // Hide admin-only sections when viewing as a specific user
+  const showAdminSections = isAdmin && !isInUserView
   const filteredConfig = sidebarConfig
     .filter((group) => !group.adminOnly || showAdminSections)
     .map((group) => ({
@@ -71,7 +71,7 @@ export function AppSidebar({ userEmail, isAdmin }: AppSidebarProps) {
       <SidebarHeader className="border-b border-white/10">
         <SidebarMenu>
           <SidebarMenuItem>
-            <TenantSwitcher isAdmin={isAdmin} />
+            <UserSwitcher isAdmin={isAdmin} />
           </SidebarMenuItem>
         </SidebarMenu>
       </SidebarHeader>

@@ -46,7 +46,7 @@ export const metadata: Metadata = {
   },
 };
 
-export default function Home() {
+export default function LandingV2() {
   const organizationSchema = getOrganizationSchema();
 
   return (

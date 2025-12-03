@@ -45,7 +45,7 @@ function LatencyTimeSeriesChartInner({ data, isLoading }: LatencyTimeSeriesChart
 
   if (isLoading) {
     return (
-      <div className="bg-black/20 border border-white/20 rounded-xl p-3 h-[300px] flex items-center justify-center">
+      <div className="bg-black/20 border border-white/20 rounded-xl p-3 h-full flex items-center justify-center">
         <p className="text-white/60 text-sm">Chargement des données de latence...</p>
       </div>
     )
@@ -53,19 +53,19 @@ function LatencyTimeSeriesChartInner({ data, isLoading }: LatencyTimeSeriesChart
 
   if (chartData.length === 0) {
     return (
-      <div className="bg-black/20 border border-white/20 rounded-xl p-3 h-[300px] flex items-center justify-center">
+      <div className="bg-black/20 border border-white/20 rounded-xl p-3 h-full flex items-center justify-center">
         <p className="text-white/60 text-sm">Aucune donnée de latence disponible</p>
       </div>
     )
   }
 
   return (
-    <div className="bg-black/20 border border-white/20 rounded-xl p-3 flex flex-col h-[300px]">
+    <div className="bg-black/20 border border-white/20 rounded-xl p-3 flex flex-col h-full">
       <h3 className="text-sm font-semibold text-white mb-2 flex-shrink-0">
         Latence par infrastructure (ms)
       </h3>
       <ResponsiveContainer width="100%" height="100%">
-        <AreaChart data={chartData} stackOffset="none">
+        <AreaChart data={chartData} stackOffset="none" margin={{ top: 5, right: 30, left: 0, bottom: 5 }}>
           <defs>
             {/* Gradient for STT (Speech-to-Text) - violet */}
             <linearGradient id="colorSTT" x1="0" y1="0" x2="0" y2="1">

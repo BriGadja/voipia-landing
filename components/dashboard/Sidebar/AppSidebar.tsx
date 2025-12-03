@@ -45,6 +45,13 @@ export function AppSidebar({ userEmail, isAdmin }: AppSidebarProps) {
   const viewAsUserId = searchParams.get('viewAsUser')
   const isInUserView = !!viewAsUserId
 
+  // Helper to build href with preserved viewAsUser param
+  const buildHref = (baseHref: string) => {
+    if (!viewAsUserId) return baseHref
+    const separator = baseHref.includes('?') ? '&' : '?'
+    return `${baseHref}${separator}viewAsUser=${viewAsUserId}`
+  }
+
   const handleLogout = async () => {
     const supabase = createClient()
     await supabase.auth.signOut()
@@ -68,7 +75,7 @@ export function AppSidebar({ userEmail, isAdmin }: AppSidebarProps) {
 
   return (
     <Sidebar collapsible="icon" className="border-r border-white/10">
-      <SidebarHeader className="border-b border-white/10">
+      <SidebarHeader className="border-b border-white/10 h-14 flex items-center">
         <SidebarMenu>
           <SidebarMenuItem>
             <UserSwitcher isAdmin={isAdmin} />
@@ -96,7 +103,7 @@ export function AppSidebar({ userEmail, isAdmin }: AppSidebarProps) {
                         tooltip={item.title}
                         className="text-white/70 hover:text-white hover:bg-white/10 data-[active=true]:bg-white/10 data-[active=true]:text-white"
                       >
-                        <Link href={item.href}>
+                        <Link href={buildHref(item.href)}>
                           <item.icon className="size-4" />
                           <span>{item.title}</span>
                         </Link>

@@ -81,11 +81,14 @@ function OutcomeBreakdownInner({ data }: OutcomeBreakdownProps) {
   // Custom label renderer with external labels and connecting lines
   const renderCustomLabel = useCallback(
     (props: any) => {
-      const { cx, cy, midAngle, outerRadius, name, value } = props
+      const { cx, cy, midAngle, outerRadius, name, value, percent } = props
       const RADIAN = Math.PI / 180
-      const radius = outerRadius + 30 // Distance from pie to label
+      const radius = outerRadius + 20 // Reduced distance from pie to label
       const x = cx + radius * Math.cos(-midAngle * RADIAN)
       const y = cy + radius * Math.sin(-midAngle * RADIAN)
+
+      // Skip small segments to avoid clutter
+      if (percent < 0.05) return null
 
       const percentage = total > 0 ? ((value / total) * 100).toFixed(1) : 0
 
@@ -96,7 +99,7 @@ function OutcomeBreakdownInner({ data }: OutcomeBreakdownProps) {
           fill="#fff"
           textAnchor={x > cx ? 'start' : 'end'}
           dominantBaseline="central"
-          className="text-xs font-medium"
+          style={{ fontSize: '11px', fontWeight: 500 }}
         >
           {`${name} : ${value} (${percentage}%)`}
         </text>
@@ -140,10 +143,10 @@ function OutcomeBreakdownInner({ data }: OutcomeBreakdownProps) {
         <PieChart>
           <Pie
             data={chartData}
-            cx="40%"
+            cx="35%"
             cy="50%"
-            innerRadius={50}
-            outerRadius={80}
+            innerRadius="30%"
+            outerRadius="50%"
             paddingAngle={2}
             dataKey="value"
             label={renderCustomLabel}

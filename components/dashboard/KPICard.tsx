@@ -10,6 +10,7 @@ interface KPICardProps {
   format?: 'number' | 'currency' | 'percentage' | 'duration' | 'latency'
   decorationColor?: 'blue' | 'emerald' | 'amber' | 'red' | 'violet' | 'teal'
   delay?: number
+  compact?: boolean
 }
 
 const colorClasses = {
@@ -37,6 +38,7 @@ export function KPICard({
   format = 'number',
   decorationColor = 'blue',
   delay = 0,
+  compact = false,
 }: KPICardProps) {
   const formatValue = (val: number | string | undefined): string => {
     if (val === undefined || val === null) return '—'
@@ -88,18 +90,18 @@ export function KPICard({
       {/* Decoration bar */}
       <div className={`absolute top-0 left-0 right-0 h-1 ${decorationColors[decorationColor]}`} />
 
-      <div className="p-4">
+      <div className={compact ? "p-4" : "p-4"}>
         <div className="flex items-start justify-between">
           <div className="flex-1">
-            <p className="text-sm font-medium text-white/60 mb-1">{label}</p>
-            <p className="text-2xl font-bold text-white">
+            <p className={`font-medium text-white/60 ${compact ? 'text-xs mb-0.5' : 'text-sm mb-1'}`}>{label}</p>
+            <p className={`font-bold text-white ${compact ? 'text-xl' : 'text-2xl'}`}>
               {formatValue(value)}
             </p>
           </div>
 
           {delta && (
             <div
-              className={`flex items-center gap-1 px-2 py-1 rounded-full text-xs font-semibold ${
+              className={`flex items-center gap-1 rounded-full font-semibold ${compact ? 'px-1.5 py-0.5 text-[10px]' : 'px-2 py-1 text-xs'} ${
                 delta.trend === 'up'
                   ? 'bg-emerald-500/20 text-emerald-400'
                   : delta.trend === 'down'
@@ -108,11 +110,11 @@ export function KPICard({
               }`}
             >
               {delta.trend === 'up' ? (
-                <TrendingUp className="w-3 h-3" />
+                <TrendingUp className={compact ? "w-2.5 h-2.5" : "w-3 h-3"} />
               ) : delta.trend === 'down' ? (
-                <TrendingDown className="w-3 h-3" />
+                <TrendingDown className={compact ? "w-2.5 h-2.5" : "w-3 h-3"} />
               ) : (
-                <Minus className="w-3 h-3" />
+                <Minus className={compact ? "w-2.5 h-2.5" : "w-3 h-3"} />
               )}
               {delta.value > 0 && (
                 <span>

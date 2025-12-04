@@ -1,7 +1,6 @@
 import type { Metadata } from 'next'
 import { Inter } from 'next/font/google'
 import './globals.css'
-import ClientChatbot from '@/components/chatbot/ClientChatbot'
 import { Providers } from './providers'
 import { AuthHashHandler } from '@/components/auth/AuthHashHandler'
 import { Analytics } from '@vercel/analytics/next'
@@ -78,7 +77,6 @@ export default function RootLayout({
           <Providers>
             <AuthHashHandler />
             {children}
-            <ClientChatbot />
             <Toaster
               position="top-right"
               theme="dark"

@@ -6,17 +6,14 @@ import {
   useLouisNestennKPIs,
   useLouisNestennChartData,
 } from '@/lib/hooks/useDashboardData'
-import { useLatencyMetrics } from '@/lib/hooks/useLatencyData'
 import { exportLouisCallsToCSV } from '@/lib/queries/louis'
 import { DateRangeFilter } from '@/components/dashboard/Filters/DateRangeFilter'
 import { KPIGrid } from '@/components/dashboard/KPIGrid'
 import { ExportCSVButton } from '@/components/dashboard/ExportCSVButton'
 import { CallVolumeChart } from '@/components/dashboard/Charts/CallVolumeChart'
 import { EmotionDistribution } from '@/components/dashboard/Charts/EmotionDistribution'
-import { LatencyTimeSeriesChart } from '@/components/dashboard/Charts/LatencyTimeSeriesChart'
-import { FunnelChart } from '@/components/dashboard/Charts/FunnelChart'
-import { DurationByOutcomeChart } from '@/components/dashboard/Charts/DurationByOutcomeChart'
 import { NestennOutcomeChart } from '@/components/dashboard/Charts/NestennOutcomeChart'
+import { OwnerPerformanceChart } from '@/components/dashboard/Charts/OwnerPerformanceChart'
 
 type AgentTypeName = 'louis' | 'arthur' | 'alexandra'
 
@@ -59,11 +56,10 @@ const statusLabels: Record<string, string> = {
  *
  * Features:
  * - 6 KPIs: Total Appels, Taux Contact, Transferts Demandes, Taux Qualification, Rappels, SMS
- * - Funnel Chart: Total -> Contactes -> Decroches -> Qualifies
+ * - RDV par Owner: Performance des agents immobiliers
  * - Outcome Distribution: With Nestenn-specific labels
- * - Duration by Outcome: Shows correlation between call duration and success
+ * - Call Volume Chart: Daily call trends
  * - Emotion Distribution: Only for answered calls
- * - Latency Chart: Infrastructure performance
  */
 export function LouisNestennDashboardClient({
   deployment,
@@ -83,15 +79,6 @@ export function LouisNestennDashboardClient({
   // Fetch Nestenn-specific metrics
   const { data: kpiData, isLoading: isLoadingKPIs } = useLouisNestennKPIs(filtersWithDeployment)
   const { data: chartData, isLoading: isLoadingCharts } = useLouisNestennChartData(filtersWithDeployment)
-
-  // Fetch latency metrics
-  const { data: latencyData, isLoading: isLoadingLatencies } = useLatencyMetrics({
-    startDate: filters.startDate,
-    endDate: filters.endDate,
-    deploymentId: deployment.deployment_id,
-    clientId: deployment.client_id,
-    agentTypeName: deployment.agent_type_name,
-  })
 
   // Handle filter changes
   const handleDateChange = (start: Date, end: Date) => {
@@ -149,36 +136,25 @@ export function LouisNestennDashboardClient({
           />
         </div>
 
-        {/* Charts Grid - 2x3 layout for Nestenn */}
+        {/* Charts Grid - 2x2 balanced layout (same as Louis standard) */}
         <div className="grid grid-cols-1 lg:grid-cols-2 gap-1.5 flex-1 min-h-0 overflow-hidden">
-          {/* Row 1: Funnel + Outcome Distribution */}
+          {/* Row 1: RDV par Owner + Outcome Distribution */}
           <div className="h-full min-h-[180px] overflow-hidden">
-            <FunnelChart data={chartData?.funnel_data} />
+            <OwnerPerformanceChart data={chartData?.by_owner} />
           </div>
           <div className="h-full min-h-[180px] overflow-hidden">
             <NestennOutcomeChart data={chartData?.outcome_distribution} />
           </div>
 
-          {/* Row 2: Call Volume + Duration by Outcome */}
+          {/* Row 2: Call Volume + Emotion Distribution */}
           <div className="h-full min-h-[180px] overflow-hidden">
             <CallVolumeChart
               data={chartData?.call_volume_by_day || []}
             />
           </div>
           <div className="h-full min-h-[180px] overflow-hidden">
-            <DurationByOutcomeChart data={chartData?.duration_by_outcome} />
-          </div>
-
-          {/* Row 3: Emotion Distribution + Latency */}
-          <div className="h-full min-h-[180px] overflow-hidden">
             <EmotionDistribution
               data={chartData?.emotion_distribution || []}
-            />
-          </div>
-          <div className="h-full min-h-[180px] overflow-hidden">
-            <LatencyTimeSeriesChart
-              data={latencyData || []}
-              isLoading={isLoadingLatencies}
             />
           </div>
         </div>

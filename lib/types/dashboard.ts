@@ -78,6 +78,17 @@ export interface ChartData {
   // Louis-Nestenn specific charts
   duration_by_outcome?: DurationByOutcomeData[]
   funnel_data?: FunnelData
+  by_owner?: OwnerPerformanceData[]
+}
+
+/**
+ * Owner (agent immobilier) performance data for Nestenn dashboard
+ */
+export interface OwnerPerformanceData {
+  owner: string
+  total_calls: number
+  rdv_count: number
+  conversion_rate: number
 }
 
 /**

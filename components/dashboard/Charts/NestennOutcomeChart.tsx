@@ -20,16 +20,41 @@ interface ExtendedOutcomeData extends OutcomeData {
   color?: string
 }
 
+// Labels français pour les outcomes Nestenn
+const outcomeLabels: Record<string, string> = {
+  appointment_requested: 'Transfert demandé',
+  callback_requested: 'Rappel demandé',
+  voicemail: 'Messagerie',
+  no_answer: 'Pas de réponse',
+  not_interested: 'Pas intéressé',
+  unknown: 'Autre',
+  null: 'Non défini',
+}
+
+// Couleurs spécifiques pour chaque résultat Nestenn
+const outcomeColors: Record<string, string> = {
+  appointment_requested: '#10b981',  // emerald - succès
+  callback_requested: '#3b82f6',     // blue
+  voicemail: '#f59e0b',              // amber
+  no_answer: '#6b7280',              // gray
+  not_interested: '#ef4444',         // red
+  unknown: '#8b5cf6',                // violet
+  null: '#64748b',                   // slate
+}
+
 function NestennOutcomeChartInner({ data }: NestennOutcomeChartProps) {
   const chartData = useMemo(() => {
     if (!data || data.length === 0) return []
     return (data as ExtendedOutcomeData[])
       .filter((item) => item.count > 0)
-      .map((item) => ({
-        name: item.outcome,
-        value: item.count,
-        color: item.color || '#6b7280',
-      }))
+      .map((item) => {
+        const outcomeKey = item.outcome || 'unknown'
+        return {
+          name: outcomeLabels[outcomeKey] || item.outcome || 'Autre',
+          value: item.count,
+          color: outcomeColors[outcomeKey] || item.color || '#6b7280',
+        }
+      })
       .sort((a, b) => b.value - a.value)
   }, [data])
 

@@ -74,7 +74,24 @@ function isNestennDeployment(deployment: DeploymentInfo): boolean {
 }
 
 /**
- * Deployment Dashboard Client Component
+ * Deployment Dashboard Client Component - Entry point
+ * Routes to appropriate dashboard based on deployment type
+ */
+export function DeploymentDashboardClient({
+  deployment,
+  userEmail,
+}: DeploymentDashboardClientProps) {
+  // Check for Louis-Nestenn mode - render separate component
+  if (deployment.agent_type_name === 'louis' && isNestennDeployment(deployment)) {
+    return <LouisNestennDashboardClient deployment={deployment} userEmail={userEmail} />
+  }
+
+  // Render standard deployment dashboard
+  return <StandardDeploymentDashboard deployment={deployment} userEmail={userEmail} />
+}
+
+/**
+ * Standard Deployment Dashboard Component
  * Dashboard for a specific agent deployment instance
  * Uses the standard Louis dashboard layout (6 KPIs compact, 4 charts 2x2)
  *
@@ -82,17 +99,10 @@ function isNestennDeployment(deployment: DeploymentInfo): boolean {
  * - Displays base KPIs for the agent type
  * - Can be extended with custom KPIs from custom_kpis JSONB
  * - Can be extended with custom charts from custom_charts JSONB
- * - Supports Louis-Nestenn mode for qualification-focused deployments
  */
-export function DeploymentDashboardClient({
+function StandardDeploymentDashboard({
   deployment,
-  userEmail,
 }: DeploymentDashboardClientProps) {
-  // Check for Louis-Nestenn mode
-  if (deployment.agent_type_name === 'louis' && isNestennDeployment(deployment)) {
-    return <LouisNestennDashboardClient deployment={deployment} userEmail={userEmail} />
-  }
-
   // URL-based filters with deployment pre-set
   const { filters, setDateRange } = useDashboardFilters()
 

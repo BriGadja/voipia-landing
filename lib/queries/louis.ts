@@ -7,6 +7,64 @@ import type {
   CallExportRow,
 } from '@/lib/types/dashboard'
 
+// ============================================================================
+// Louis-Nestenn Specific Functions (Qualification, not RDV booking)
+// ============================================================================
+
+/**
+ * Fetch Louis-Nestenn specific KPI metrics
+ * Different from standard Louis: focuses on transfers/qualification, not RDV
+ * @param filters - Dashboard filters
+ */
+export async function fetchLouisNestennKPIs(
+  filters: DashboardFilters
+): Promise<KPIMetrics> {
+  const supabase = createClient()
+
+  const { data, error } = await supabase.rpc('get_louis_nestenn_kpis', {
+    p_start_date: filters.startDate,
+    p_end_date: filters.endDate,
+    p_client_id: filters.clientIds.length === 1 ? filters.clientIds[0] : null,
+    p_deployment_id: filters.deploymentId || null,
+  })
+
+  if (error) {
+    console.error('Error fetching Louis-Nestenn KPIs:', error)
+    throw error
+  }
+
+  return data as KPIMetrics
+}
+
+/**
+ * Fetch Louis-Nestenn specific chart data
+ * Includes funnel, duration by outcome, etc.
+ * @param filters - Dashboard filters
+ */
+export async function fetchLouisNestennChartData(
+  filters: DashboardFilters
+): Promise<ChartData> {
+  const supabase = createClient()
+
+  const { data, error } = await supabase.rpc('get_louis_nestenn_charts', {
+    p_start_date: filters.startDate,
+    p_end_date: filters.endDate,
+    p_client_id: filters.clientIds.length === 1 ? filters.clientIds[0] : null,
+    p_deployment_id: filters.deploymentId || null,
+  })
+
+  if (error) {
+    console.error('Error fetching Louis-Nestenn chart data:', error)
+    throw error
+  }
+
+  return data as ChartData
+}
+
+// ============================================================================
+// Standard Louis Functions (Original RDV-focused)
+// ============================================================================
+
 /**
  * Fetch Louis-specific KPI metrics using RPC function
  * Returns current period and previous period comparison

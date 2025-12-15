@@ -39,6 +39,17 @@ export interface KPIPeriod {
   callbacks_requested?: number
   qualified_leads?: number
 
+  // Louis-Nestenn specific KPIs (qualification, not RDV)
+  contact_rate?: number                  // 0-100 (contacted / total)
+  transfers_requested?: number           // Main success metric for Nestenn
+  qualification_rate?: number            // 0-100 (qualified / answered)
+  contacted_calls?: number
+  voicemails?: number
+  no_answers?: number
+  not_interested?: number
+  sms_sent?: number
+  cost_per_transfer?: number             // EUR
+
   // Arthur-specific KPIs
   total_prospects?: number
   active_sequences?: number
@@ -49,6 +60,9 @@ export interface KPIPeriod {
   // Global-specific KPIs
   active_agents?: number
   agents_called_today?: number
+
+  // Overview-specific KPIs
+  avg_quality_score?: number              // 0-100 (call_quality_score average)
 }
 
 /**
@@ -61,6 +75,29 @@ export interface ChartData {
   agent_type_performance?: AgentTypePerformance[]
   top_clients?: TopClientData[]
   voicemail_by_agent?: VoicemailByAgentData[]
+  // Louis-Nestenn specific charts
+  duration_by_outcome?: DurationByOutcomeData[]
+  funnel_data?: FunnelData
+}
+
+/**
+ * Duration by outcome data (for Louis-Nestenn horizontal bar chart)
+ */
+export interface DurationByOutcomeData {
+  outcome: string
+  avg_duration: number                   // seconds
+  count: number
+  color: string
+}
+
+/**
+ * Funnel data for Louis-Nestenn
+ */
+export interface FunnelData {
+  total_calls: number
+  contacted: number
+  answered: number
+  qualified: number
 }
 
 /**
@@ -75,6 +112,9 @@ export interface CallVolumeData {
   // Breakdown by agent type (Global dashboard only)
   louis_calls?: number
   arthur_calls?: number
+
+  // Louis-Nestenn specific
+  transfers?: number                     // Transfers requested (success metric)
 }
 
 /**

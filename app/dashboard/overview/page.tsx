@@ -1,19 +1,20 @@
 import { Suspense } from 'react'
 import { redirect } from 'next/navigation'
 import { createClient } from '@/lib/supabase/server'
+import { OverviewDashboardClient } from './OverviewDashboardClient'
 import { Loader2 } from 'lucide-react'
-import { LouisDashboardClient } from './LouisDashboardClient'
 
 export const metadata = {
-  title: 'Dashboard Louis | Voipia',
-  description: 'Analysez les performances de votre agent vocal Louis',
+  title: 'Vue d\'ensemble | Dashboard Voipia',
+  description: 'Dashboard agrégé de tous vos agents vocaux IA',
 }
 
 /**
- * Louis Dashboard Page - Server Component
- * Static route for Louis agent dashboard
+ * Overview Dashboard Page - Server Component
+ * Displays aggregated metrics across all agents
+ * Uses the standard Louis dashboard layout (6 KPIs, 4 charts 2x2)
  */
-export default async function LouisDashboardPage() {
+export default async function OverviewDashboardPage() {
   const supabase = await createClient()
 
   // Server-side authentication check
@@ -33,7 +34,7 @@ export default async function LouisDashboardPage() {
         </div>
       }
     >
-      <LouisDashboardClient userEmail={user.email || ''} />
+      <OverviewDashboardClient userEmail={user.email || ''} />
     </Suspense>
   )
 }

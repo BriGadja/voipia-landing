@@ -204,7 +204,7 @@ export async function fetchAgentTypePerformance(
 /**
  * Fetch client card data with aggregated metrics for the dashboard
  * Uses RPC function get_client_cards_data
- * @param filters - Dashboard filters (startDate, endDate)
+ * @param filters - Dashboard filters (startDate, endDate, optional clientIds)
  */
 export async function fetchClientCardsData(
   filters: DashboardFilters
@@ -214,6 +214,7 @@ export async function fetchClientCardsData(
   const { data, error } = await supabase.rpc('get_client_cards_data', {
     p_start_date: filters.startDate,
     p_end_date: filters.endDate,
+    p_client_ids: filters.clientIds.length > 0 ? filters.clientIds : null,
   })
 
   if (error) {

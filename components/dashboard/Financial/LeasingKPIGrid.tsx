@@ -80,7 +80,7 @@ export function LeasingKPIGrid({ data, isLoading }: LeasingKPIGridProps) {
       </div>
 
       {/* KPI Grid */}
-      <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
+      <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4">
         {leasingKPIs.map((kpi, index) => (
           <KPICard
             key={kpi.label}
@@ -91,28 +91,6 @@ export function LeasingKPIGrid({ data, isLoading }: LeasingKPIGridProps) {
             delay={index * 0.05}
           />
         ))}
-      </div>
-
-      {/* Additional Info */}
-      <div className="grid grid-cols-1 md:grid-cols-3 gap-4 mt-4">
-        <div className="p-4 bg-slate-900/50 border border-slate-700/50 rounded-lg">
-          <p className="text-xs text-white/50 mb-1">Taux d&#39;adoption</p>
-          <p className="text-lg font-semibold text-white">
-            {data.leasing_adoption_rate.toFixed(1)}%
-          </p>
-        </div>
-        <div className="p-4 bg-slate-900/50 border border-slate-700/50 rounded-lg">
-          <p className="text-xs text-white/50 mb-1">Agents en leasing</p>
-          <p className="text-lg font-semibold text-white">
-            {data.active_leasing_count}
-          </p>
-        </div>
-        <div className="p-4 bg-slate-900/50 border border-slate-700/50 rounded-lg">
-          <p className="text-xs text-white/50 mb-1">Leasing moyen mensuel</p>
-          <p className="text-lg font-semibold text-white">
-            {data.avg_monthly_leasing.toFixed(2)}€
-          </p>
-        </div>
       </div>
     </div>
   );

@@ -2,46 +2,63 @@
 
 import { useDashboardFilters } from '@/lib/hooks/useDashboardFilters'
 import {
-  useLouisKPIs,
-  useLouisChartData,
+  useGlobalKPIs,
+  useGlobalChartData,
+  useAgentTypePerformance,
 } from '@/lib/hooks/useDashboardData'
 import { useLatencyMetrics } from '@/lib/hooks/useLatencyData'
-import { exportLouisCallsToCSV } from '@/lib/queries/louis'
+import { exportGlobalCallsToCSV } from '@/lib/queries/global'
 import { DateRangeFilter } from '@/components/dashboard/Filters/DateRangeFilter'
 import { ClientAgentFilter } from '@/components/dashboard/Filters/ClientAgentFilter'
 import { KPIGrid } from '@/components/dashboard/KPIGrid'
 import { ExportCSVButton } from '@/components/dashboard/ExportCSVButton'
 import { CallVolumeChart } from '@/components/dashboard/Charts/CallVolumeChart'
-import { OutcomeBreakdown } from '@/components/dashboard/Charts/OutcomeBreakdown'
 import { EmotionDistribution } from '@/components/dashboard/Charts/EmotionDistribution'
+import { AgentTypeComparisonChart } from '@/components/dashboard/Charts/AgentTypeComparisonChart'
 import { LatencyTimeSeriesChart } from '@/components/dashboard/Charts/LatencyTimeSeriesChart'
 
-interface LouisDashboardClientProps {
+interface OverviewDashboardClientProps {
   userEmail?: string
 }
 
 /**
- * Louis Dashboard Client Component
- * Specialized dashboard for Louis (setter/appointment booking) agents
- * Displays Louis-specific KPIs and metrics
+ * Overview Dashboard Client Component
+ * Aggregated dashboard showing metrics across ALL agents accessible by the user
+ * Uses the standard Louis dashboard layout (6 KPIs compact, 4 charts 2x2)
+ *
+ * KPIs (order: funnel chronologique):
+ * 1. Total Appels
+ * 2. Taux Décroché
+ * 3. Durée Moyenne
+ * 4. Sentiment Positif
+ * 5. Latence Moyenne
+ * 6. Coût Total
+ *
+ * Charts (2x2 grid):
+ * - Top-left: Volume par jour (Area chart, breakdown par agent type)
+ * - Top-right: Distribution émotions (Donut chart)
+ * - Bottom-left: Performance par type (Bar chart, comparatif Louis vs Arthur vs Alexandra)
+ * - Bottom-right: Latence infrastructure (Line chart)
  */
-export function LouisDashboardClient({ userEmail }: LouisDashboardClientProps) {
+export function OverviewDashboardClient({ userEmail }: OverviewDashboardClientProps) {
   // URL-based filters
   const { filters, setClientIds, setDeploymentId, setDateRange } =
     useDashboardFilters()
 
-  // Fetch Louis metrics
-  const { data: kpiData, isLoading: isLoadingKPIs } = useLouisKPIs(filters)
+  // Fetch global metrics
+  const { data: kpiData, isLoading: isLoadingKPIs } = useGlobalKPIs(filters)
   const { data: chartData, isLoading: isLoadingCharts } =
-    useLouisChartData(filters)
+    useGlobalChartData(filters)
+  const { data: agentTypeData, isLoading: isLoadingAgentTypes } =
+    useAgentTypePerformance(filters)
 
-  // Fetch latency metrics
+  // Fetch latency metrics (no agent type filter for overview)
   const { data: latencyData, isLoading: isLoadingLatencies } = useLatencyMetrics({
     startDate: filters.startDate,
     endDate: filters.endDate,
     deploymentId: filters.deploymentId,
     clientId: filters.clientIds.length === 1 ? filters.clientIds[0] : null,
-    agentTypeName: 'louis',
+    agentTypeName: null, // All agent types for overview
   })
 
   // Calculate average total latency for KPI
@@ -77,22 +94,21 @@ export function LouisDashboardClient({ userEmail }: LouisDashboardClientProps) {
               selectedClientIds={filters.clientIds}
               selectedAgentIds={filters.deploymentId ? [filters.deploymentId] : []}
               onChange={handleFilterChange}
-              agentType="louis"
             />
           </div>
           <ExportCSVButton
             filters={filters}
-            exportFn={exportLouisCallsToCSV}
-            filename="louis-dashboard-export.csv"
+            exportFn={exportGlobalCallsToCSV}
+            filename="overview-dashboard-export.csv"
           />
         </div>
 
-        {/* KPIs Grid */}
+        {/* KPIs Grid - 6 compact cards */}
         <div className="flex-shrink-0">
           <KPIGrid
             data={kpiData}
             isLoading={isLoadingKPIs}
-            agentType="louis"
+            agentType="overview"
             avgLatency={avgTotalLatency}
           />
         </div>
@@ -110,14 +126,15 @@ export function LouisDashboardClient({ userEmail }: LouisDashboardClientProps) {
             />
           </div>
           <div className="h-full min-h-[180px] overflow-hidden">
-            <OutcomeBreakdown
-              data={chartData?.outcome_distribution || []}
-            />
-          </div>
-          <div className="h-full min-h-[180px] overflow-hidden">
             <LatencyTimeSeriesChart
               data={latencyData || []}
               isLoading={isLoadingLatencies}
+            />
+          </div>
+          <div className="h-full min-h-[180px] overflow-hidden">
+            <AgentTypeComparisonChart
+              data={agentTypeData || []}
+              isLoading={isLoadingAgentTypes}
             />
           </div>
         </div>

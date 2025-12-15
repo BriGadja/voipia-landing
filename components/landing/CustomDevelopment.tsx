@@ -6,7 +6,7 @@ import { Code2, Stethoscope, HardHat, ShoppingCart } from 'lucide-react';
 
 export function CustomDevelopment() {
   return (
-    <section className="py-24 relative overflow-hidden">
+    <section className="py-24 relative overflow-hidden bg-gray-950">
       {/* Background decoration */}
       <div className="absolute inset-0 bg-gradient-to-br from-cyan-900/10 via-blue-900/5 to-transparent" />
 

@@ -1,16 +1,18 @@
 'use client'
 
-import { useState, Suspense } from 'react'
+import { useState, useMemo, useCallback } from 'react'
 import { useSearchParams } from 'next/navigation'
+import { useQueryStates } from 'nuqs'
 import dynamic from 'next/dynamic'
 import { useFinancialKPIs, useClientBreakdown, useFinancialTimeSeries, useCostBreakdown, useLeasingMetrics, useConsumptionMetrics } from '@/lib/hooks/useFinancialData'
-import { getDefaultDateRange } from '@/lib/queries/financial'
 import { FinancialKPIGrid } from '@/components/dashboard/Financial/FinancialKPIGrid'
 import { ClientBreakdownTableV2 } from '@/components/dashboard/Financial/ClientBreakdownTableV2'
 import FinancialViewToggle from '@/components/dashboard/Financial/FinancialViewToggle'
 import { LeasingKPIGrid } from '@/components/dashboard/Financial/LeasingKPIGrid'
 import { ConsumptionKPIGrid } from '@/components/dashboard/Financial/ConsumptionKPIGrid'
-import type { FinancialFilters, ClientFinancialData, FinancialViewMode } from '@/lib/types/financial'
+import { PreviousMonthSummary } from '@/components/dashboard/Financial/PreviousMonthSummary'
+import { financialParsers, type FinancialViewMode } from '@/lib/hooks/financialSearchParams'
+import type { FinancialFilters, ClientFinancialData } from '@/lib/types/financial'
 
 // Lazy load heavy chart components
 const FinancialTimeSeriesChart = dynamic(
@@ -87,20 +89,40 @@ export function FinancialDashboardClient() {
 }
 
 function AdminFinancialDashboard() {
-  // Default to last 30 days
-  const defaultRange = getDefaultDateRange()
-  const [filters, setFilters] = useState<FinancialFilters>({
-    startDate: defaultRange.startDate,
-    endDate: defaultRange.endDate,
-    clientId: null,
-    agentTypeName: null,
-    deploymentId: null,
+  // URL-based state management using nuqs (persisted filters)
+  const [searchParams, setSearchParams] = useQueryStates(financialParsers, {
+    history: 'push',
+    shallow: true,
   })
 
-  // View mode state (leasing vs consumption)
-  const [viewMode, setViewMode] = useState<FinancialViewMode>('leasing')
+  // Derive filters from URL params
+  const filters: FinancialFilters = useMemo(() => ({
+    startDate: searchParams.startDate,
+    endDate: searchParams.endDate,
+    clientId: searchParams.clientId || null,
+    agentTypeName: searchParams.agentTypeName || null,
+    deploymentId: searchParams.deploymentId || null,
+  }), [searchParams])
 
-  // Modal state for drill down
+  // View mode from URL
+  const viewMode = searchParams.viewMode
+
+  // Callbacks for updating URL params
+  const setFilters = useCallback((newFilters: Partial<FinancialFilters>) => {
+    setSearchParams({
+      startDate: newFilters.startDate,
+      endDate: newFilters.endDate,
+      clientId: newFilters.clientId,
+      agentTypeName: newFilters.agentTypeName,
+      deploymentId: newFilters.deploymentId,
+    })
+  }, [setSearchParams])
+
+  const setViewMode = useCallback((mode: FinancialViewMode) => {
+    setSearchParams({ viewMode: mode })
+  }, [setSearchParams])
+
+  // Modal state for drill down (local state is fine for modals)
   const [selectedClient, setSelectedClient] = useState<ClientFinancialData | null>(null)
   const [isModalOpen, setIsModalOpen] = useState(false)
 
@@ -116,27 +138,31 @@ function AdminFinancialDashboard() {
   const { data: costBreakdownData, isLoading: costBreakdownLoading } = useCostBreakdown(filters)
 
   return (
-    <div className="p-4 space-y-3">
+    <div className="p-4 space-y-3 h-full overflow-y-auto">
       {/* Compact Header with Filters and Toggle */}
       <div className="flex flex-wrap items-center justify-between gap-3">
         <div className="flex flex-wrap items-center gap-2">
           <input
             type="date"
             value={filters.startDate}
-            onChange={(e) => setFilters({ ...filters, startDate: e.target.value })}
+            onChange={(e) => setSearchParams({ startDate: e.target.value })}
             className="px-2 py-1.5 bg-gray-800 border border-gray-700 rounded-lg text-white text-sm focus:ring-2 focus:ring-violet-500 focus:border-transparent"
           />
           <span className="text-gray-500">-</span>
           <input
             type="date"
             value={filters.endDate}
-            onChange={(e) => setFilters({ ...filters, endDate: e.target.value })}
+            onChange={(e) => setSearchParams({ endDate: e.target.value })}
             className="px-2 py-1.5 bg-gray-800 border border-gray-700 rounded-lg text-white text-sm focus:ring-2 focus:ring-violet-500 focus:border-transparent"
           />
           <button
             onClick={() => {
-              const range = getDefaultDateRange()
-              setFilters({ ...filters, ...range })
+              const now = new Date()
+              const thirtyDaysAgo = new Date(now.getTime() - 30 * 24 * 60 * 60 * 1000)
+              setSearchParams({
+                startDate: thirtyDaysAgo.toISOString().split('T')[0],
+                endDate: now.toISOString().split('T')[0],
+              })
             }}
             className="px-3 py-1.5 bg-violet-600 hover:bg-violet-700 text-white text-xs font-medium rounded-lg transition-colors"
           >
@@ -191,6 +217,9 @@ function AdminFinancialDashboard() {
           setIsModalOpen(true)
         }}
       />
+
+      {/* Previous Month Summary - Admin Only */}
+      <PreviousMonthSummary />
 
       {/* Client Drill Down Modal */}
       <ClientDrilldownModal

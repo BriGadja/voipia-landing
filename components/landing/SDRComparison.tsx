@@ -56,7 +56,7 @@ const comparisonData = [
 
 export function SDRComparison() {
   return (
-    <section className="py-24 relative">
+    <section className="py-24 relative bg-gradient-to-b from-gray-950 via-gray-900 to-gray-950">
       {/* Background decoration */}
       <div className="absolute inset-0 bg-[radial-gradient(ellipse_at_top,_var(--tw-gradient-stops))] from-orange-900/10 via-transparent to-transparent" />
 

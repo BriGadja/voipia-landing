@@ -17,7 +17,7 @@ export function FAQAccordion({ faqs }: FAQAccordionProps) {
   };
 
   return (
-    <section className="py-24 relative">
+    <section className="py-24 relative bg-gradient-to-b from-gray-950 via-gray-900 to-gray-950">
       {/* Background decoration */}
       <div className="absolute inset-0 bg-gradient-to-b from-transparent via-purple-900/5 to-transparent" />
 

@@ -25,8 +25,8 @@ interface GlobalDashboardClientProps {
  * All cards are dynamically generated from Supabase data
  */
 export function GlobalDashboardClient({ userEmail }: GlobalDashboardClientProps) {
-  // URL-based filters
-  const { filters, setDateRange } = useDashboardFilters()
+  // URL-based filters with viewAsUser support
+  const { filters, setDateRange, isFiltersReady, isViewingAsUser } = useDashboardFilters()
 
   // Fetch dynamic cards data
   const { data: clientCards, isLoading: isLoadingClients } = useClientCardsData(filters)
@@ -39,19 +39,21 @@ export function GlobalDashboardClient({ userEmail }: GlobalDashboardClientProps)
 
   const hasClientCards = clientCards && clientCards.length > 0
   const hasAgentTypeCards = agentTypeCards && agentTypeCards.length > 0
-  const isLoading = isLoadingClients || isLoadingAgentTypes
+  // Include filters loading state to prevent showing stale data during viewAsUser initialization
+  const isLoading = !isFiltersReady || isLoadingClients || isLoadingAgentTypes
 
   return (
     <div className="p-6 space-y-6">
       {/* Header with Export */}
       <PageHeader
         title="Vue d'ensemble"
-        description="Performance globale de tous vos agents"
+        description={isViewingAsUser ? "Vue utilisateur - Performance de cet utilisateur" : "Performance globale de tous vos agents"}
       >
         <ExportCSVButton
           filters={filters}
           exportFn={exportGlobalCallsToCSV}
           filename="global-dashboard-export.csv"
+          disabled={!isFiltersReady}
         />
       </PageHeader>
 
@@ -62,7 +64,18 @@ export function GlobalDashboardClient({ userEmail }: GlobalDashboardClientProps)
         onChange={handleDateChange}
       />
 
-        {/* Two Column Layout */}
+      {/* Loading state when viewAsUser client IDs are being fetched */}
+      {!isFiltersReady && (
+        <div className="flex items-center justify-center py-12">
+          <div className="flex flex-col items-center space-y-4">
+            <div className="animate-spin rounded-full h-10 w-10 border-b-2 border-white/50" />
+            <p className="text-white/60 text-sm">Chargement des permissions utilisateur...</p>
+          </div>
+        </div>
+      )}
+
+      {/* Two Column Layout - Only show when filters are ready */}
+      {isFiltersReady && (
         <div className="grid grid-cols-1 lg:grid-cols-2 gap-8">
           {/* Left Column: Agent Type Cards */}
           {(hasAgentTypeCards || isLoadingAgentTypes) && (
@@ -130,35 +143,36 @@ export function GlobalDashboardClient({ userEmail }: GlobalDashboardClientProps)
             </div>
           )}
         </div>
+      )}
 
-        {/* Empty State - Only show when not loading and no data */}
-        {!isLoading && !hasClientCards && !hasAgentTypeCards && (
-          <div className="flex flex-col items-center justify-center py-16 space-y-4">
-            <div className="p-4 rounded-full bg-white/5">
-              <svg
-                className="w-12 h-12 text-white/20"
-                fill="none"
-                stroke="currentColor"
-                viewBox="0 0 24 24"
-              >
-                <path
-                  strokeLinecap="round"
-                  strokeLinejoin="round"
-                  strokeWidth={2}
-                  d="M20 13V6a2 2 0 00-2-2H6a2 2 0 00-2 2v7m16 0v5a2 2 0 01-2 2H6a2 2 0 01-2-2v-5m16 0h-2.586a1 1 0 00-.707.293l-2.414 2.414a1 1 0 01-.707.293h-3.172a1 1 0 01-.707-.293l-2.414-2.414A1 1 0 006.586 13H4"
-                />
-              </svg>
-            </div>
-            <div className="text-center space-y-2">
-              <p className="text-lg font-semibold text-white">
-                Aucune donnée disponible
-              </p>
-              <p className="text-sm text-white/60">
-                Aucun agent ou entreprise trouvé pour cette période
-              </p>
-            </div>
+      {/* Empty State - Only show when not loading and no data */}
+      {isFiltersReady && !isLoading && !hasClientCards && !hasAgentTypeCards && (
+        <div className="flex flex-col items-center justify-center py-16 space-y-4">
+          <div className="p-4 rounded-full bg-white/5">
+            <svg
+              className="w-12 h-12 text-white/20"
+              fill="none"
+              stroke="currentColor"
+              viewBox="0 0 24 24"
+            >
+              <path
+                strokeLinecap="round"
+                strokeLinejoin="round"
+                strokeWidth={2}
+                d="M20 13V6a2 2 0 00-2-2H6a2 2 0 00-2 2v7m16 0v5a2 2 0 01-2 2H6a2 2 0 01-2-2v-5m16 0h-2.586a1 1 0 00-.707.293l-2.414 2.414a1 1 0 01-.707.293h-3.172a1 1 0 01-.707-.293l-2.414-2.414A1 1 0 006.586 13H4"
+              />
+            </svg>
           </div>
-        )}
+          <div className="text-center space-y-2">
+            <p className="text-lg font-semibold text-white">
+              Aucune donnée disponible
+            </p>
+            <p className="text-sm text-white/60">
+              Aucun agent ou entreprise trouvé pour cette période
+            </p>
+          </div>
+        </div>
+      )}
     </div>
   )
 }

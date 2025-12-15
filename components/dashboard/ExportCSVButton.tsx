@@ -9,6 +9,7 @@ interface ExportCSVButtonProps {
   filters: DashboardFilters
   exportFn: (filters: DashboardFilters) => Promise<string>
   filename?: string
+  disabled?: boolean
 }
 
 /**
@@ -17,11 +18,13 @@ interface ExportCSVButtonProps {
  * @param filters - Current dashboard filters
  * @param exportFn - Export function to call (from queries)
  * @param filename - Optional custom filename (defaults to "export-{date}.csv")
+ * @param disabled - Optional flag to disable the button
  */
 export function ExportCSVButton({
   filters,
   exportFn,
   filename,
+  disabled = false,
 }: ExportCSVButtonProps) {
   const [isExporting, setIsExporting] = useState(false)
 
@@ -66,7 +69,7 @@ export function ExportCSVButton({
   return (
     <button
       onClick={handleExport}
-      disabled={isExporting}
+      disabled={isExporting || disabled}
       className="flex items-center gap-2 px-4 py-2 bg-purple-600 hover:bg-purple-700 disabled:bg-purple-600/50 disabled:cursor-not-allowed rounded-lg text-white font-medium transition-colors"
       aria-label="Exporter en CSV"
     >

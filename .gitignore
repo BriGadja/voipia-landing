@@ -44,3 +44,4 @@ next-env.d.ts
 # OS
 Thumbs.dbfeatures/_archive/dbDump/
 supabase/.temp/
+features/_archive/dbDump/

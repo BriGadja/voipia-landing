@@ -1,10 +1,9 @@
 import {
   LayoutDashboard,
-  TrendingUp,
   Users,
   Receipt,
-  Building2,
   Settings,
+  Wallet,
   type LucideIcon,
 } from 'lucide-react'
 
@@ -14,6 +13,7 @@ export interface NavItem {
   icon: LucideIcon
   badge?: string
   adminOnly?: boolean
+  userOnly?: boolean  // Visible uniquement pour les non-admins
 }
 
 export interface NavGroup {
@@ -22,52 +22,47 @@ export interface NavGroup {
   adminOnly?: boolean
 }
 
+// NOTE: La section "Mes Agents" est maintenant dynamique via le composant AgentTree
+// Elle n'apparait plus dans cette configuration statique
+
 export const sidebarConfig: NavGroup[] = [
   {
     label: 'Platform',
     items: [
       {
-        title: 'Overview',
-        href: '/dashboard',
+        title: 'Vue d\'ensemble',
+        href: '/dashboard/overview',
         icon: LayoutDashboard,
-      },
-      {
-        title: 'Performance',
-        href: '/dashboard/performance',
-        icon: TrendingUp,
       },
       {
         title: 'Agents',
         href: '/dashboard/agents',
         icon: Users,
       },
-    ],
-  },
-  {
-    label: 'Financier',
-    items: [
       {
-        title: 'Vue Financière',
-        href: '/dashboard/financial',
-        icon: Receipt,
+        title: 'Ma Conso',
+        href: '/dashboard/consumption',
+        icon: Wallet,
       },
     ],
   },
+  // "Mes Agents" est insere dynamiquement via AgentTree dans AppSidebar
   {
-    label: 'Administration',
-    adminOnly: true,
+    label: 'Financier',
+    adminOnly: true,  // Section visible uniquement pour les admins
     items: [
       {
-        title: 'Clients',
-        href: '/dashboard/clients',
-        icon: Building2,
+        title: 'Dashboard Financier',
+        href: '/dashboard/financial',
+        icon: Receipt,
+        adminOnly: true,
       },
     ],
   },
 ]
 
 export const settingsNavItem: NavItem = {
-  title: 'Paramètres',
+  title: 'Parametres',
   href: '/dashboard/settings',
   icon: Settings,
 }

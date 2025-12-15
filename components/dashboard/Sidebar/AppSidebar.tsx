@@ -24,7 +24,8 @@ import {
   DropdownMenuTrigger,
 } from '@/components/ui/dropdown-menu'
 import { Avatar, AvatarFallback } from '@/components/ui/avatar'
-import { sidebarConfig, settingsNavItem, type NavGroup } from './SidebarConfig'
+import { sidebarConfig, settingsNavItem } from './SidebarConfig'
+import { AgentTree } from './AgentTree'
 import { UserSwitcher } from './UserSwitcher'
 import { LogOut, ChevronsUpDown, User } from 'lucide-react'
 import { createClient } from '@/lib/supabase/client'
@@ -58,15 +59,23 @@ export function AppSidebar({ userEmail, isAdmin }: AppSidebarProps) {
     router.push('/login')
   }
 
-  // Filter navigation based on admin status
+  // Filter navigation based on admin status and userOnly flag
   // Hide admin-only sections when viewing as a specific user
   const showAdminSections = isAdmin && !isInUserView
   const filteredConfig = sidebarConfig
     .filter((group) => !group.adminOnly || showAdminSections)
     .map((group) => ({
       ...group,
-      items: group.items.filter((item) => !item.adminOnly || showAdminSections),
+      items: group.items.filter((item) => {
+        // Hide admin-only items for non-admins or when in user view
+        if (item.adminOnly && !showAdminSections) return false
+        // Hide user-only items for admins (unless in user view)
+        if (item.userOnly && isAdmin && !isInUserView) return false
+        return true
+      }),
     }))
+    // Filter out groups with no items after filtering
+    .filter((group) => group.items.length > 0)
 
   const userInitials = userEmail
     .split('@')[0]
@@ -84,7 +93,44 @@ export function AppSidebar({ userEmail, isAdmin }: AppSidebarProps) {
       </SidebarHeader>
 
       <SidebarContent>
-        {filteredConfig.map((group) => (
+        {/* Platform section */}
+        {filteredConfig.slice(0, 1).map((group) => (
+          <SidebarGroup key={group.label}>
+            <SidebarGroupLabel className="text-white/50 uppercase text-xs tracking-wider">
+              {group.label}
+            </SidebarGroupLabel>
+            <SidebarGroupContent>
+              <SidebarMenu>
+                {group.items.map((item) => {
+                  const isActive = pathname === item.href ||
+                    (item.href !== '/dashboard' && pathname.startsWith(item.href))
+
+                  return (
+                    <SidebarMenuItem key={item.href}>
+                      <SidebarMenuButton
+                        asChild
+                        isActive={isActive}
+                        tooltip={item.title}
+                        className="text-white/70 hover:text-white hover:bg-white/10 data-[active=true]:bg-white/10 data-[active=true]:text-white"
+                      >
+                        <Link href={buildHref(item.href)}>
+                          <item.icon className="size-4" />
+                          <span>{item.title}</span>
+                        </Link>
+                      </SidebarMenuButton>
+                    </SidebarMenuItem>
+                  )
+                })}
+              </SidebarMenu>
+            </SidebarGroupContent>
+          </SidebarGroup>
+        ))}
+
+        {/* Mes Agents - Dynamic tree */}
+        <AgentTree viewAsUserId={viewAsUserId} />
+
+        {/* Remaining sections (Financier, Administration) */}
+        {filteredConfig.slice(1).map((group) => (
           <SidebarGroup key={group.label}>
             <SidebarGroupLabel className="text-white/50 uppercase text-xs tracking-wider">
               {group.label}
@@ -160,7 +206,7 @@ export function AppSidebar({ userEmail, isAdmin }: AppSidebarProps) {
                   className="text-red-400 hover:text-red-300 hover:bg-red-500/10 focus:bg-red-500/10 focus:text-red-300 cursor-pointer"
                 >
                   <LogOut className="mr-2 h-4 w-4" />
-                  Déconnexion
+                  Deconnexion
                 </DropdownMenuItem>
               </DropdownMenuContent>
             </DropdownMenu>

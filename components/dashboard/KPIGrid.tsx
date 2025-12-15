@@ -6,8 +6,8 @@ import type { KPIMetrics } from '@/lib/types/dashboard'
 interface KPIGridProps {
   data: KPIMetrics | undefined
   isLoading: boolean
-  agentType?: 'global' | 'louis' | 'arthur' | 'alexandra'
-  avgLatency?: number // Average total latency in milliseconds (for Louis dashboard)
+  agentType?: 'global' | 'louis' | 'louis-nestenn' | 'arthur' | 'alexandra' | 'overview'
+  avgLatency?: number // Average total latency in milliseconds (for Louis/Overview dashboard)
 }
 
 /**
@@ -82,6 +82,100 @@ export function KPIGrid({ data, isLoading, agentType = 'global', avgLatency = 0 
       previousValue: 0, // No comparison for latency
       format: 'latency' as const,
       decorationColor: 'emerald' as const, // emerald for performance metric
+    },
+  ]
+
+  // Louis-Nestenn Dashboard - 6 KPIs qualification (pas de RDV)
+  // Focus: Transferts vers négociateur, qualification de leads
+  const louisNestennKPIs = [
+    {
+      label: 'Total Appels',
+      value: current_period.total_calls,
+      previousValue: previous_period.total_calls,
+      format: 'number' as const,
+      decorationColor: 'blue' as const,
+    },
+    {
+      label: 'Taux de Contact',
+      value: current_period.contact_rate || 0,
+      previousValue: previous_period.contact_rate || 0,
+      format: 'percentage' as const,
+      decorationColor: 'teal' as const,
+    },
+    {
+      label: 'Transferts Demandés',
+      value: current_period.transfers_requested || 0,
+      previousValue: previous_period.transfers_requested || 0,
+      format: 'number' as const,
+      decorationColor: 'emerald' as const,  // Green = success
+    },
+    {
+      label: 'Taux Qualification',
+      value: current_period.qualification_rate || 0,
+      previousValue: previous_period.qualification_rate || 0,
+      format: 'percentage' as const,
+      decorationColor: 'violet' as const,
+    },
+    {
+      label: 'Rappels Planifiés',
+      value: current_period.callbacks_requested || 0,
+      previousValue: previous_period.callbacks_requested || 0,
+      format: 'number' as const,
+      decorationColor: 'amber' as const,
+    },
+    {
+      label: 'SMS Envoyés',
+      value: current_period.sms_sent || 0,
+      previousValue: previous_period.sms_sent || 0,
+      format: 'number' as const,
+      decorationColor: 'blue' as const,
+    },
+  ]
+
+  // Overview Dashboard - 6 KPIs opérationnels agrégés (tous agents)
+  // Order: funnel chronologique (Total → Décroché → Répondus → Durée → Qualité → Latence)
+  const overviewKPIs = [
+    {
+      label: 'Total Appels',
+      value: current_period.total_calls,
+      previousValue: previous_period.total_calls,
+      format: 'number' as const,
+      decorationColor: 'blue' as const,
+    },
+    {
+      label: 'Taux de Décroché',
+      value: current_period.answer_rate,
+      previousValue: previous_period.answer_rate,
+      format: 'percentage' as const,
+      decorationColor: 'teal' as const,
+    },
+    {
+      label: 'Appels Répondus',
+      value: current_period.answered_calls,
+      previousValue: previous_period.answered_calls,
+      format: 'number' as const,
+      decorationColor: 'emerald' as const,
+    },
+    {
+      label: 'Durée Moyenne',
+      value: current_period.avg_duration,
+      previousValue: previous_period.avg_duration,
+      format: 'duration' as const,
+      decorationColor: 'amber' as const,
+    },
+    {
+      label: 'Qualité Moyenne',
+      value: current_period.avg_quality_score || 0,
+      previousValue: previous_period.avg_quality_score || 0,
+      format: 'score' as const,
+      decorationColor: 'violet' as const,
+    },
+    {
+      label: 'Latence Moyenne',
+      value: avgLatency,
+      previousValue: 0,
+      format: 'latency' as const,
+      decorationColor: 'blue' as const,
     },
   ]
 
@@ -236,20 +330,30 @@ export function KPIGrid({ data, isLoading, agentType = 'global', avgLatency = 0 
 
   // Combine KPIs based on agent type
   const allKPIs = agentType === 'louis'
-    ? louisOriginalKPIs  // Use simplified 5 KPIs for Louis
+    ? louisOriginalKPIs  // Use simplified 6 KPIs for Louis
+    : agentType === 'louis-nestenn'
+    ? louisNestennKPIs  // Use qualification-focused 6 KPIs for Nestenn
+    : agentType === 'overview'
+    ? overviewKPIs  // Use 6 KPIs for Overview (aggregated)
     : [
         ...coreKPIs,
         ...(agentType === 'arthur' ? arthurKPIs : []),
         ...(agentType === 'global' ? globalKPIs : []),
       ]
 
-  // Grid columns: 6 for Louis (6 KPIs), 4 for others
-  const gridCols = agentType === 'louis'
-    ? 'grid-cols-1 md:grid-cols-3 lg:grid-cols-6'
+  // Grid columns: 6 for Louis/Louis-Nestenn/Overview (6 KPIs compact), 4 for others
+  const gridCols = (agentType === 'louis' || agentType === 'louis-nestenn' || agentType === 'overview')
+    ? 'grid-cols-2 md:grid-cols-3 lg:grid-cols-6'
     : 'grid-cols-1 md:grid-cols-2 lg:grid-cols-4'
 
+  // Gap: smaller for Louis/Louis-Nestenn/Overview to fit better
+  const gridGap = (agentType === 'louis' || agentType === 'louis-nestenn' || agentType === 'overview') ? 'gap-2' : 'gap-6'
+
+  // Use compact mode for Louis/Louis-Nestenn/Overview dashboard
+  const isCompact = (agentType === 'louis' || agentType === 'louis-nestenn' || agentType === 'overview')
+
   return (
-    <div className={`grid ${gridCols} gap-6`}>
+    <div className={`grid ${gridCols} ${gridGap}`}>
       {allKPIs.map((kpi, index) => (
         <KPICard
           key={kpi.label}
@@ -259,6 +363,7 @@ export function KPIGrid({ data, isLoading, agentType = 'global', avgLatency = 0 
           format={kpi.format}
           decorationColor={kpi.decorationColor}
           delay={index * 0.05}
+          compact={isCompact}
         />
       ))}
     </div>

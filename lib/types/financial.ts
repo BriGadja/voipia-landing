@@ -197,7 +197,7 @@ export interface FinancialFilters {
   startDate: string;
   endDate: string;
   clientId?: string | null;
-  agentTypeName?: string | null;
+  agentTypeName?: 'louis' | 'arthur' | 'alexandra' | null;
   deploymentId?: string | null;
 }
 

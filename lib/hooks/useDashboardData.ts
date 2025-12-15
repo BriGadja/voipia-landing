@@ -28,6 +28,8 @@ import {
   fetchLouisKPIMetrics,
   fetchLouisChartData,
   fetchLouisAgentPerformance,
+  fetchLouisNestennKPIs,
+  fetchLouisNestennChartData,
 } from '@/lib/queries/louis'
 
 // Query configuration constants
@@ -186,15 +188,51 @@ export function useLouisAgentPerformance(
   })
 }
 
+// ============================================================================
+// Louis-Nestenn Specific Hooks (Qualification Dashboard)
+// ============================================================================
+
+/**
+ * Hook to fetch Louis-Nestenn KPI metrics
+ * Uses qualification-focused metrics instead of RDV metrics
+ * @param filters - Dashboard filters
+ */
+export function useLouisNestennKPIs(
+  filters: DashboardFilters
+): UseQueryResult<KPIMetrics> {
+  return useQuery({
+    queryKey: ['louis-nestenn-kpis', serializeFilters(filters)],
+    queryFn: () => fetchLouisNestennKPIs(filters),
+    staleTime: STALE_TIME,
+    refetchInterval: REFETCH_INTERVAL,
+  })
+}
+
+/**
+ * Hook to fetch Louis-Nestenn chart data
+ * Includes funnel, duration by outcome, etc.
+ * @param filters - Dashboard filters
+ */
+export function useLouisNestennChartData(
+  filters: DashboardFilters
+): UseQueryResult<ChartData> {
+  return useQuery({
+    queryKey: ['louis-nestenn-chart-data', serializeFilters(filters)],
+    queryFn: () => fetchLouisNestennChartData(filters),
+    staleTime: STALE_TIME,
+    refetchInterval: REFETCH_INTERVAL,
+  })
+}
+
 /**
  * Hook to fetch client cards data for dynamic dashboard
- * @param filters - Dashboard filters (startDate, endDate)
+ * @param filters - Dashboard filters (startDate, endDate, clientIds)
  */
 export function useClientCardsData(
   filters: DashboardFilters
 ): UseQueryResult<ClientCardData[]> {
   return useQuery({
-    queryKey: ['client-cards-data', filters.startDate, filters.endDate],
+    queryKey: ['client-cards-data', serializeFilters(filters)],
     queryFn: () => fetchClientCardsData(filters),
     staleTime: STALE_TIME,
     refetchInterval: REFETCH_INTERVAL,

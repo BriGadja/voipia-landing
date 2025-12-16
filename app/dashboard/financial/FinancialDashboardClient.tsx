@@ -5,14 +5,17 @@ import { useSearchParams } from 'next/navigation'
 import { useQueryStates } from 'nuqs'
 import dynamic from 'next/dynamic'
 import { useFinancialKPIs, useClientBreakdown, useFinancialTimeSeries, useCostBreakdown, useLeasingMetrics, useConsumptionMetrics } from '@/lib/hooks/useFinancialData'
+import { useMonthlyInvoice } from '@/lib/hooks/useMonthlyInvoice'
 import { FinancialKPIGrid } from '@/components/dashboard/Financial/FinancialKPIGrid'
 import { ClientBreakdownTableV2 } from '@/components/dashboard/Financial/ClientBreakdownTableV2'
 import FinancialViewToggle from '@/components/dashboard/Financial/FinancialViewToggle'
 import { LeasingKPIGrid } from '@/components/dashboard/Financial/LeasingKPIGrid'
 import { ConsumptionKPIGrid } from '@/components/dashboard/Financial/ConsumptionKPIGrid'
-import { PreviousMonthSummary } from '@/components/dashboard/Financial/PreviousMonthSummary'
+import { MonthSelector } from '@/components/dashboard/Financial/MonthSelector'
+import { InvoiceSummaryTable } from '@/components/dashboard/Financial/InvoiceSummaryTable'
 import { financialParsers, type FinancialViewMode } from '@/lib/hooks/financialSearchParams'
 import type { FinancialFilters, ClientFinancialData } from '@/lib/types/financial'
+import { getDefaultInvoiceMonth, type SelectedMonth } from '@/lib/types/invoice'
 
 // Lazy load heavy chart components
 const FinancialTimeSeriesChart = dynamic(
@@ -126,6 +129,15 @@ function AdminFinancialDashboard() {
   const [selectedClient, setSelectedClient] = useState<ClientFinancialData | null>(null)
   const [isModalOpen, setIsModalOpen] = useState(false)
 
+  // Invoice month state (defaults to previous month)
+  const [invoiceMonth, setInvoiceMonth] = useState<SelectedMonth>(getDefaultInvoiceMonth)
+
+  // Fetch invoice data
+  const { data: invoiceData, isLoading: invoiceLoading, error: invoiceError } = useMonthlyInvoice(
+    invoiceMonth.year,
+    invoiceMonth.month
+  )
+
   // Fetch data
   const { data: kpiData, isLoading: kpiLoading, error: kpiError } = useFinancialKPIs(filters)
   const { data: leasingData, isLoading: leasingLoading } = useLeasingMetrics(filters)
@@ -218,8 +230,19 @@ function AdminFinancialDashboard() {
         }}
       />
 
-      {/* Previous Month Summary - Admin Only */}
-      <PreviousMonthSummary />
+      {/* Monthly Invoice Summary - Admin Only */}
+      <div className="space-y-3">
+        <MonthSelector
+          selectedYear={invoiceMonth.year}
+          selectedMonth={invoiceMonth.month}
+          onChange={(year, month) => setInvoiceMonth({ year, month })}
+        />
+        <InvoiceSummaryTable
+          data={invoiceData}
+          isLoading={invoiceLoading}
+          error={invoiceError}
+        />
+      </div>
 
       {/* Client Drill Down Modal */}
       <ClientDrilldownModal

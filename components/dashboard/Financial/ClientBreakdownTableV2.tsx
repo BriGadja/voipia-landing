@@ -4,6 +4,13 @@ import type { ClientFinancialData } from '@/lib/types/financial'
 import { formatCurrency, formatPercentage } from '@/lib/queries/financial'
 import { InteractiveFinancialTable, ColumnDefinition } from './InteractiveFinancialTable'
 
+// Extended type with computed fields
+interface ClientFinancialDataExtended extends ClientFinancialData {
+  consumption_revenue: number
+  consumption_margin: number
+  consumption_margin_pct: number
+}
+
 interface ClientBreakdownTableV2Props {
   data: ClientFinancialData[] | undefined
   isLoading?: boolean
@@ -15,28 +22,49 @@ export function ClientBreakdownTableV2({
   isLoading,
   onDetailClick,
 }: ClientBreakdownTableV2Props) {
-  // Filter out Voipia from data
-  const filteredData = data?.filter(
+  // Filter out Voipia and compute additional fields
+  const filteredData: ClientFinancialDataExtended[] = (data?.filter(
     (client) => client.client_name.toLowerCase() !== 'voipia'
-  ) || []
+  ) || []).map(client => {
+    const consumption_revenue = client.call_revenue + client.sms_revenue + client.email_revenue
+    const consumption_margin = consumption_revenue - client.total_provider_cost
+    const consumption_margin_pct = consumption_revenue > 0
+      ? (consumption_margin / consumption_revenue) * 100
+      : 0
+    return {
+      ...client,
+      consumption_revenue,
+      consumption_margin,
+      consumption_margin_pct,
+    }
+  })
 
   // Define columns
-  const columns: ColumnDefinition<ClientFinancialData>[] = [
+  const columns: ColumnDefinition<ClientFinancialDataExtended>[] = [
     {
       key: 'client_name',
       label: 'Client',
       sortable: true,
       align: 'left',
       className: 'font-medium text-white',
-      width: '200px',
+      width: '180px',
     },
     {
       key: 'total_revenue',
-      label: 'Revenue',
+      label: 'Revenu Total',
       sortable: true,
       align: 'right',
       format: (value) => (
-        <span className="font-semibold text-amber-400">{formatCurrency(value)}</span>
+        <span className="font-semibold text-white">{formatCurrency(value)}</span>
+      ),
+    },
+    {
+      key: 'consumption_revenue',
+      label: 'Revenu Conso',
+      sortable: true,
+      align: 'right',
+      format: (value) => (
+        <span className="font-semibold text-emerald-400">{formatCurrency(value)}</span>
       ),
     },
     {
@@ -49,7 +77,7 @@ export function ClientBreakdownTableV2({
       ),
     },
     {
-      key: 'total_margin',
+      key: 'consumption_margin',
       label: 'Marge',
       sortable: true,
       align: 'right',
@@ -58,16 +86,16 @@ export function ClientBreakdownTableV2({
       ),
     },
     {
-      key: 'margin_percentage',
+      key: 'consumption_margin_pct',
       label: 'Marge %',
       sortable: true,
       align: 'right',
       format: (value) => (
         <span
           className={`inline-flex items-center px-2 py-1 rounded-full text-xs font-semibold ${
-            value >= 95
+            value >= 50
               ? 'bg-emerald-500/20 text-emerald-400'
-              : value >= 90
+              : value >= 30
               ? 'bg-amber-500/20 text-amber-400'
               : 'bg-red-500/20 text-red-400'
           }`}
@@ -118,7 +146,9 @@ export function ClientBreakdownTableV2({
   const summary = filteredData.reduce(
     (acc, client) => ({
       totalRevenue: acc.totalRevenue + client.total_revenue,
-      totalMargin: acc.totalMargin + client.total_margin,
+      totalConsoRevenue: acc.totalConsoRevenue + client.consumption_revenue,
+      totalCosts: acc.totalCosts + client.total_provider_cost,
+      totalMargin: acc.totalMargin + client.consumption_margin,
       totalCalls: acc.totalCalls + client.call_count,
       totalSMS: acc.totalSMS + client.sms_count,
       totalEmails: acc.totalEmails + client.email_count,
@@ -126,6 +156,8 @@ export function ClientBreakdownTableV2({
     }),
     {
       totalRevenue: 0,
+      totalConsoRevenue: 0,
+      totalCosts: 0,
       totalMargin: 0,
       totalCalls: 0,
       totalSMS: 0,
@@ -154,37 +186,45 @@ export function ClientBreakdownTableV2({
           <h4 className="text-sm font-semibold text-gray-400 mb-4">
             Totaux (hors Voipia)
           </h4>
-          <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-6 gap-4 text-sm">
+          <div className="grid grid-cols-2 md:grid-cols-4 lg:grid-cols-8 gap-4 text-sm">
             <div>
-              <p className="text-gray-400 mb-1">Total Revenue</p>
+              <p className="text-gray-400 mb-1">Revenu Total</p>
               <p className="text-white font-bold">{formatCurrency(summary.totalRevenue)}</p>
             </div>
             <div>
-              <p className="text-gray-400 mb-1">Total Marge</p>
+              <p className="text-gray-400 mb-1">Revenu Conso</p>
+              <p className="text-emerald-400 font-bold">{formatCurrency(summary.totalConsoRevenue)}</p>
+            </div>
+            <div>
+              <p className="text-gray-400 mb-1">Coûts</p>
+              <p className="text-red-400 font-bold">{formatCurrency(summary.totalCosts)}</p>
+            </div>
+            <div>
+              <p className="text-gray-400 mb-1">Marge</p>
               <p className="text-emerald-400 font-bold">
                 {formatCurrency(summary.totalMargin)}
               </p>
             </div>
             <div>
-              <p className="text-gray-400 mb-1">Total Appels</p>
+              <p className="text-gray-400 mb-1">Appels</p>
               <p className="text-white font-bold">
                 {summary.totalCalls.toLocaleString('fr-FR')}
               </p>
             </div>
             <div>
-              <p className="text-gray-400 mb-1">Total SMS</p>
+              <p className="text-gray-400 mb-1">SMS</p>
               <p className="text-blue-400 font-bold">
                 {summary.totalSMS.toLocaleString('fr-FR')}
               </p>
             </div>
             <div>
-              <p className="text-gray-400 mb-1">Total Emails</p>
+              <p className="text-gray-400 mb-1">Emails</p>
               <p className="text-cyan-400 font-bold">
                 {summary.totalEmails.toLocaleString('fr-FR')}
               </p>
             </div>
             <div>
-              <p className="text-gray-400 mb-1">Total RDV</p>
+              <p className="text-gray-400 mb-1">RDV</p>
               <p className="text-violet-400 font-bold">{summary.totalRDV}</p>
             </div>
           </div>

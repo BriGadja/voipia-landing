@@ -57,14 +57,7 @@ export default function FinancialViewToggle({
         />
 
         {/* Label */}
-        <span className="relative z-10">Leasing</span>
-
-        {/* Badge: 100% margin */}
-        {isLeasing && (
-          <span className="relative z-10 px-2 py-0.5 text-xs bg-violet-500/20 text-violet-300 rounded-full">
-            100% marge
-          </span>
-        )}
+        <span className="relative z-10">Revenu</span>
       </button>
 
       {/* Consumption Button */}

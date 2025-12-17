@@ -90,15 +90,6 @@ export function ConsumptionKPIGrid({ data, isLoading }: ConsumptionKPIGridProps)
 
   return (
     <div className="space-y-4">
-      {/* Badge: Variable Margin */}
-      <div className="flex items-center gap-2">
-        <div className="px-3 py-1 bg-cyan-500/20 border border-cyan-500/30 rounded-full">
-          <span className="text-sm font-medium text-cyan-300">
-            📈 Marge variable - Paiement à l&#39;usage
-          </span>
-        </div>
-      </div>
-
       {/* Main KPI Grid - 2 rows of 3 */}
       <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
         {consumptionKPIs.map((kpi, index) => (

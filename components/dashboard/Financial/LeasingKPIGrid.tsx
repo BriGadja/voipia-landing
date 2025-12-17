@@ -70,15 +70,6 @@ export function LeasingKPIGrid({ data, isLoading }: LeasingKPIGridProps) {
 
   return (
     <div className="space-y-4">
-      {/* Badge: 100% Margin */}
-      <div className="flex items-center gap-2">
-        <div className="px-3 py-1 bg-violet-500/20 border border-violet-500/30 rounded-full">
-          <span className="text-sm font-medium text-violet-300">
-            💎 Marge 100% - Revenu fixe mensuel
-          </span>
-        </div>
-      </div>
-
       {/* KPI Grid */}
       <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4">
         {leasingKPIs.map((kpi, index) => (

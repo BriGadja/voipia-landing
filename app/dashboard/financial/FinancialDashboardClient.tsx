@@ -206,6 +206,20 @@ function AdminFinancialDashboard() {
         <FinancialKPIGrid data={kpiData} isLoading={kpiLoading} />
       </div>
 
+      {/* Monthly Invoice Summary - Admin Only (placed right after KPIs) */}
+      <div className="space-y-3">
+        <MonthSelector
+          selectedYear={invoiceMonth.year}
+          selectedMonth={invoiceMonth.month}
+          onChange={(year, month) => setInvoiceMonth({ year, month })}
+        />
+        <InvoiceSummaryTable
+          data={invoiceData}
+          isLoading={invoiceLoading}
+          error={invoiceError}
+        />
+      </div>
+
       {/* Charts Grid - Side by Side */}
       <div className="grid grid-cols-1 lg:grid-cols-2 gap-3">
         <FinancialTimeSeriesChart
@@ -229,20 +243,6 @@ function AdminFinancialDashboard() {
           setIsModalOpen(true)
         }}
       />
-
-      {/* Monthly Invoice Summary - Admin Only */}
-      <div className="space-y-3">
-        <MonthSelector
-          selectedYear={invoiceMonth.year}
-          selectedMonth={invoiceMonth.month}
-          onChange={(year, month) => setInvoiceMonth({ year, month })}
-        />
-        <InvoiceSummaryTable
-          data={invoiceData}
-          isLoading={invoiceLoading}
-          error={invoiceError}
-        />
-      </div>
 
       {/* Client Drill Down Modal */}
       <ClientDrilldownModal

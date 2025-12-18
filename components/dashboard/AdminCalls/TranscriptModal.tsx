@@ -88,7 +88,14 @@ export function TranscriptModal({ call, isOpen, onClose }: TranscriptModalProps)
             animate={{ opacity: 1, scale: 1 }}
             exit={{ opacity: 0, scale: 0.95 }}
             transition={{ duration: 0.2 }}
-            className="fixed inset-4 md:inset-auto md:left-1/2 md:top-1/2 md:-translate-x-1/2 md:-translate-y-1/2 md:w-[800px] md:max-h-[85vh] z-50 flex flex-col bg-gray-900 border border-gray-700 rounded-xl shadow-2xl overflow-hidden"
+            className="fixed z-50 flex flex-col bg-gray-900 border border-gray-700 rounded-xl shadow-2xl overflow-hidden"
+            style={{
+              top: '50%',
+              left: '50%',
+              transform: 'translate(-50%, -50%)',
+              width: 'min(800px, calc(100vw - 32px))',
+              maxHeight: 'min(85vh, calc(100vh - 32px))',
+            }}
           >
             {/* Header */}
             <div className="flex items-center justify-between px-6 py-4 border-b border-gray-800">

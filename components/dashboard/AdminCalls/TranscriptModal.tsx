@@ -1,6 +1,7 @@
 'use client'
 
-import { useEffect } from 'react'
+import { useEffect, useState } from 'react'
+import { createPortal } from 'react-dom'
 import { format } from 'date-fns'
 import { fr } from 'date-fns/locale'
 import { X, Play, Clock, User, Building2, Bot, MessageSquare } from 'lucide-react'
@@ -34,6 +35,14 @@ const OUTCOME_COLORS: Record<string, string> = {
 }
 
 export function TranscriptModal({ call, isOpen, onClose }: TranscriptModalProps) {
+  const [mounted, setMounted] = useState(false)
+
+  // Mount state for portal
+  useEffect(() => {
+    setMounted(true)
+    return () => setMounted(false)
+  }, [])
+
   // Handle escape key
   useEffect(() => {
     const handleEscape = (e: KeyboardEvent) => {
@@ -53,7 +62,7 @@ export function TranscriptModal({ call, isOpen, onClose }: TranscriptModalProps)
     }
   }, [isOpen, onClose])
 
-  if (!call) return null
+  if (!call || !mounted) return null
 
   // Format duration
   const formatDuration = (seconds: number | null) => {
@@ -69,7 +78,8 @@ export function TranscriptModal({ call, isOpen, onClose }: TranscriptModalProps)
     .join(' ')
     .trim() || 'Contact inconnu'
 
-  return (
+  // Render modal in a portal to ensure it's positioned relative to viewport
+  const modalContent = (
     <AnimatePresence>
       {isOpen && (
         <>
@@ -78,7 +88,8 @@ export function TranscriptModal({ call, isOpen, onClose }: TranscriptModalProps)
             initial={{ opacity: 0 }}
             animate={{ opacity: 1 }}
             exit={{ opacity: 0 }}
-            className="fixed inset-0 z-50 bg-black/60 backdrop-blur-sm"
+            className="fixed inset-0 bg-black/60 backdrop-blur-sm"
+            style={{ zIndex: 9999 }}
             onClick={onClose}
           />
 
@@ -88,8 +99,9 @@ export function TranscriptModal({ call, isOpen, onClose }: TranscriptModalProps)
             animate={{ opacity: 1, scale: 1 }}
             exit={{ opacity: 0, scale: 0.95 }}
             transition={{ duration: 0.2 }}
-            className="fixed z-50 flex flex-col bg-gray-900 border border-gray-700 rounded-xl shadow-2xl overflow-hidden"
+            className="fixed flex flex-col bg-gray-900 border border-gray-700 rounded-xl shadow-2xl overflow-hidden"
             style={{
+              zIndex: 10000,
               top: '50%',
               left: '50%',
               transform: 'translate(-50%, -50%)',
@@ -257,4 +269,6 @@ export function TranscriptModal({ call, isOpen, onClose }: TranscriptModalProps)
       )}
     </AnimatePresence>
   )
+
+  return createPortal(modalContent, document.body)
 }

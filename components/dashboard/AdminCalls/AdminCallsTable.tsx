@@ -85,37 +85,48 @@ export function AdminCallsTable({
     const result: Array<{
       column: typeof COLUMN_DEFINITIONS[0]
       isGroupHeader?: boolean
+      isFirstOfExpandedGroup?: boolean
       groupKey?: string
+      groupLabel?: string
     }> = []
 
     COLUMN_GROUPS.forEach((group) => {
       const groupColumns = group.columns.filter((key) => visibleColumns.has(key))
       if (groupColumns.length === 0) return
 
-      // Add group header for collapsible groups
-      if (group.collapsible && groupColumns.length > 0) {
+      // For collapsible groups
+      if (group.collapsible) {
         const isCollapsed = collapsedGroups.has(group.key)
-        result.push({
-          column: {
-            key: `group_${group.key}`,
-            label: group.label,
-            sortable: false,
-            width: isCollapsed ? '40px' : undefined,
-            align: 'center',
-          },
-          isGroupHeader: true,
-          groupKey: group.key,
-        })
 
-        // If collapsed, don't add individual columns
-        if (isCollapsed) return
+        if (isCollapsed) {
+          // When collapsed: show only the group header as a single column
+          result.push({
+            column: {
+              key: `group_${group.key}`,
+              label: group.label,
+              sortable: false,
+              width: '40px',
+              align: 'center',
+            },
+            isGroupHeader: true,
+            groupKey: group.key,
+          })
+          return // Skip individual columns
+        }
+        // When expanded: show individual columns with first marked for collapse button
       }
 
-      // Add individual columns
-      groupColumns.forEach((key) => {
+      // Add individual columns (for non-collapsible groups OR expanded collapsible groups)
+      groupColumns.forEach((key, idx) => {
         const colDef = getColumnDef(key)
         if (colDef) {
-          result.push({ column: colDef })
+          result.push({
+            column: colDef,
+            // Mark the first column of an expanded collapsible group
+            isFirstOfExpandedGroup: group.collapsible && idx === 0,
+            groupKey: group.collapsible ? group.key : undefined,
+            groupLabel: group.collapsible ? group.label : undefined,
+          })
         }
       })
     })
@@ -300,7 +311,7 @@ export function AdminCallsTable({
           {/* Sticky header */}
           <thead className="sticky top-0 z-10 bg-gray-900/95 backdrop-blur-sm">
             <tr className="border-b border-gray-800">
-              {visibleColumnDefs.map(({ column, isGroupHeader, groupKey }) => (
+              {visibleColumnDefs.map(({ column, isGroupHeader, isFirstOfExpandedGroup, groupKey, groupLabel }) => (
                 <th
                   key={column.key}
                   className={cn(
@@ -308,7 +319,8 @@ export function AdminCallsTable({
                     column.align === 'center' && 'text-center',
                     column.align === 'right' && 'text-right',
                     column.sortable && 'cursor-pointer hover:text-gray-200 select-none',
-                    isGroupHeader && 'bg-gray-800/50'
+                    isGroupHeader && 'bg-gray-800/50',
+                    isFirstOfExpandedGroup && 'bg-purple-900/20'
                   )}
                   style={{ width: column.width }}
                   onClick={() =>
@@ -324,12 +336,22 @@ export function AdminCallsTable({
                       column.align === 'right' && 'justify-end'
                     )}
                   >
+                    {/* Collapsed group header - expand button */}
                     {isGroupHeader && groupKey && (
-                      collapsedGroups.has(groupKey) ? (
-                        <ChevronRightIcon className="w-4 h-4" />
-                      ) : (
-                        <ChevronDownIcon className="w-4 h-4" />
-                      )
+                      <ChevronRightIcon className="w-4 h-4" />
+                    )}
+                    {/* First column of expanded group - collapse button */}
+                    {isFirstOfExpandedGroup && groupKey && (
+                      <button
+                        onClick={(e) => {
+                          e.stopPropagation()
+                          onToggleGroup(groupKey)
+                        }}
+                        className="mr-1 p-0.5 rounded hover:bg-gray-700"
+                        title={`Réduire ${groupLabel}`}
+                      >
+                        <ChevronDownIcon className="w-3 h-3 text-purple-400" />
+                      </button>
                     )}
                     <span>{column.label}</span>
                     {!isGroupHeader && renderSortIcon(column.key, column.sortable)}
@@ -370,7 +392,7 @@ export function AdminCallsTable({
                 >
                   {visibleColumnDefs.map(({ column, isGroupHeader, groupKey }) => {
                     // For collapsed group headers, show expand button
-                    if (isGroupHeader && groupKey && collapsedGroups.has(groupKey)) {
+                    if (isGroupHeader && groupKey) {
                       return (
                         <td
                           key={column.key}
@@ -386,9 +408,6 @@ export function AdminCallsTable({
                         </td>
                       )
                     }
-
-                    // Skip group headers in body when expanded
-                    if (isGroupHeader) return null
 
                     return (
                       <td

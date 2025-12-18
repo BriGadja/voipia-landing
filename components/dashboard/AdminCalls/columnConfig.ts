@@ -36,15 +36,6 @@ export const COLUMN_DEFINITIONS: AdminCallsColumnDef[] = [
     defaultVisible: true,
   },
   {
-    key: 'agent_type_name',
-    label: 'Type',
-    sortable: false,
-    width: '80px',
-    align: 'center',
-    group: 'core',
-    defaultVisible: true,
-  },
-  {
     key: 'contact',
     label: 'Contact',
     sortable: false,
@@ -60,6 +51,36 @@ export const COLUMN_DEFINITIONS: AdminCallsColumnDef[] = [
     width: '120px',
     align: 'left',
     group: 'core',
+    defaultVisible: true,
+  },
+  // Duration (in core group)
+  {
+    key: 'duration_seconds',
+    label: 'Durée',
+    sortable: true,
+    width: '80px',
+    align: 'right',
+    group: 'core',
+    defaultVisible: true,
+  },
+
+  // Media columns (after duration)
+  {
+    key: 'recording_url',
+    label: 'Audio',
+    sortable: false,
+    width: '70px',
+    align: 'center',
+    group: 'media',
+    defaultVisible: true,
+  },
+  {
+    key: 'transcript',
+    label: 'Transcript',
+    sortable: false,
+    width: '90px',
+    align: 'center',
+    group: 'media',
     defaultVisible: true,
   },
 
@@ -100,18 +121,6 @@ export const COLUMN_DEFINITIONS: AdminCallsColumnDef[] = [
     group: 'outcome',
     defaultVisible: false,
   },
-
-  // Duration
-  {
-    key: 'duration_seconds',
-    label: 'Durée',
-    sortable: true,
-    width: '80px',
-    align: 'right',
-    group: 'core',
-    defaultVisible: true,
-  },
-
   // Quality
   {
     key: 'call_quality_score',
@@ -312,34 +321,22 @@ export const COLUMN_DEFINITIONS: AdminCallsColumnDef[] = [
     group: 'technical',
     defaultVisible: false,
   },
-
-  // Media
-  {
-    key: 'recording_url',
-    label: 'Audio',
-    sortable: false,
-    width: '70px',
-    align: 'center',
-    group: 'media',
-    defaultVisible: true,
-  },
-  {
-    key: 'transcript',
-    label: 'Transcript',
-    sortable: false,
-    width: '90px',
-    align: 'center',
-    group: 'media',
-    defaultVisible: true,
-  },
 ]
 
 // Column groups configuration
+// Order: core → media → outcome (non-collapsible) → latencies → costs → technical (collapsible at end)
 export const COLUMN_GROUPS: AdminCallsColumnGroup[] = [
   {
     key: 'core',
     label: 'Informations principales',
-    columns: ['started_at', 'client_name', 'deployment_name', 'agent_type_name', 'contact', 'phone_number', 'duration_seconds'],
+    columns: ['started_at', 'client_name', 'deployment_name', 'contact', 'phone_number', 'duration_seconds'],
+    collapsible: false,
+    defaultCollapsed: false,
+  },
+  {
+    key: 'media',
+    label: 'Médias',
+    columns: ['recording_url', 'transcript'],
     collapsible: false,
     defaultCollapsed: false,
   },
@@ -347,8 +344,15 @@ export const COLUMN_GROUPS: AdminCallsColumnGroup[] = [
     key: 'outcome',
     label: 'Résultats',
     columns: ['outcome', 'emotion', 'answered', 'appointment_scheduled', 'call_quality_score'],
-    collapsible: true,
+    collapsible: false,
     defaultCollapsed: false,
+  },
+  {
+    key: 'costs',
+    label: 'Coûts',
+    columns: ['total_cost', 'stt_cost', 'tts_cost', 'llm_cost', 'telecom_cost', 'dipler_commission'],
+    collapsible: true,
+    defaultCollapsed: true,
   },
   {
     key: 'latencies',
@@ -362,25 +366,11 @@ export const COLUMN_GROUPS: AdminCallsColumnGroup[] = [
     defaultCollapsed: true,
   },
   {
-    key: 'costs',
-    label: 'Coûts détaillés',
-    columns: ['total_cost', 'stt_cost', 'tts_cost', 'llm_cost', 'telecom_cost', 'dipler_commission'],
-    collapsible: true,
-    defaultCollapsed: true,
-  },
-  {
     key: 'technical',
     label: 'Technique',
     columns: ['direction', 'llm_model', 'tts_provider', 'conversation_id', 'call_sid'],
     collapsible: true,
     defaultCollapsed: true,
-  },
-  {
-    key: 'media',
-    label: 'Médias',
-    columns: ['recording_url', 'transcript'],
-    collapsible: false,
-    defaultCollapsed: false,
   },
 ]
 

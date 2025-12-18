@@ -4,6 +4,7 @@ import {
   Receipt,
   Settings,
   Wallet,
+  Phone,
   type LucideIcon,
 } from 'lucide-react'
 
@@ -55,6 +56,18 @@ export const sidebarConfig: NavGroup[] = [
         title: 'Dashboard Financier',
         href: '/dashboard/financial',
         icon: Receipt,
+        adminOnly: true,
+      },
+    ],
+  },
+  {
+    label: 'Administration',
+    adminOnly: true,
+    items: [
+      {
+        title: 'Historique Appels',
+        href: '/dashboard/admin/calls',
+        icon: Phone,
         adminOnly: true,
       },
     ],

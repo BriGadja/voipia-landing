@@ -93,20 +93,18 @@ export function TranscriptModal({ call, isOpen, onClose }: TranscriptModalProps)
             onClick={onClose}
           />
 
-          {/* Modal */}
+          {/* Modal - using inset + margin auto for perfect centering */}
           <motion.div
             initial={{ opacity: 0, scale: 0.95 }}
             animate={{ opacity: 1, scale: 1 }}
             exit={{ opacity: 0, scale: 0.95 }}
             transition={{ duration: 0.2 }}
-            className="fixed flex flex-col bg-gray-900 border border-gray-700 rounded-xl shadow-2xl overflow-hidden"
+            className="fixed inset-0 m-auto flex flex-col bg-gray-900 border border-gray-700 rounded-xl shadow-2xl overflow-hidden"
             style={{
               zIndex: 10000,
-              top: '50%',
-              left: '50%',
-              transform: 'translate(-50%, -50%)',
-              width: 'min(800px, calc(100vw - 32px))',
-              maxHeight: 'min(85vh, calc(100vh - 32px))',
+              width: 'min(800px, calc(100vw - 64px))',
+              height: 'fit-content',
+              maxHeight: 'min(85vh, calc(100vh - 64px))',
             }}
           >
             {/* Header */}

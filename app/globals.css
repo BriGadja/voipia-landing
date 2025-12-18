@@ -89,6 +89,30 @@
 }
 
 @layer utilities {
+  /* Custom scrollbar styles */
+  .scrollbar-thin {
+    scrollbar-width: thin;
+  }
+
+  .scrollbar-thumb-purple-600::-webkit-scrollbar-thumb {
+    background-color: #9333ea;
+    border-radius: 4px;
+  }
+
+  .scrollbar-track-gray-800::-webkit-scrollbar-track {
+    background-color: #1f2937;
+    border-radius: 4px;
+  }
+
+  .hover\:scrollbar-thumb-purple-500:hover::-webkit-scrollbar-thumb {
+    background-color: #a855f7;
+  }
+
+  .scrollbar-thin::-webkit-scrollbar {
+    width: 8px;
+    height: 8px;
+  }
+
   .glass {
     @apply bg-white/10 backdrop-blur-md border border-white/20;
   }

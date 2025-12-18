@@ -305,9 +305,15 @@ export function AdminCallsTable({
 
   return (
     <div className="flex flex-col h-full">
-      {/* Table container with horizontal scroll */}
-      <div className="flex-1 overflow-auto">
-        <table className="w-full border-collapse">
+      {/* Table container with horizontal scroll - custom scrollbar */}
+      <div
+        className="flex-1 overflow-auto scrollbar-thin scrollbar-thumb-purple-600 scrollbar-track-gray-800 hover:scrollbar-thumb-purple-500"
+        style={{
+          scrollbarWidth: 'thin',
+          scrollbarColor: '#9333ea #1f2937',
+        }}
+      >
+        <table className="w-full border-collapse min-w-max">
           {/* Sticky header */}
           <thead className="sticky top-0 z-10 bg-gray-900/95 backdrop-blur-sm">
             <tr className="border-b border-gray-800">

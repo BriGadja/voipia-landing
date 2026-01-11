@@ -56,7 +56,7 @@ export default function Footer() {
             <ul className="space-y-3 text-gray-400">
               <li className="flex items-center gap-2">
                 <Mail className="w-4 h-4 text-blue-400" />
-                <a href="mailto:contact@voipia.fr" className="hover:text-white transition-colors">contact@voipia.fr</a>
+                <a href="mailto:brice@sablia.io" className="hover:text-white transition-colors">brice@sablia.io</a>
               </li>
               <li className="flex items-center gap-2">
                 <Phone className="w-4 h-4 text-blue-400" />

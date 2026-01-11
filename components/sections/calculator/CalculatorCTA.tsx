@@ -45,7 +45,7 @@ Voici ma configuration:
 Cordialement
     `.trim()
 
-    const mailtoLink = `mailto:contact@voipia.fr?subject=${encodeURIComponent(subject)}&body=${encodeURIComponent(body)}`
+    const mailtoLink = `mailto:brice@sablia.io?subject=${encodeURIComponent(subject)}&body=${encodeURIComponent(body)}`
     window.location.href = mailtoLink
 
     setTimeout(() => setIsSubmitting(false), 2000)

@@ -203,7 +203,7 @@ const CTAPopupForm: React.FC<CTAPopupFormProps> = ({
         timestamp: new Date().toISOString()
       };
 
-      const response = await fetch('https://n8n.voipia.fr/webhook/voipia_louis_from_site', {
+      const response = await fetch('https://n8n.sablia.io/webhook/voipia_louis_from_site', {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
@@ -232,7 +232,7 @@ const CTAPopupForm: React.FC<CTAPopupFormProps> = ({
 
     } catch (err) {
       console.error('Erreur soumission:', err);
-      setError('Une erreur est survenue. Veuillez réessayer ou nous contacter à contact@voipia.fr');
+      setError('Une erreur est survenue. Veuillez réessayer ou nous contacter à brice@sablia.io');
     } finally {
       setIsSubmitting(false);
     }

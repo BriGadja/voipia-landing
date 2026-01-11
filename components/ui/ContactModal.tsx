@@ -26,7 +26,7 @@ export default function ContactModal({ isOpen, onClose, title = "Demander une d√
     setIsSubmitting(true)
     
     try {
-      const response = await fetch('https://n8n.voipia.fr/webhook/formulaire_rdv', {
+      const response = await fetch('https://n8n.sablia.io/webhook/formulaire_rdv', {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',

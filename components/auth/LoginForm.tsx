@@ -199,7 +199,7 @@ export function LoginForm() {
             <p className="text-sm text-white/60">
               Vous n&apos;avez pas de compte ?{' '}
               <a
-                href="mailto:brice@voipia.fr"
+                href="mailto:brice@sablia.io"
                 className="text-purple-400 hover:text-purple-300 transition-colors"
               >
                 Contactez l&apos;administrateur

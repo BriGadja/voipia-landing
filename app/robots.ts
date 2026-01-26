@@ -13,6 +13,6 @@ export default function robots(): MetadataRoute.Robots {
         ],
       },
     ],
-    sitemap: 'https://voipia.com/sitemap.xml',
+    sitemap: 'https://vox.sablia.io/sitemap.xml',
   };
 }

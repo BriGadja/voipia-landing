@@ -9,7 +9,7 @@ interface ClientDetailPageProps {
 }
 
 export const metadata = {
-  title: 'Detail Client | Voipia Dashboard',
+  title: 'Detail Client | Sablia Vox Dashboard',
   description: 'Details et metriques du client',
 }
 

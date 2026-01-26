@@ -2,7 +2,7 @@ import { Metadata } from 'next'
 import { FinancialDashboardClient } from './FinancialDashboardClient'
 
 export const metadata: Metadata = {
-  title: 'Dashboard Financier | Voipia',
+  title: 'Dashboard Financier | Sablia Vox',
   description: 'Suivi financier en temps réel : marge, coûts, revenue par client',
 }
 

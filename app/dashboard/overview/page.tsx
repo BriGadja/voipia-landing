@@ -5,7 +5,7 @@ import { OverviewDashboardClient } from './OverviewDashboardClient'
 import { Loader2 } from 'lucide-react'
 
 export const metadata = {
-  title: 'Vue d\'ensemble | Dashboard Voipia',
+  title: 'Vue d\'ensemble | Dashboard Sablia Vox',
   description: 'Dashboard agrégé de tous vos agents vocaux IA',
 }
 

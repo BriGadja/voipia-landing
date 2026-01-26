@@ -2,8 +2,8 @@ import { LoginForm } from '@/components/auth/LoginForm'
 import { Metadata } from 'next'
 
 export const metadata: Metadata = {
-  title: 'Connexion | Dashboard Voipia',
-  description: 'Connectez-vous au dashboard analytics Voipia',
+  title: 'Connexion | Dashboard Sablia Vox',
+  description: 'Connectez-vous au dashboard analytics Sablia Vox',
 }
 
 export default function LoginPage() {

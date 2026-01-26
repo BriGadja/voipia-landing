@@ -12,7 +12,7 @@ import { faqs } from '@/lib/data/faqs';
 import { getOrganizationSchema } from '@/lib/seo/structured-data';
 
 export const metadata: Metadata = {
-  title: 'VoIPIA - Agents IA Vocaux | Disponibles 24/7',
+  title: 'Sablia Vox - Agents IA Vocaux | Disponibles 24/7',
   description: 'Nos agents IA répondent et rappellent 24/7, qualifient vos prospects, prennent vos rendez-vous et répondent aux questions courantes. Zéro appel manqué, zéro interruption.',
   keywords: [
     'agent IA vocal',
@@ -23,16 +23,16 @@ export const metadata: Metadata = {
     'standard téléphonique IA',
   ],
   openGraph: {
-    title: 'VoIPIA - Agents IA Vocaux | Disponibles 24/7',
+    title: 'Sablia Vox - Agents IA Vocaux | Disponibles 24/7',
     description: 'Déléguez le traitement de vos appels à nos agents IA. Zéro appel manqué, zéro interruption pour vos équipes.',
-    url: 'https://voipia.com',
-    siteName: 'VoIPIA',
+    url: 'https://vox.sablia.io',
+    siteName: 'Sablia Vox',
     images: [
       {
-        url: 'https://voipia.com/og-home.png',
+        url: 'https://vox.sablia.io/og-home.png',
         width: 1200,
         height: 630,
-        alt: 'VoIPIA - Agents IA Vocaux',
+        alt: 'Sablia Vox - Agents IA Vocaux',
       },
     ],
     type: 'website',
@@ -40,9 +40,9 @@ export const metadata: Metadata = {
   },
   twitter: {
     card: 'summary_large_image',
-    title: 'VoIPIA - Agents IA Vocaux',
+    title: 'Sablia Vox - Agents IA Vocaux',
     description: 'Déléguez le traitement de vos appels à nos agents IA disponibles 24/7',
-    images: ['https://voipia.com/og-home.png'],
+    images: ['https://vox.sablia.io/og-home.png'],
   },
 };
 

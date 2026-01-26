@@ -43,7 +43,7 @@ export function UserSwitcher({ isAdmin }: UserSwitcherProps) {
           V
         </div>
         <div className="grid flex-1 text-left text-sm leading-tight">
-          <span className="truncate font-semibold text-white">Voipia</span>
+          <span className="truncate font-semibold text-white">Sablia Vox</span>
           <span className="truncate text-xs text-white/60">Dashboard</span>
         </div>
       </SidebarMenuButton>

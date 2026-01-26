@@ -2,7 +2,7 @@ import { Metadata } from 'next'
 import { Settings, User, Bell, Shield, Key } from 'lucide-react'
 
 export const metadata: Metadata = {
-  title: 'Parametres | Voipia Dashboard',
+  title: 'Parametres | Sablia Vox Dashboard',
   description: 'Configurez vos preferences et parametres de compte',
 }
 

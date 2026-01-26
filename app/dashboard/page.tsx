@@ -3,7 +3,7 @@ import { createClient } from '@/lib/supabase/server'
 import './styles.css'
 
 export const metadata = {
-  title: 'Dashboard | Voipia',
+  title: 'Dashboard | Sablia Vox',
   description: 'Tableau de bord analytique pour vos agents vocaux IA',
 }
 

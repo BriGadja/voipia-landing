@@ -216,7 +216,7 @@ export function LoginForm() {
               rel="noopener noreferrer"
               className="inline-flex items-center gap-2 text-sm text-purple-400 hover:text-purple-300 transition-colors"
             >
-              <span>Essayer Voipia gratuitement</span>
+              <span>Essayer Sablia Vox gratuitement</span>
               <span>→</span>
             </a>
           </div>

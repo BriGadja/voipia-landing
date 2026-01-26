@@ -13,7 +13,7 @@ interface PageProps {
 export async function generateMetadata({ params }: PageProps) {
   const { agentId } = await params
   return {
-    title: `Agent ${agentId} | Voipia Dashboard`,
+    title: `Agent ${agentId} | Sablia Vox Dashboard`,
     description: 'Details et metriques de votre agent vocal IA',
   }
 }

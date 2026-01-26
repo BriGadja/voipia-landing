@@ -19,7 +19,7 @@ export function HeaderV2() {
               href="/"
               className="text-2xl font-bold bg-gradient-to-r from-violet-400 to-purple-400 bg-clip-text text-transparent hover:from-violet-300 hover:to-purple-300 transition"
             >
-              VoIPIA
+              Sablia Vox
             </Link>
 
             {/* Navigation Desktop */}

@@ -33,13 +33,13 @@ export async function generateMetadata({ params }: { params: Promise<{ deploymen
 
   if (!deployment) {
     return {
-      title: 'Agent non trouvé | Voipia',
+      title: 'Agent non trouvé | Sablia Vox',
       description: 'Cet agent n\'existe pas ou vous n\'avez pas les permissions pour y accéder',
     }
   }
 
   return {
-    title: `${deployment.deployment_name} - ${deployment.client_name} | Voipia`,
+    title: `${deployment.deployment_name} - ${deployment.client_name} | Sablia Vox`,
     description: `Dashboard de l'agent ${deployment.agent_display_name} pour ${deployment.client_name}`,
   }
 }

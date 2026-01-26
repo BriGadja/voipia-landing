@@ -9,7 +9,7 @@ interface CallsPageProps {
 }
 
 export const metadata = {
-  title: 'Historique des appels | Voipia Dashboard',
+  title: 'Historique des appels | Sablia Vox Dashboard',
   description: 'Liste des appels pour cet agent',
 }
 

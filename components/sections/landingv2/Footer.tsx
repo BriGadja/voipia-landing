@@ -13,7 +13,7 @@ export default function Footer() {
           {/* Col 1: Logo + Description */}
           <div>
             <div className="text-2xl font-bold bg-gradient-to-r from-blue-500 to-violet-500 bg-clip-text text-transparent mb-4">
-              VOIPIA
+              SABLIA VOX
             </div>
             <p className="text-gray-400 mb-4">
               Automatisez votre CRM avec des agents vocaux IA. Vos leads rappelés en 30 secondes.
@@ -74,7 +74,7 @@ export default function Footer() {
         <div className="pt-8 border-t border-white/10">
           <div className="flex flex-col md:flex-row justify-between items-center gap-4 text-sm text-gray-400">
             <div>
-              © {currentYear} Voipia. Tous droits réservés.
+              © {currentYear} Sablia Vox. Tous droits réservés.
             </div>
             <div className="flex gap-6">
               <Link href="/mentions-legales" className="hover:text-white transition-colors">Mentions légales</Link>

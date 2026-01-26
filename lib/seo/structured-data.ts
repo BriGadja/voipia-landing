@@ -7,19 +7,18 @@ export function getOrganizationSchema() {
   return {
     '@context': 'https://schema.org',
     '@type': 'Organization',
-    name: 'VoIPIA',
-    url: 'https://voipia.com',
-    logo: 'https://voipia.com/logo.png',
+    name: 'Sablia Vox',
+    url: 'https://vox.sablia.io',
+    logo: 'https://vox.sablia.io/logo.png',
     description: 'Agents IA vocaux pour automatiser le traitement de vos prospects',
     contactPoint: {
       '@type': 'ContactPoint',
-      email: 'remi@voipia.com',
+      email: 'brice@sablia.io',
       contactType: 'Sales',
       availableLanguage: ['fr'],
     },
     sameAs: [
-      'https://www.linkedin.com/company/voipia',
-      'https://twitter.com/voipia',
+      'https://www.linkedin.com/company/sablia',
     ],
     address: {
       '@type': 'PostalAddress',
@@ -34,8 +33,8 @@ export function getProductSchema(agent: 'louis' | 'arthur' | 'alexandra') {
       name: 'Louis - Agent IA de Rappel Automatique',
       description:
         'Agent IA vocal qui rappelle vos leads en moins de 60 secondes, 24/7. Qualification automatique et prise de rendez-vous.',
-      url: 'https://voipia.com/louis',
-      image: 'https://voipia.com/og-louis.png',
+      url: 'https://vox.sablia.io/louis',
+      image: 'https://vox.sablia.io/og-louis.png',
       price: '190',
       features: [
         'Rappel en moins de 60 secondes',
@@ -48,8 +47,8 @@ export function getProductSchema(agent: 'louis' | 'arthur' | 'alexandra') {
       name: 'Arthur - Agent IA de Réactivation de Bases Dormantes',
       description:
         'Agent IA vocal qui réactive vos bases de prospects dormants et génère +40k€ CA/mois en moyenne.',
-      url: 'https://voipia.com/arthur',
-      image: 'https://voipia.com/og-arthur.png',
+      url: 'https://vox.sablia.io/arthur',
+      image: 'https://vox.sablia.io/og-arthur.png',
       price: '490',
       features: [
         '+65% taux de réactivation',
@@ -62,8 +61,8 @@ export function getProductSchema(agent: 'louis' | 'arthur' | 'alexandra') {
       name: "Alexandra - Agent IA de Réception d'Appels 24/7",
       description:
         'Agent IA vocal qui répond à tous vos appels entrants en moins de 3 sonneries, 24/7.',
-      url: 'https://voipia.com/alexandra',
-      image: 'https://voipia.com/og-alexandra.png',
+      url: 'https://vox.sablia.io/alexandra',
+      image: 'https://vox.sablia.io/og-alexandra.png',
       price: '290',
       features: [
         '100% taux de réponse',
@@ -85,7 +84,7 @@ export function getProductSchema(agent: 'louis' | 'arthur' | 'alexandra') {
     image: product.image,
     brand: {
       '@type': 'Brand',
-      name: 'VoIPIA',
+      name: 'Sablia Vox',
     },
     offers: {
       '@type': 'Offer',

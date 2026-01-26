@@ -17,24 +17,24 @@ import { louisBenefits } from '@/lib/data/benefits';
 import { getProductSchema, getFAQSchema, jsonLdScriptProps } from '@/lib/seo/structured-data';
 
 export const metadata: Metadata = {
-  title: 'Louis - Agent IA de Rappel Automatique de Leads | VoIPIA',
+  title: 'Louis - Agent IA de Rappel Automatique de Leads | Sablia Vox',
   description: 'Louis rappelle vos leads en moins de 60 secondes, 24/7. +72% taux de contact, x3 rendez-vous qualifiés. Déploiement en 5 jours. À partir de 190€/mois.',
   keywords: [
     'rappel automatique leads',
     'agent IA vocal',
     'qualification leads',
     'prise rendez-vous automatique',
-    'Louis VoIPIA',
+    'Louis Sablia Vox',
     'agent rappel IA',
   ],
   openGraph: {
     title: 'Louis - Rappel Automatique de Leads en <60s',
     description: 'Louis rappelle, qualifie et planifie chaque nouveau lead automatiquement. +72% taux de contact.',
-    url: 'https://voipia.com/louis',
-    siteName: 'VoIPIA',
+    url: 'https://vox.sablia.io/louis',
+    siteName: 'Sablia Vox',
     images: [
       {
-        url: 'https://voipia.com/og-louis.png',
+        url: 'https://vox.sablia.io/og-louis.png',
         width: 1200,
         height: 630,
         alt: 'Louis - Agent IA de Rappel Automatique',
@@ -47,7 +47,7 @@ export const metadata: Metadata = {
     card: 'summary_large_image',
     title: 'Louis - Rappel Automatique de Leads',
     description: 'Louis rappelle vos leads en moins de 60 secondes, 24/7',
-    images: ['https://voipia.com/og-louis.png'],
+    images: ['https://vox.sablia.io/og-louis.png'],
   },
 };
 

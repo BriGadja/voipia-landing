@@ -1,8 +1,10 @@
-# CLAUDE.md
+# CLAUDE.md - Sablia Vox
+
+Voice agent platform for Sablia. Domain: **vox.sablia.io**
 
 ## Development Commands
 
-- `npm run dev` - Start development server
+- `npm run dev` - Start development server (port 3000)
 - `npm run build` - Build for production
 - `npm run lint` - Run ESLint
 
@@ -89,7 +91,7 @@ After UI changes:
 
 ### Environments
 
-**Production** (`mcp__supabase-voipia__*`): Read-only, live data
+**Production** (`mcp__supabase-vox__*`): Read-only, live data
 **Staging** (`mcp__supabase-staging__*`): Full access, testing
 
 **Workflow**: Develop in staging → Generate migration → User executes in production
@@ -158,7 +160,7 @@ GRANT EXECUTE ON FUNCTION func_name(...) TO authenticated;
 
 ## n8n Workflows
 
-AI agents orchestrated via n8n workflows. Access via `mcp__n8n-voipia__*`
+AI agents orchestrated via n8n workflows. Access via `mcp__n8n-mcp__*`
 
 **Flow**: `Client → agent_deployments → agent_types → n8n workflows → agent_calls`
 

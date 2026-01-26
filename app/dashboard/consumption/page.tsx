@@ -3,7 +3,7 @@ import { redirect } from 'next/navigation'
 import { UserConsumptionDashboardClient } from './UserConsumptionDashboardClient'
 
 export const metadata = {
-  title: 'Ma Consommation | Voipia',
+  title: 'Ma Consommation | Sablia Vox',
   description: 'Suivi de votre consommation d\'appels, SMS et emails',
 }
 

@@ -15,12 +15,12 @@ const inter = Inter({
 })
 
 export const metadata: Metadata = {
-  title: 'Voipia - Agents Vocaux IA 24/7 | Louis & Arthur',
+  title: 'Sablia Vox - Agents Vocaux IA 24/7 | Louis & Arthur',
   description: 'Transformez vos appels en opportunités avec nos agents vocaux IA. Louis pour les rappels de leads, Arthur pour la prospection. Performance garantie 24/7.',
   keywords: ['agent vocal IA', 'intelligence artificielle', 'prospection téléphonique', 'CRM', 'automatisation commerciale'],
-  authors: [{ name: 'SabliaVox', url: 'https://vox.sablia.io' }],
-  creator: 'Voipia',
-  publisher: 'Voipia',
+  authors: [{ name: 'Sablia Vox', url: 'https://vox.sablia.io' }],
+  creator: 'Sablia Vox',
+  publisher: 'Sablia Vox',
   robots: {
     index: true,
     follow: true,
@@ -36,21 +36,21 @@ export const metadata: Metadata = {
     type: 'website',
     locale: 'fr_FR',
     url: 'https://vox.sablia.io',
-    siteName: 'Voipia',
-    title: 'Voipia - Agents Vocaux IA 24/7',
+    siteName: 'Sablia Vox',
+    title: 'Sablia Vox - Agents Vocaux IA 24/7',
     description: 'Transformez vos appels en opportunités avec Louis & Arthur - vos agents vocaux IA disponibles 24/7',
     images: [
       {
         url: '/og-image.jpg',
         width: 1200,
         height: 630,
-        alt: 'Voipia - Agents Vocaux IA',
+        alt: 'Sablia Vox - Agents Vocaux IA',
       },
     ],
   },
   twitter: {
     card: 'summary_large_image',
-    title: 'Voipia - Agents Vocaux IA 24/7',
+    title: 'Sablia Vox - Agents Vocaux IA 24/7',
     description: 'Transformez vos appels en opportunités avec Louis & Arthur',
     images: ['/twitter-image.jpg'],
   },

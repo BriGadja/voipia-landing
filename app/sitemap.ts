@@ -1,7 +1,7 @@
 import { MetadataRoute } from 'next';
 
 export default function sitemap(): MetadataRoute.Sitemap {
-  const baseUrl = 'https://voipia.com';
+  const baseUrl = 'https://vox.sablia.io';
   const now = new Date();
 
   return [

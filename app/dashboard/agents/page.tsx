@@ -5,7 +5,7 @@ import { Loader2 } from 'lucide-react'
 import { AgentsListClient } from './AgentsListClient'
 
 export const metadata = {
-  title: 'Agents | Voipia Dashboard',
+  title: 'Agents | Sablia Vox Dashboard',
   description: 'Liste de tous vos agents vocaux IA déployés',
 }
 

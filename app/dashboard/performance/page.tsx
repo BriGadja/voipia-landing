@@ -5,7 +5,7 @@ import { Loader2 } from 'lucide-react'
 import { PerformanceClient } from './PerformanceClient'
 
 export const metadata = {
-  title: 'Performance | Voipia Dashboard',
+  title: 'Performance | Sablia Vox Dashboard',
   description: 'Analysez les performances globales de vos agents vocaux IA',
 }
 

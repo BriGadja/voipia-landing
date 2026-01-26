@@ -8,7 +8,7 @@ import { Separator } from '@/components/ui/separator'
 import { DynamicBreadcrumb } from '@/components/dashboard/DynamicBreadcrumb'
 
 export const metadata = {
-  title: 'Dashboard | Voipia',
+  title: 'Dashboard | Sablia Vox',
   description: 'Tableau de bord analytique pour vos agents vocaux IA',
   robots: {
     index: false,

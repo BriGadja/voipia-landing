@@ -9,7 +9,7 @@ interface CallDetailPageProps {
 }
 
 export const metadata = {
-  title: 'Detail de l\'appel | Voipia Dashboard',
+  title: 'Detail de l\'appel | Sablia Vox Dashboard',
   description: 'Details complets de l\'appel',
 }
 

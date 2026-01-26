@@ -4,7 +4,7 @@ import { createClient } from '@/lib/supabase/server'
 import { AdminCallsClient } from './AdminCallsClient'
 
 export const metadata: Metadata = {
-  title: 'Admin - Historique des appels | Voipia',
+  title: 'Admin - Historique des appels | Sablia Vox',
   description: 'Vue complète de tous les appels avec filtres avancés',
 }
 

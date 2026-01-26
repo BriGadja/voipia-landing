@@ -17,24 +17,24 @@ import { arthurBenefits } from '@/lib/data/benefits';
 import { getProductSchema, getFAQSchema, jsonLdScriptProps } from '@/lib/seo/structured-data';
 
 export const metadata: Metadata = {
-  title: 'Arthur - Agent IA de Réactivation de Bases Dormantes | VoIPIA',
+  title: 'Arthur - Agent IA de Réactivation de Bases Dormantes | Sablia Vox',
   description: 'Arthur réactive vos prospects dormants et génère +40k€ CA/mois en moyenne. +65% taux de réactivation. Relance automatique 24/7. À partir de 490€/mois.',
   keywords: [
     'réactivation prospects',
     'relance base dormante',
     'agent IA réactivation',
-    'Arthur VoIPIA',
+    'Arthur Sablia Vox',
     'prospection automatique',
     'réactivation leads',
   ],
   openGraph: {
     title: 'Arthur - Réactivation de Bases Dormantes',
     description: 'Redonnez vie à vos opportunités oubliées. +40k€ CA/mois en moyenne.',
-    url: 'https://voipia.com/arthur',
-    siteName: 'VoIPIA',
+    url: 'https://vox.sablia.io/arthur',
+    siteName: 'Sablia Vox',
     images: [
       {
-        url: 'https://voipia.com/og-arthur.png',
+        url: 'https://vox.sablia.io/og-arthur.png',
         width: 1200,
         height: 630,
         alt: 'Arthur - Agent IA de Réactivation',
@@ -47,7 +47,7 @@ export const metadata: Metadata = {
     card: 'summary_large_image',
     title: 'Arthur - Réactivation de Bases Dormantes',
     description: 'Arthur réactive vos prospects dormants et génère +40k€ CA/mois',
-    images: ['https://voipia.com/og-arthur.png'],
+    images: ['https://vox.sablia.io/og-arthur.png'],
   },
 };
 

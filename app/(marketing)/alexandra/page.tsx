@@ -15,24 +15,24 @@ import { alexandraBenefits } from '@/lib/data/benefits';
 import { getProductSchema, getFAQSchema, jsonLdScriptProps } from '@/lib/seo/structured-data';
 
 export const metadata: Metadata = {
-  title: "Alexandra - Agent IA de Réception d'Appels 24/7 | VoIPIA",
+  title: "Alexandra - Agent IA de Réception d'Appels 24/7 | Sablia Vox",
   description: "Alexandra répond à 100% de vos appels en <3 sonneries, 24/7. Filtrage intelligent, prise de RDV automatique. +45% satisfaction client. À partir de 290€/mois.",
   keywords: [
     'réception appels IA',
     'standard téléphonique IA',
     'agent IA accueil',
-    'Alexandra VoIPIA',
+    'Alexandra Sablia Vox',
     'réceptionniste virtuelle',
     'accueil téléphonique IA',
   ],
   openGraph: {
     title: "Alexandra - Réception d'Appels 24/7",
     description: 'Ne manquez plus jamais un appel. 100% taux de réponse, disponibilité 24/7.',
-    url: 'https://voipia.com/alexandra',
-    siteName: 'VoIPIA',
+    url: 'https://vox.sablia.io/alexandra',
+    siteName: 'Sablia Vox',
     images: [
       {
-        url: 'https://voipia.com/og-alexandra.png',
+        url: 'https://vox.sablia.io/og-alexandra.png',
         width: 1200,
         height: 630,
         alt: "Alexandra - Agent IA de Réception 24/7",
@@ -45,7 +45,7 @@ export const metadata: Metadata = {
     card: 'summary_large_image',
     title: "Alexandra - Réception d'Appels 24/7",
     description: "Alexandra répond à 100% de vos appels en <3 sonneries, 24/7",
-    images: ['https://voipia.com/og-alexandra.png'],
+    images: ['https://vox.sablia.io/og-alexandra.png'],
   },
 };
 

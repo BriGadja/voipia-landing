@@ -49,7 +49,7 @@ export default function Navigation() {
             className="text-2xl font-bold text-white"
             whileHover={{ scale: 1.05 }}
           >
-            <span className="text-gradient">Voipia</span>
+            <span className="text-gradient">Sablia Vox</span>
           </motion.div>
 
           <div className="hidden md:flex items-center gap-8">

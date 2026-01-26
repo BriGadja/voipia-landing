@@ -89,11 +89,11 @@ export const howItWorksSteps = [
 
 export const chatbotConfig = {
   webhookUrl: 'https://n8n.sablia.io/webhook/chatbot-iapreneurs',
-  welcomeMessage: 'Bonjour ! Je suis l\'assistant IA de Voipia. Comment puis-je vous aider aujourd\'hui ?',
+  welcomeMessage: 'Bonjour ! Je suis l\'assistant IA de Sablia Vox. Comment puis-je vous aider aujourd\'hui ?',
   placeholder: 'Écrivez votre message...',
   maxMessages: 100,
   timeoutMs: 10000,
-  title: 'Assistant Voipia',
+  title: 'Assistant Sablia Vox',
   subtitle: 'Découvrez nos agents IA'
 }
 

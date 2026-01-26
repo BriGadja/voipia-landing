@@ -3,14 +3,14 @@
 import { useState } from 'react';
 import CTAStaticForm from '@/components/ui/CTAStaticForm';
 import SuccessToast from '@/components/ui/SuccessToast';
-import { Header } from '@/components/shared/Header';
+import { HeaderV2 } from '@/components/shared/HeaderV2';
 
 export default function TesterNosAgentsClient() {
   const [showSuccessToast, setShowSuccessToast] = useState(false);
 
   return (
     <>
-      <Header />
+      <HeaderV2 />
 
       <main className="min-h-screen bg-gray-950 pt-16">
         {/* Background gradient effects */}

@@ -1,89 +1,93 @@
 # CLAUDE.md - Sablia Vox
 
-Voice agent platform for Sablia. Domain: **vox.sablia.io**
-
-## Development Commands
-
-- `npm run dev` - Start development server (port 3000)
-- `npm run build` - Build for production
-- `npm run lint` - Run ESLint
+**Voice AI Agent Platform** - B2B sales automation via AI voice agents. Domain: **vox.sablia.io**
 
 ---
 
-## ⚠️ CRITICAL Rules
+## What is Sablia Vox?
 
-### File Creation Policy
+Sablia Vox is Brice's SaaS platform that deploys AI voice agents for B2B clients. The main product is **Louis** - an AI agent that:
+- Instantly calls back new leads (<60 seconds)
+- Qualifies prospects via conversation
+- Books appointments directly in client calendars
+- Sends confirmation SMS
 
-**NEVER create files at project root** (except config files like `.env`, `package.json`, `tsconfig.json`, `CLAUDE.md`)
+**Business Model**: Monthly subscription + consumption-based billing (per minute/SMS)
 
-**File locations**:
-- Documentation → `features/[feature-name]/` or `docs/`
-- Migrations → `supabase/migrations/`
-- Scripts → `scripts/`
-- Source code → `app/`, `components/`, `lib/`
+**Target Market**: French B2B companies needing automated lead follow-up without hiring SDRs.
 
-### Feature Development
+---
 
-1. Create dedicated folder in `features/[feature-name]/`
-2. Structure: `README.md`, `PRPs/`, `documentation/`, `assets/`, `sql/`, `notes/`
-3. Source code stays in `app/`, `components/`, `lib/`
-4. Final migrations move to `supabase/migrations/`
+## Development Commands
 
-### Process Management (npm run dev)
+```bash
+npm run dev      # Start dev server (port 3000)
+npm run build    # Build for production
+npm run lint     # Run ESLint
+```
+
+---
+
+## CRITICAL Rules
+
+### Process Management (Windows)
 
 **Before starting dev server**:
 ```bash
-# Kill port 3000 ONLY
 netstat -ano | findstr :3000
 taskkill /PID <PID> /F
 npm run dev
 ```
 
 **NEVER**:
-- ❌ Kill processes on other ports
-- ❌ Use `pkill node` or `taskkill /IM node.exe` (kills Claude Code)
-- ❌ Kill without verifying exact PID
+- Kill processes on other ports
+- Use `pkill node` or `taskkill /IM node.exe` (kills Claude Code)
+- Kill without verifying exact PID
 
-### UI Verification
+### File Creation Policy
 
-After UI changes:
-1. Navigate with MCP Playwright to `http://localhost:3000`
-2. Use `browser_snapshot` (NOT full-page screenshots)
-3. If screenshot needed, ALWAYS specify `element` and `ref` parameters
+**NEVER create files at project root** (except config files)
 
----
-
-## Project Architecture
-
-**Stack**: Next.js 15, TypeScript, Tailwind CSS, Framer Motion, Supabase, React Query
-
-**Structure**:
-- `app/` - Next.js App Router (pages, routes)
-- `components/sections/` - Page sections (Hero, AgentsGrid, etc.)
-- `components/ui/` - Reusable UI components
-- `components/dashboard/` - Dashboard components
-- `lib/` - Utilities, constants, types, queries
-
-**Design**: Dark theme, glassmorphism, mobile-first, agent colors (Louis=blue, Arthur=orange, Alexandra=green)
-
-**Routes**:
-- `/` - Current Home (do not touch during refonte)
-- `/landingv2` - New Home (in development)
-- `/louis`, `/arthur`, `/alexandra` - Agent landing pages
-- `/dashboard` - Global dashboard
-- `/dashboard/louis`, `/dashboard/arthur` - Agent dashboards
-
-**Documentation**: See `features/proposition_restructuration_landing/REFONTE_OVERVIEW.md`
+**Locations**:
+- Documentation → `features/[feature-name]/` or `docs/`
+- Migrations → `supabase/migrations/`
+- Source code → `app/`, `components/`, `lib/`
 
 ---
 
-## PRP System
+## Site Architecture
 
-**Commands**:
-- `/generate-prp "description"` - Generate PRP
-- `/execute-prp PRPs/feature-name.md` - Execute PRP
+### Public Pages
 
-**Requirements**: Include context, success criteria, validation commands, code patterns, browser snapshots
+| Route | Purpose |
+|-------|---------|
+| `/` | Landing page - Value proposition, how it works, FAQ |
+| `/tester-nos-agents` | Demo request form |
+| `/login` | Authentication |
+
+### Dashboard (Authenticated)
+
+| Route | Purpose |
+|-------|---------|
+| `/dashboard` | Main dashboard overview |
+| `/dashboard/agents` | Agent deployments list |
+| `/dashboard/agents/[agentId]` | Agent detail + calls |
+| `/dashboard/clients` | Client companies list |
+| `/dashboard/clients/[clientId]` | Client detail |
+| `/dashboard/financial` | Financial analytics (admin) |
+| `/dashboard/consumption` | User consumption tracking |
+| `/dashboard/admin/calls` | Admin calls explorer |
+| `/dashboard/performance` | Performance analytics |
+
+### Tech Stack
+
+- **Framework**: Next.js 15 (App Router)
+- **Language**: TypeScript
+- **Styling**: Tailwind CSS + Framer Motion
+- **Database**: Supabase (PostgreSQL)
+- **State**: React Query
+- **Auth**: Supabase Auth
+- **Voice AI**: Dipler + n8n workflows
 
 ---
 
@@ -91,52 +95,93 @@ After UI changes:
 
 ### Environments
 
-**Production** (`mcp__supabase-vox__*`): Read-only, live data
-**Staging** (`mcp__supabase-staging__*`): Full access, testing
+| Environment | MCP Tools | Access |
+|-------------|-----------|--------|
+| **Production** | `mcp__supabase-vox__*` | Read-only |
+| **Staging** | `mcp__supabase-staging__*` | Full access |
 
-**Workflow**: Develop in staging → Generate migration → User executes in production
+**Workflow**: Develop in staging → Generate migration → Brice executes in production
 
 ### Core Tables
 
-- `agent_calls` - Call data (outcome, duration, cost, emotion)
-- `agent_deployments` - Agent instances per client
-- `agent_types` - Agent types (louis, arthur, alexandra)
-- `clients` - Customer companies
-- `user_client_permissions` - RLS permissions
+```
+clients                    → Customer companies
+  └── agent_deployments    → Agent instances per client
+        └── agent_calls    → Individual call records
 
-**Views**: `v_agent_calls_enriched`, `v_user_accessible_clients`, `v_user_accessible_agents`
+agent_types                → louis, arthur, alexandra (types)
+user_client_permissions    → RLS: who can see what
+```
 
-**RPC Functions**: `get_kpi_metrics`, `get_chart_data`, `get_agent_type_cards_data`, `get_client_cards_data`
+### Key Views
 
-**Full schema**: `docs/DATABASE_REFERENCE.md`
+- `v_agent_calls_enriched` - Calls with calculated `answered` and `appointment_scheduled` booleans
+- `v_user_accessible_clients` - RLS-filtered clients
+- `v_user_accessible_agents` - RLS-filtered deployments
+
+### RPC Functions
+
+- `get_kpi_metrics(start, end, client?, deployment?, agent_type?)` - Dashboard KPIs
+- `get_chart_data(...)` - Chart data (volume, outcomes, emotions)
+- `get_agent_type_cards_data(...)` - Aggregated metrics by agent type
+- `get_client_cards_data(...)` - Aggregated metrics by client
 
 ### Critical KPI Formulas
 
-```
-Total Calls = COUNT(*)
-Answered Calls = COUNT(*) WHERE answered = true
-RDV Pris = COUNT(*) WHERE appointment_scheduled = true
-Answer Rate = (answered_calls / total_calls) × 100
-Conversion Rate = (appointments / ANSWERED_calls) × 100  ← NOT total_calls!
-Average Duration = AVG(duration_seconds) WHERE duration_seconds > 0
+```sql
+Answer Rate      = answered_calls / total_calls × 100
+Conversion Rate  = appointments / ANSWERED_calls × 100  -- NOT total_calls!
+Cost per RDV     = total_cost / appointments
 ```
 
 **Common Pitfalls**:
-- ❌ `metadata ? 'key'` checks existence, not value
-- ❌ Conversion rate with total_calls instead of answered_calls
-- ❌ Forgetting to filter by agent_type_name
-- ❌ Treating voicemail as "answered"
+- `metadata ? 'key'` checks key existence, not value (use `appointment_scheduled = true`)
+- Conversion rate denominator is answered_calls, not total_calls
+- Voicemail is NOT answered (outcome='voicemail' → answered=false)
+
+**Full schema**: `docs/DATABASE_REFERENCE.md`
+
+---
+
+## Component Structure
+
+```
+components/
+├── landing/           # Landing page sections (home only)
+│   ├── HeroHomeV2.tsx
+│   ├── HowItWorksV2.tsx
+│   ├── DashboardShowcase.tsx
+│   ├── IntegrationsTriple.tsx
+│   ├── SDRComparison.tsx
+│   ├── CustomDevelopment.tsx
+│   ├── FAQAccordion.tsx
+│   └── FloatingCTA.tsx
+├── dashboard/         # Dashboard components
+│   ├── Charts/        # Recharts visualizations
+│   ├── Cards/         # KPI and info cards
+│   ├── Filters/       # Date, client, agent filters
+│   ├── Financial/     # Financial dashboard
+│   └── Sidebar/       # Navigation
+├── shared/            # Shared (HeaderV2, Button, Card)
+├── ui/                # shadcn/ui + custom UI
+└── chatbot/           # Chatbot widget
+```
+
+---
+
+## Data Files
+
+```
+lib/data/
+├── faqs.ts           # FAQ content for home page
+└── integrations.ts   # Integration logos/data
+```
 
 ---
 
 ## Migrations
 
-**Rules**:
-1. Always create migration files (format: `YYYYMMDD_description.sql`)
-2. Include `DROP IF EXISTS` to prevent conflicts
-3. Add descriptive comments
-4. Include verification queries (commented)
-5. Test in staging first
+**Format**: `YYYYMMDD_description.sql`
 
 **Template**:
 ```sql
@@ -152,39 +197,49 @@ GRANT EXECUTE ON FUNCTION func_name(...) TO authenticated;
 ```
 
 **Safety**:
-- ⚠️ Never assume staging = production schemas
-- ⚠️ Always test in staging first
-- ⚠️ Use transactions for multi-step changes
+- Test in staging first
+- Include DROP IF EXISTS
+- Use transactions for multi-step changes
 
 ---
 
-## n8n Workflows
+## PRP System
 
-AI agents orchestrated via n8n workflows. Access via `mcp__n8n-mcp__*`
+Project Request Proposals for feature development.
 
-**Flow**: `Client → agent_deployments → agent_types → n8n workflows → agent_calls`
+**Commands**:
+- `/generate-prp "description"` - Generate PRP
+- `/execute-prp PRPs/feature-name.md` - Execute PRP
+
+---
+
+## UI Verification
+
+After UI changes:
+1. Navigate with MCP Playwright to `http://localhost:3000`
+2. Use `browser_snapshot` (NOT full-page screenshots)
+3. If screenshot needed, specify `element` and `ref` parameters
 
 ---
 
 ## Quick Reference
 
-**Dashboard Files**:
-- `app/dashboard/page.tsx` - Global dashboard
-- `app/dashboard/[agentType]/page.tsx` - Dynamic route
-- `app/dashboard/[agentType]/LouisDashboardClient.tsx` - Louis dashboard
-- `lib/queries/louis.ts`, `lib/queries/arthur.ts` - Agent queries
+### Outcomes (lowercase)
+`appointment_scheduled`, `appointment_refused`, `voicemail`, `not_interested`, `callback_requested`, `too_short`, `call_failed`, `no_answer`, `busy`, `error`
 
-**Agent Types**: `'louis'`, `'arthur'`, `'alexandra'`
+### Emotions
+`positive`, `neutral`, `negative`, `unknown`
 
-**Outcomes**: `'appointment_scheduled'`, `'appointment_refused'`, `'voicemail'`, `'not_interested'`, `'callback_requested'`, `'too_short'`, `'call_failed'`
-
-**Dashboard Filters**: Date range, Client (optional), Agent (optional)
+### Design Tokens
+- **Background**: Dark gradient (black → purple-950/20 → black)
+- **Cards**: Glassmorphism (bg-white/5, border-white/10)
+- **Accent**: Violet/Purple (#8B5CF6)
 
 ---
 
-## Additional Documentation
+## Documentation
 
-- `docs/DATABASE_REFERENCE.md` - Complete schema
-- `features/Dashboard/ARCHITECTURE.md` - Dashboard details
-- `features/proposition_restructuration_landing/REFONTE_OVERVIEW.md` - Refonte plan
-- `docs/KNOWN_ISSUES.md` - Bug history
+- `docs/DATABASE_REFERENCE.md` - Complete database schema
+- `docs/KNOWN_ISSUES.md` - Bug history and solutions
+- `docs/MIGRATION_BEST_PRACTICES.md` - Migration guidelines
+- `features/_archive/` - Archived feature documentation

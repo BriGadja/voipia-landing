@@ -48,9 +48,10 @@ function getPreviousMonthRange() {
 function AgentConsumptionCard({ agent }: { agent: DeploymentConsumption }) {
   const minutesUsed = agent.total_minutes
   const included = BILLING.INCLUDED_MINUTES
-  const progress = Math.min((minutesUsed / included) * 100, 100)
+  const progress = included > 0 ? Math.min((minutesUsed / included) * 100, 100) : 0
   const overage = Math.max(minutesUsed - included, 0)
   const overageCost = overage * BILLING.OVERAGE_RATE
+  const minutesCost = minutesUsed * BILLING.OVERAGE_RATE
   const smsCost = agent.sms_count * (agent.cost_per_sms ?? BILLING.SMS_RATE)
   const templateColor =
     TEMPLATE_COLORS[agent.template_type] || 'bg-gray-500/20 text-gray-400 border-gray-500/30'
@@ -72,28 +73,37 @@ function AgentConsumptionCard({ agent }: { agent: DeploymentConsumption }) {
         <span className="text-xs text-white/40">{agent.call_count} appels</span>
       </div>
 
-      <div className="space-y-2">
+      {included > 0 ? (
+        <div className="space-y-2">
+          <div className="flex items-center justify-between text-sm">
+            <span className="text-white/60">Minutes utilisées</span>
+            <span className="text-white font-medium tabular-nums">
+              {minutesUsed.toFixed(1)} / {included}
+            </span>
+          </div>
+          <div className="h-2 bg-white/10 rounded-full overflow-hidden">
+            <div
+              style={{ width: `${progress}%` }}
+              className={cn(
+                'h-full rounded-full transition-all',
+                progress >= 100 ? 'bg-orange-500' : 'bg-purple-500',
+              )}
+            />
+          </div>
+          {overage > 0 && (
+            <p className="text-xs text-orange-400">
+              +{overage.toFixed(1)} min hors forfait ({overageCost.toFixed(2)} €)
+            </p>
+          )}
+        </div>
+      ) : (
         <div className="flex items-center justify-between text-sm">
-          <span className="text-white/60">Minutes utilisées</span>
+          <span className="text-white/60">Minutes facturées</span>
           <span className="text-white font-medium tabular-nums">
-            {minutesUsed.toFixed(1)} / {included}
+            {minutesUsed.toFixed(1)} min ({minutesCost.toFixed(2)} €)
           </span>
         </div>
-        <div className="h-2 bg-white/10 rounded-full overflow-hidden">
-          <div
-            style={{ width: `${progress}%` }}
-            className={cn(
-              'h-full rounded-full transition-all',
-              progress >= 100 ? 'bg-orange-500' : 'bg-purple-500',
-            )}
-          />
-        </div>
-        {overage > 0 && (
-          <p className="text-xs text-orange-400">
-            +{overage.toFixed(1)} min hors forfait ({overageCost.toFixed(2)} €)
-          </p>
-        )}
-      </div>
+      )}
 
       {agent.sms_count > 0 && (
         <div className="flex items-center justify-between text-sm pt-2 border-t border-white/5">
@@ -181,6 +191,7 @@ export function ConsumptionClient({ isAdmin }: { isAdmin: boolean }) {
 
   const deployments = data?.by_deployment ?? []
   const groups = groupByBillingClient(deployments)
+  const hasIncludedMinutes = BILLING.INCLUDED_MINUTES > 0
 
   const totalBase = deployments.length * BILLING.MONTHLY_BASE_PER_AGENT
   const totalOverage = deployments.reduce((sum, d) => {
@@ -307,11 +318,13 @@ export function ConsumptionClient({ isAdmin }: { isAdmin: boolean }) {
                     </p>
                   </div>
                   <div className="space-y-1">
-                    <span className="text-xs text-white/60">Hors forfait</span>
+                    <span className="text-xs text-white/60">
+                      {hasIncludedMinutes ? 'Hors forfait' : 'Minutes'}
+                    </span>
                     <p
                       className={cn(
                         'font-semibold tabular-nums',
-                        totalOverage > 0 ? 'text-orange-400' : 'text-white',
+                        hasIncludedMinutes && totalOverage > 0 ? 'text-orange-400' : 'text-white',
                       )}
                     >
                       {totalOverage.toFixed(2)} €

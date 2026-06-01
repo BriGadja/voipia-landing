@@ -35,7 +35,10 @@ export interface ConsumptionFilters {
 
 export const BILLING = {
   MONTHLY_BASE_PER_AGENT: 300,
-  INCLUDED_MINUTES: 100,
+  // Clients actuels : aucune minute incluse — facturation à la minute dès la 1re.
+  // L'offre "100 minutes incluses" (cf. landing PricingSection) vise les futurs clients ;
+  // si elle est activée pour de nouveaux comptes, remettre cette valeur à 100.
+  INCLUDED_MINUTES: 0,
   OVERAGE_RATE: 0.27,
   SMS_RATE: 0.14,
 } as const

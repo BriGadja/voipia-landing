@@ -66,9 +66,12 @@ export const metadata: Metadata = {
     description: 'Transformez vos appels en opportunités avec nos agents vocaux IA',
   },
   icons: {
-    icon: '/favicon.svg',
-    shortcut: '/favicon.svg',
-    apple: '/android-chrome-192x192.png',
+    icon: [
+      { url: '/favicon.ico', sizes: 'any' },
+      { url: '/favicon.png', type: 'image/png' },
+    ],
+    shortcut: '/favicon.ico',
+    apple: '/apple-icon.png',
   },
   manifest: '/site.webmanifest',
 }

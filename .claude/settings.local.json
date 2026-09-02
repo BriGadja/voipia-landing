@@ -115,7 +115,9 @@
       "Bash(find:*)",
       "mcp__claude_ai_Vercel__list_deployments",
       "mcp__claude_ai_Vercel__get_runtime_logs",
-      "mcp__chrome-devtools__*"
+      "mcp__chrome-devtools__*",
+      "Bash(cp \"/home/sablia/.claude/projects/-home-sablia-workspace-projects-internal-websites-sablia-vox/1b7d91fa-16a5-4281-beb2-38a28b9b168a/tool-results/mcp-n8n-mcp-n8n_get_workflow-1776408344178.txt\" \"tmp/s-3369394/workflow-post-C.json\")",
+      "Bash(python3)"
     ],
     "deny": []
   },
